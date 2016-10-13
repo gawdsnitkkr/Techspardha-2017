@@ -10,7 +10,7 @@
     "url": "https://github.com/gawdsnitk/Techspardha2017.git"
   },
   "bugs": {
-    "url": "https://github.com/gawdsnitk/Techspardha2017.git/issues"
+    "url": "https://github.com/gawdsnitk/Techspardha2017/issues"
   },
   "author": {
     "name": "Divya Mamgai",
@@ -40,14 +40,6 @@
     "rimraf": "latest"
   },
   "scripts": {
-    "lint": "jshint src/js",
-    "build:css": "stylus src/styl/PluginName.styl -o dist/css/PluginName.css",
-    "postbuild:css": "postcss --use autoprefixer -c postcssConfig.json -o dist/css/PluginName.css dist/css/PluginName.css && cleancss dist/css/PluginName.css > dist/css/PluginName.min.css",
-    "prebuild:js": "npm run lint",
-    "build:js": "cp src/js/PluginName.js dist/js/PluginName.js",
-    "postbuild:js": "uglifyjs src/js/PluginName.js > dist/js/PluginName.min.js",
-    "build": "npm run build:css && npm run build:js",
-    "autoreload": "live-reload --port 9621 dist/",
-    "clean": "rimraf dist"
+    
   }
 }
