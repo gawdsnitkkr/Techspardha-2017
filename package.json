@@ -38,7 +38,9 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "jshint src/js",
+    "autoreload": "live-reload --port 9621 dist/",
+    "clean": "rimraf dist"
   },
   "repository": {
     "type": "git",
