@@ -12,11 +12,23 @@
   "bugs": {
     "url": "https://github.com/gawdsnitk/Techspardha2017/issues"
   },
-  "author": {
-    "name": "Divya Mamgai",
-    "email": "divyamamgai21@gmail.com",
-    "url": "https://github.com/divyamamgai"
-  },
+  "author": [
+    {
+      "name": "Divya Mamgai",
+      "email": "divyamamgai21@gmail.com",
+      "url": "https://github.com/divyamamgai"
+    },
+    {
+      "name": "Rishabh Chanana",
+      "email": "rishabhchanana97@gmail.com",
+      "url": "https://github.com/rishabh2609"
+    },
+    {
+      "name": "Nishchay Garg",
+      "email": "nstar.garg@gmail.com",
+      "url": "https://github.com/nicechay"
+    }
+  ],
   "homepage": "http://techspardha.org",
   "contributors": [
     {
@@ -28,6 +40,11 @@
       "name": "Nishchay Garg",
       "email": "nstar.garg@gmail.com",
       "url": "https://github.com/nicechay"
+    },
+    {
+      "name": "Rishabh Chanana",
+      "email": "rishabhchanana97@gmail.com",
+      "url": "https://github.com/rishabh2609"
     }
   ],
   "license": "MIT",
