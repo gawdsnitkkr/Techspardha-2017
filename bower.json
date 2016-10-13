@@ -1,0 +1,21 @@
+{
+  "name": "Techspardha2017",
+  "license": "MIT",
+  "authors": [
+    "Divya Mamgai <divyamamgai21@gmail.com>"
+  ],
+  "description": "Techspardha 2017 front-end website.",
+  "homepage": "http://techspardha.org",
+  "keywords": [
+    "Techspardha"
+  ],
+  "dependencies": {
+    "jquery": ">=1.5.1",
+	"angular": ">=2"
+  },
+  "ignore": [
+    "npm-debug.log",
+    "bower_components",
+    "node_modules"
+  ]
+}
