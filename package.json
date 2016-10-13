@@ -1,51 +1,18 @@
 {
   "name": "Techspardha2017",
   "version": "1.0.0",
-  "description": "Techspardha 2017 front-end website.",
-  "keywords": [
-    "Techspardha"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gawdsnitk/Techspardha2017.git"
-  },
-  "bugs": {
-    "url": "https://github.com/gawdsnitk/Techspardha2017/issues"
-  },
-  "author": [
-    {
-      "name": "Divya Mamgai",
-      "email": "divyamamgai21@gmail.com",
-      "url": "https://github.com/divyamamgai"
-    },
-	{
-		"name": "Kaushik Sarma",
-		"email": "kausyap10@gmail.com"	,
-		"url": "https://github.com/kaushikSarma"
-	},
-    {
-      "name": "Rishabh Chanana",
-      "email": "rishabhchanana97@gmail.com",
-      "url": "https://github.com/rishabh2609"
-    },
-    {
-      "name": "Nishchay Garg",
-      "email": "nstar.garg@gmail.com",
-      "url": "https://github.com/nicechay"
-    }
-  ],
-  "homepage": "http://techspardha.org",
+  "description": "Front-end of the Techspardha 2017 website.",
   "contributors": [
     {
       "name": "Divya Mamgai",
       "email": "divyamamgai21@gmail.com",
       "url": "https://github.com/divyamamgai"
     },
-	{
-		"name": "Kaushik Sarma",
-		"email": "kausyap10@gmail.com"	,
-		"url": "https://github.com/kaushikSarma"
-	},
+    {
+      "name": "Kaushik Sarma",
+      "email": "kausyap10@gmail.com",
+      "url": "https://github.com/kaushikSarma"
+    },
     {
       "name": "Nishchay Garg",
       "email": "nstar.garg@gmail.com",
@@ -57,21 +24,30 @@
       "url": "https://github.com/rishabh2609"
     }
   ],
-  "license": "MIT",
+  "main": "index.js",
   "dependencies": {
-    "jquery": ">=1.5.1"
+    "autoprefixer": "^6.5.1",
+    "angular": "^1.5.8",
+    "clean-css": "^3.4.20",
+    "jquery": "^3.1.1",
+    "jshint": "^2.9.3",
+    "rimraf": "^2.5.4",
+    "postcss-cli": "^2.6.0",
+    "uglify-js": "^2.7.3",
+    "stylus": "^0.54.5"
   },
-  "devDependencies": {
-    "jshint": "latest",
-    "stylus": "latest",
-    "postcss-cli": "latest",
-    "autoprefixer": "latest",
-    "clean-css": "latest",
-    "uglify-js": "latest",
-    "live-reload": "latest",
-    "rimraf": "latest"
-  },
+  "devDependencies": {},
   "scripts": {
-    
-  }
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gawdsnitk/Techspardha2017.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gawdsnitk/Techspardha2017/issues"
+  },
+  "homepage": "https://github.com/gawdsnitk/Techspardha2017#readme"
 }
