@@ -2,7 +2,8 @@
   "name": "Techspardha2017",
   "license": "MIT",
   "authors": [
-    "Divya Mamgai <divyamamgai21@gmail.com>"
+    "Divya Mamgai <divyamamgai21@gmail.com>",
+    "Kaushik Sarma <kausyap10@gmail.com>"
   ],
   "description": "Techspardha 2017 front-end website.",
   "homepage": "http://techspardha.org",
@@ -10,8 +11,8 @@
     "Techspardha"
   ],
   "dependencies": {
-    "jquery": ">=1.5.1",
-	"angular": ">=2"
+    "jquery": "latest",
+	"angular2": "latest"
   },
   "ignore": [
     "npm-debug.log",

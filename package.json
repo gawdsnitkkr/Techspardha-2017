@@ -12,34 +12,24 @@
       "name": "Kaushik Sarma",
       "email": "kausyap10@gmail.com",
       "url": "https://github.com/kaushikSarma"
-    },
-    {
-      "name": "Nishchay Garg",
-      "email": "nstar.garg@gmail.com",
-      "url": "https://github.com/nicechay"
-    },
-    {
-      "name": "Rishabh Chanana",
-      "email": "rishabhchanana97@gmail.com",
-      "url": "https://github.com/rishabh2609"
     }
   ],
   "main": "index.js",
   "dependencies": {
-    "autoprefixer": "^6.5.1",
-    "angular": "^1.5.8",
-    "clean-css": "^3.4.20",
-    "jquery": "^3.1.1",
-    "jshint": "^2.9.3",
-    "rimraf": "^2.5.4",
-    "postcss-cli": "^2.6.0",
-    "uglify-js": "^2.7.3",
-    "stylus": "^0.54.5"
+    "angular2": "latest",
+    "jquery": "latest"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "autoprefixer": "latest",
+    "clean-css": "latest",
+    "jshint": "latest",
+    "rimraf": "latest",
+    "postcss-cli": "latest",
+    "uglify-js": "latest",
+    "stylus": "latest"
+  },
   "scripts": {
     "lint": "jshint src/js",
-    "autoreload": "live-reload --port 9621 dist/",
     "clean": "rimraf dist"
   },
   "repository": {
@@ -47,7 +37,7 @@
     "url": "git+https://github.com/gawdsnitk/Techspardha2017.git"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/gawdsnitk/Techspardha2017/issues"
   },
