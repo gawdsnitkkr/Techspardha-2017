@@ -33,15 +33,16 @@
             // create a jQuery DOM element again and again which might costlier, you can use $.fn.clone() method to clone
             // these caches for you plugin instance.
             useHTMLOptions: true,
-            divisions: 1,
-            pathLength: 1
+            pathLength: 0,
+            divisions: 2,
+            startOffset: undefined
         },
         PathAnimationAnimateDefaults = {
-            ease: Linear.easeNone,
             invert: false,
+            clearOpacity: false,
             delay: 0,
-            callback: $.noop,
-            clearOpacity: false
+            ease: Linear.easeNone,
+            onComplete: $.noop
         },
         // Our plugin's constructor function.
         PathAnimation = function (element, options, initialize) {
@@ -64,15 +65,15 @@
             // This function extends the plugin instance options with the HTML data attribute based options as -
             // data-OPTION="VALUE" -> OPTION: "VALUE"
             ApplyHTMLOptions: function () {
-                var Property = this.property,
-                    $Element = this.$element,
-                    HTMLOptions = {};
-                for (var Option in PathAnimationDefaults) {
-                    if (PathAnimationDefaults.hasOwnProperty(Option)) {
-                        HTMLOptions[Option] = $Element.attr('data-' + Option) || undefined;
+                var property = this.property,
+                    $element = this.$element,
+                    htmlOptions = {};
+                for (var option in PathAnimationDefaults) {
+                    if (PathAnimationDefaults.hasOwnProperty(option)) {
+                        htmlOptions[option] = $element.attr('data-' + option) || undefined;
                     }
                 }
-                $.extend(Property, HTMLOptions);
+                $.extend(property, htmlOptions);
             }
         };
     // All of our plugin's public methods go here.
@@ -80,27 +81,28 @@
     // Note: $.data(element, 'PathAnimation'); is much faster than $element.data('PathAnimation');
     PathAnimation.prototype = {
         Initialize: function () {
-            var Property = this.property;
-            if (Property.useHTMLOptions) {
+            var property = this.property;
+            if (property.useHTMLOptions) {
                 PathAnimationPrivate.ApplyHTMLOptions.apply(this);
             }
         },
-        Animate: function (options) {
+        Animate: function (time, options) {
+            time = time || 1;
             options = $.extend({}, PathAnimationAnimateDefaults, options);
-            var Path = this.element,
-                PathLength = options.pathLength,
-                DividePathLength = PathLength / options.divisions;
+            var property = this.property,
+                pathLength = property.pathLength,
+                startOffset = property.startOffset;
             if (options.clearOpacity) {
-                Path.style.opacity = 1;
+                this.element.style.opacity = 1;
             }
-            TweenMax.fromTo(Path, time, {
-                strokeDasharray: DividePathLength + ' ' + PathLength,
-                strokeDashoffset: (options.inverse ? -1 : 1) * PathLength
+            TweenMax.fromTo(this.element, time, {
+                strokeDasharray: startOffset + ' ' + pathLength,
+                strokeDashoffset: (options.inverse ? -1 : 1) * startOffset
             }, {
                 strokeDashoffset: 0,
                 ease: options.ease,
                 delay: options.delay,
-                onComplete: options.callback
+                onComplete: options.onComplete
             });
         },
         SetOptions: function (options) {
@@ -112,9 +114,13 @@
             // All of the options are available in this.property and different properties that we might need which are
             // local to this instance are extended in the this.property object. This encapsulates everything into one
             // manageable javascript object.
-            this.property = $.extend({
-                pathLength: this.element.getTotalLength()
-            }, this.property, options);
+            var pathLength = this.element.getTotalLength() * 2,
+                property = this.property = $.extend($.extend({}, PathAnimationDefaults, {
+                    pathLength: pathLength
+                }), options);
+            if (property.startOffset === undefined) {
+                this.property.startOffset = pathLength / property.divisions;
+            }
         }
     };
     // Global plugin to alter the defaults, inspiration from here -

@@ -40,7 +40,7 @@
             ease: Linear.easeNone,
             invert: false,
             delay: 0,
-            callback: $.noop,
+            onComplete: $.noop,
             clearOpacity: false
         },
         // Our plugin's constructor function.
@@ -85,7 +85,8 @@
                 PathAnimationPrivate.ApplyHTMLOptions.apply(this);
             }
         },
-        Animate: function (options) {
+        Animate: function (time, options) {
+            time = time || 1;
             options = $.extend({}, PathAnimationAnimateDefaults, options);
             var Path = this.element,
                 PathLength = options.pathLength,
@@ -100,7 +101,7 @@
                 strokeDashoffset: 0,
                 ease: options.ease,
                 delay: options.delay,
-                onComplete: options.callback
+                onComplete: options.onComplete
             });
         },
         SetOptions: function (options) {
