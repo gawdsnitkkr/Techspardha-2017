@@ -12,7 +12,8 @@
   ],
   "dependencies": {
     "jquery": "latest",
-	"angular2": "latest"
+    "angular2": "latest",
+    "gsap": "latest"
   },
   "ignore": [
     "npm-debug.log",

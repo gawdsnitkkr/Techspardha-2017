@@ -31,7 +31,12 @@
   },
   "scripts": {
     "lint": "jshint src/js",
-    "clean": "rimraf dist"
+    "clean": "rimraf dist",
+    "prebuild:js": "npm run lint",
+    "build:js": "cp src/js/* dist/resources/js/",
+    "build": "npm run build:js",
+    "deploy": "cp -r dist/* deploy/",
+    "postdeploy": "for %i in (deploy/resources/js/*) do uglifyjs deploy/resources/js/%i > deploy/resources/js/%~ni.min.js"
   },
   "repository": {
     "type": "git",
