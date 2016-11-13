@@ -1,31 +1,6 @@
 (function ($, w, d, t, undefined) {
     'use strict';
 
-    var $Cache = {},
-        $Objects = {},
-        Globals = {
-            StarDefaultAttributes: {
-                scale: 1
-            },
-            EventDefaultProperties: {
-                name: 'Event'
-            },
-            CategoriesPositions: [],
-            /** @type Category[] */
-            Categories: []
-        },
-        Functions = {
-            /**
-             * Creates a new Star jQuery object with given attributes and returns it.
-             * @param {Object} [attributes] - Attributes to be given to the new Star jQuery object.
-             * @return {jQuery}
-             */
-            $CreateStar: function (attributes) {
-                var $clone = $Cache.Star.clone();
-                t.set($clone, $.extend({}, Globals.StarDefaultAttributes, attributes));
-                return $clone;
-            }
-        };
     /**
      * A point having X and Y coordinates.
      * @param {Number} x - X coordinate of the point.
@@ -33,8 +8,41 @@
      * @constructor
      */
     var Point = function (x, y) {
-        
+        this.x = x;
+        this.y = y;
     };
+
+    var $Cache = {},
+        $Objects = {},
+        Globals = {
+            StarDefaultAttributes: {
+                scale: 1
+            },
+            EventDefaultProperties: {
+                title: 'Event'
+            },
+            CategoryDiameter: 512,
+            /** @type Point[] */
+            CategoriesPosition: [
+                new Point(640, 360)
+            ],
+            /** @type Category[] */
+            Categories: []
+        },
+        Functions = {
+            /**
+             * Creates a new Event jQuery object with given attributes and returns it.
+             * @param {Object} [attributes] - Attributes to be given to the new Event jQuery object which are
+             * applied using TweenMax.set().
+             * @return {jQuery}
+             */
+            $CreateEvent: function (attributes) {
+                var $clone = $Cache.Event.clone();
+                t.set($clone, $.extend({}, Globals.StarDefaultAttributes, attributes));
+                return $clone;
+            }
+        };
+
     /**
      * Category entity.
      * @param {Number} index - Index of the Category, uniquely identifying the Category.
@@ -45,6 +53,7 @@
     var Category = function (index, title, eventPropertiesArray) {
         this.index = index;
         this.title = title;
+        this.position = Globals.CategoriesPosition[index];
         this.setEvents(eventPropertiesArray);
         this.initialize();
     };
@@ -67,6 +76,7 @@
             }
         }
     };
+
     /**
      * Event entity.
      * @param {Category} category - Category entity which the event belongs to.
@@ -82,19 +92,29 @@
     };
     Event.prototype = {
         initialize: function () {
-            var categoryIndex = this.category.index,
+            var categoryPosition = this.category.position,
                 index = this.index,
-                properties = this.properties;
-            this.$Star = Functions.$CreateStar({
-                x: 0,
-                y: 0
-            });
+                properties = this.properties,
+                position = this.position = new Point(
+                    categoryPosition.x + Globals.CategoryDiameter * (Math.random() - 0.5),
+                    categoryPosition.y + Globals.CategoryDiameter * (Math.random() - 0.5));
+            this.$Event = Functions.$CreateEvent({
+                x: position.x,
+                y: position.y
+            }).appendTo($Objects.Galaxy);
         }
     };
+
     $(function () {
         $Objects.Galaxy = $('#Galaxy', d);
-        // Cache Star
-        $Cache.Star = $Objects.Galaxy.find('.Star').clone();
-        $Objects.Galaxy.find('.Star').remove();
+        // Cache Event
+        $Cache.Event = $Objects.Galaxy.find('.Event').clone();
+        $Objects.Galaxy.find('.Event').remove();
+        Globals.Categories.push(new Category(0, 'Category', [
+            {
+                title: 'Event'
+            }
+        ]));
     });
+
 })(jQuery, window, document, TweenMax);
