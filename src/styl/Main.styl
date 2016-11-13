@@ -1,0 +1,61 @@
+@import 'nib'
+
+// Color Pallete
+$LightDullGreen = #99B898;
+$LightYellow = #FECEAB;
+$LightPink = #FF847C;
+$Pink = #E84A5F;
+$DarkBlue = #2A363B;
+$DarkestBlue = #03030B;
+
+// Color Pallete
+$LighterGreen = #E5FCC2;
+$LightGreen = #9DE0AD;
+$SkyBlue = #45ADA8;
+$DarkSkyBlue = #547980;
+$DarkGrey = #594F4F;
+
+body {
+  background-color: $DarkestBlue;
+  width: 100vw;
+  height: 100vh;
+}
+
+#Galaxy {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.Star {
+  .Core {
+    fill: #fff;
+  }
+  for $shell in (1..3) {
+    .Shell:nth-child({$shell}) {
+      fill: #fff;
+      fill-opacity: ($shell / 20);
+      animation-direction: alternate;
+      animation-duration: 0.5s;
+      animation-timing-function: ease-in-out;
+      animation-delay: unit((0.3 - ($shell / 10)), 's');
+      animation-name: unquote('StarShellAnimation-' + $shell);
+      animation-iteration-count: infinite;
+      transform-origin: 50% 50% 0;
+    }
+  }
+}
+
+for $shell in 1..3 {
+  $keyframeName = unquote('StarShellAnimation-' + $shell);
+  @keyframes {$keyframeName} {
+    for i in 0..10 {
+      {10% * i} {
+        opacity: (i / 10);
+        transform: unquote('scale(' + (0.5 * (1 + (i / 10))) + ')');
+      }
+    }
+  }
+}
