@@ -1,5 +1,5 @@
 {
-  "name": "Techspardha2017",
+  "title": "Techspardha2017",
   "version": "1.0.0",
   "description": "Front-end of the Techspardha 2017 website.",
   "contributors": [
@@ -22,23 +22,24 @@
     "bootstrap": "latest"
   },
   "devDependencies": {
-    "autoprefixer": "latest",
-    "clean-css": "latest",
     "jshint": "latest",
-    "rimraf": "latest",
-    "postcss-cli": "latest",
+    "fuse": "latest",
     "uglify-js": "latest",
-    "stylus": "latest"
+    "stylus": "latest",
+    "nib": "latest",
+    "clean-css": "latest",
+    "rimraf": "latest"
   },
   "scripts": {
     "lint": "jshint src/js",
-    "clean": "rimraf dist",
     "prebuild:js": "npm run lint",
-    "build:js": "cp src/js/* dist/resources/js/",
-    "build": "npm run build:js",
-    "predeploy": "rimraf deploy/ && mkdir deploy",
+    "build:js": "fuse -i src/js/Main.js -o dist/resources/js/Main.js",
+    "build:css": "stylus -u nib src/styl/Main.styl -o dist/resources/css/Main.css",
+    "build": "npm run build:js && npm run build:css",
+    "predeploy": "npm run clean",
     "deploy": "cp -r dist/* deploy/",
-    "postdeploy": "for %i in (deploy/resources/js/*) do uglifyjs deploy/resources/js/%i > deploy/resources/js/%~ni.min.js"
+    "postdeploy": "uglifyjs deploy/resources/js/Main.js > deploy/resources/js/Main.min.js -mc && rimraf deploy/resources/js/Main.js",
+    "clean": "rimraf deploy/ && mkdir deploy"
   },
   "repository": {
     "type": "git",

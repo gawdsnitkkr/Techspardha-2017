@@ -1,3 +1,5 @@
+// @include ./plugins/Trail.js
+
 (function ($, w, d, t, undefined) {
     'use strict';
 
@@ -32,12 +34,14 @@
         Functions = {
             /**
              * Creates a new Event jQuery object with given attributes and returns it.
+             * @param {String} title - Title for the Event element.
              * @param {Object} [attributes] - Attributes to be given to the new Event jQuery object which are
              * applied using TweenMax.set().
              * @return {jQuery}
              */
-            $CreateEvent: function (attributes) {
+            $CreateEvent: function (title, attributes) {
                 var $clone = $Cache.Event.clone();
+                $clone.find('text').html(title);
                 t.set($clone, $.extend({}, Globals.StarDefaultAttributes, attributes));
                 return $clone;
             }
@@ -98,7 +102,7 @@
                 position = this.position = new Point(
                     categoryPosition.x + Globals.CategoryDiameter * (Math.random() - 0.5),
                     categoryPosition.y + Globals.CategoryDiameter * (Math.random() - 0.5));
-            this.$Event = Functions.$CreateEvent({
+            this.$Event = Functions.$CreateEvent(properties.title, {
                 x: position.x,
                 y: position.y
             }).appendTo($Objects.Galaxy);
@@ -112,7 +116,16 @@
         $Objects.Galaxy.find('.Event').remove();
         Globals.Categories.push(new Category(0, 'Category', [
             {
-                title: 'Event'
+                title: 'Red'
+            },
+            {
+                title: 'Blue'
+            },
+            {
+                title: 'Green'
+            },
+            {
+                title: 'Yellow'
             }
         ]));
     });

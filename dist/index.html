@@ -5,34 +5,24 @@
     <meta name="viewport" content="initial-scale=1,width=device-width">
     <title>Techspardha 2017</title>
     <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/css/Main.css">
     <script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="../node_modules/gsap/src/minified/TweenMax.min.js"></script>
-    <script type="text/javascript" src="resources/js/PathAnimate.js"></script>
+    <script type="text/javascript" src="resources/js/Main.js"></script>
 </head>
 <body>
-<div class="container">
-    <div class="row">
-        <div class="col-sm-12">
-            <svg id="Line" width="100" height="100" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-                <path d="M10 10 L 90 10" stroke="#000" stroke-width="2"></path>
-            </svg>
-        </div>
-    </div>
-</div>
-<script type="text/javascript">
-    (function ($) {
-        $(function () {
-            var $Path = $('#Line').find('path').PathAnimation();
-            $Path.data('PathAnimation').Animate(1, {
-                delay: 1,
-                ease: Power4.easeOut,
-                clearOpacity: true,
-                onComplete: function () {
-                    console.log('Done!');
-                }
-            });
-        });
-    })(jQuery);
-</script>
+<svg id="Galaxy" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+    <g class="Event">
+        <g class="Star">
+            <circle class="Shell" cx="12" cy="12" r="10"></circle>
+            <circle class="Shell" cx="12" cy="12" r="8"></circle>
+            <circle class="Shell" cx="12" cy="12" r="6"></circle>
+            <circle class="Core" cx="12" cy="12" r="4"></circle>
+        </g>
+        <text text-anchor="middle" x="12" y="48">
+            Event
+        </text>
+    </g>
+</svg>
 </body>
 </html>
