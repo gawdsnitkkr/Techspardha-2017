@@ -44,11 +44,13 @@
             // create a jQuery DOM element again and again which might costlier, you can use $.fn.clone() method to clone
             // these caches for you plugin instance.
             precision: 0,
-            pathLength: undefined,
             divisions: 2,
-            startOffset: undefined,
+            pathLengths: undefined,
+            startOffsets: undefined,
+            strokeDashes: undefined,
             inverse: false,
-            clearOpacity: false,
+            stagger: false,
+            staggerDelay: 0,
             duration: 1,
             ease: Linear.easeNone,
             onComplete: $.noop
@@ -58,12 +60,27 @@
          * @param element - SVG Path element.
          * @param {Object} [options] - Trail options object.
          * @param {Object} [timeLineOptions] - Timeline options object.
+         * @param {Function} [compareFunction] - Compare function to sort the paths in the svg element. If not given
+         * no sorting is done.
          * @constructor
          */
-        Trail = function (element, options, timeLineOptions) {
-            this.element = element;
-            /** @type jQuery */
-            this.$element = $(element);
+        Trail = function (element, options, timeLineOptions, compareFunction) {
+            var paths = [];
+            switch (element.tagName.toLowerCase()) {
+                case 'path':
+                    paths.push(element);
+                    break;
+                case 'svg':
+                    paths = $(element).find('path').toArray();
+                    if (compareFunction !== undefined) {
+                        paths = paths.sort(compareFunction);
+                    }
+                    break;
+                default:
+                    console.warn('Trail() :: Element (' + element.tagName + ') given is not of compatible type.');
+                    return;
+            }
+            this.paths = paths;
             this.timeLineOptions = $.extend({}, timeLineOptions);
             // Note: We don't do -
             // this.properties = defaults;
@@ -87,32 +104,57 @@
             // Sanitizes the options set by the user. This function is automatically called in
             // privates.applyHTMLOptions() and this.setOptions() functions.
             sanitizeOptions: function () {
-                var properties = this.properties;
+                var properties = this.properties,
+                    paths = this.paths,
+                    divisions = properties.divisions,
+                    pathLengths = properties.pathLengths = new Float32Array(properties.pathLengths),
+                    pathLength = 0,
+                    startOffsets = properties.startOffsets = new Float32Array(properties.startOffsets),
+                    startOffset = 0,
+                    strokeDashes = properties.strokeDashes = [],
+                    pathCount = paths.length,
+                    precision,
+                    pathIndex = 0;
+
                 properties.precision = parseInt(properties.precision);
                 if (isNaN(properties.precision)) {
                     properties.precision = defaults.precision;
                 }
-                properties.pathLength = parseFloat(properties.pathLength);
-                if (isNaN(properties.pathLength)) {
-                    properties.pathLength = parseFloat(this.element.getTotalLength() * 2)
-                        .toFixed(properties.precision);
-                } else {
-                    properties.pathLength = properties.pathLength.toFixed(properties.precision);
-                }
+                precision = properties.precision;
+
                 properties.divisions = parseInt(properties.divisions);
                 if (isNaN(properties.divisions)) {
                     properties.divisions = defaults.divisions;
                 }
-                properties.startOffset = parseFloat(properties.startOffset);
-                if (isNaN(properties.startOffset)) {
-                    properties.startOffset = parseFloat(properties.pathLength / properties.divisions)
-                        .toFixed(properties.precision);
-                } else {
-                    properties.startOffset = properties.startOffset.toFixed(properties.precision);
+
+                if (pathLengths.length !== pathCount) {
+                    pathLengths = new Uint32Array(pathCount);
                 }
+                if (startOffsets.length !== pathCount) {
+                    startOffsets = new Uint32Array(pathCount);
+                }
+                while (pathIndex < pathCount) {
+                    pathLength = pathLengths[pathIndex];
+                    startOffset = startOffsets[pathIndex];
+                    if (isNaN(pathLength) || (pathLength === 0)) {
+                        pathLength = paths[pathIndex].getTotalLength() * 2;
+                    }
+                    if (isNaN(startOffset) || (startOffset === 0)) {
+                        startOffset = pathLength / divisions;
+                    }
+                    strokeDashes.push((startOffsets[pathIndex] = startOffset.toFixed(precision)) + ' ' +
+                        (pathLengths[pathIndex] = pathLength.toFixed(precision)));
+                    pathIndex++;
+                }
+                properties.pathLengths = pathLengths;
+                properties.startOffsets = startOffsets;
                 properties.duration = parseFloat(properties.duration);
                 if (isNaN(properties.duration)) {
                     properties.duration = defaults.duration;
+                }
+                properties.staggerDelay = parseFloat(properties.staggerDelay);
+                if (isNaN(properties.staggerDelay)) {
+                    properties.staggerDelay = defaults.staggerDelay;
                 }
                 if (!$.isFunction(properties.onComplete)) {
                     properties.onComplete = $.noop;
@@ -215,18 +257,47 @@
          */
         initialize: function () {
             var properties = this.properties,
-                element = this.element;
-            if (properties.clearOpacity) {
-                element.style.opacity = 1;
-            }
+                paths = this.paths,
+                strokeDashes = properties.strokeDashes,
+                startOffsets = properties.startOffsets,
+                strokeDash,
+                startOffset,
+                duration = properties.duration,
+                ease = properties.ease,
+                pathCount = paths.length,
+                pathIndex = 0,
+                position = properties.stagger ? '0' : '+=0',
+                staggerDelay = properties.stagger ? properties.staggerDelay : 0;
             var timeLine = this.timeLine = new TimelineMax(this.timeLineOptions);
-            timeLine.fromTo(element, properties.duration, {
-                strokeDasharray: properties.startOffset + ' ' + properties.pathLength,
-                strokeDashoffset: properties.inverse ? -properties.startOffset : properties.startOffset
-            }, {
-                strokeDashoffset: 0,
-                ease: properties.ease
-            });
+            if (properties.inverse) {
+                while (pathIndex < pathCount) {
+                    strokeDash = strokeDashes[pathIndex];
+                    startOffset = startOffsets[pathIndex];
+                    timeLine.fromTo(paths[pathIndex], duration, {
+                        strokeDasharray: strokeDash,
+                        strokeDashoffset: -startOffset
+                    }, {
+                        strokeDashoffset: 0,
+                        ease: ease,
+                        delay: staggerDelay * pathIndex
+                    }, position);
+                    pathIndex++;
+                }
+            } else {
+                while (pathIndex < pathCount) {
+                    strokeDash = strokeDashes[pathIndex];
+                    startOffset = startOffsets[pathIndex];
+                    timeLine.fromTo(paths[pathIndex], duration, {
+                        strokeDasharray: strokeDash,
+                        strokeDashoffset: startOffset
+                    }, {
+                        strokeDashoffset: 0,
+                        ease: ease,
+                        delay: staggerDelay * pathIndex
+                    }, position);
+                    pathIndex++;
+                }
+            }
             return this;
         }
     };
