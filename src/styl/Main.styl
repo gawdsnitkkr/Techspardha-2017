@@ -2,8 +2,19 @@
 @import 'nib'
 @import 'ColorPalette.styl'
 
-$HeadingOneFontFamily = "Yu Gothic UI Light", sans-serif;
-$HeadingOneFontSize = 2.4rem;
+$HeadingOneFontFamily = "Roboto Light", sans-serif;
+$HeadingTwoFontFamily = "Roboto Light", sans-serif;
+$HeadingThreeFontFamily = "Roboto", sans-serif;
+$ContentFontFamily = "Roboto", sans-serif;
+$HeadingOneFontSize = 4.8rem;
+$HeadingTwoFontSize = 2.4rem;
+$HeadingThreeFontSize = 2rem;
+$ContentFontSize = 1.6rem;
+
+*, *::after, *::before {
+  position: relative;
+  box-sizing: border-box;
+}
 
 body {
   background-color: $DarkestBlue;
@@ -12,6 +23,44 @@ body {
   font-family: $HeadingOneFontFamily;
   // Makes 1rem = 10px
   font-size: 62.5%;
+}
+
+h1 {
+  font-family: $HeadingOneFontFamily;
+  font-size: $HeadingOneFontSize;
+  font-weight: 300;
+  color: $Yellow;
+  margin: 1rem;
+  cursor: default;
+}
+
+h2 {
+  font-family: $HeadingOneFontFamily;
+  font-size: $HeadingTwoFontSize;
+  font-weight: 300;
+  color: $PaperWhite;
+  margin: 0.5rem 1rem;
+  cursor: default;
+}
+
+h3 {
+  font-family: $HeadingThreeFontFamily;
+  font-size: $HeadingThreeFontSize;
+  font-weight: 400;
+  color: $DarkSkyBlue;
+  margin: 0.5rem 1rem;
+  cursor: default;
+}
+
+p {
+  font-family: $ContentFontFamily;
+  font-size: $ContentFontSize;
+  font-weight: 400;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  margin: 0;
+  color: $PaperWhite;
+  text-align: justify;
+  cursor: default;
 }
 
 @import 'Galaxy.styl'

@@ -1,7 +1,76 @@
 .Event text {
   font-family: $HeadingOneFontFamily;
-  font-size: $HeadingOneFontSize;
-  font-weight: 200;
-  fill: $LightPink;
+  font-size: 1.6rem;
+  font-weight: 300;
+  fill: $SkyBlue;
   cursor: pointer;
+  user-select: none;
+}
+
+#EventSection {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 100vh;
+  left: 0;
+  z-index: 1;
+}
+
+#EventSVG {
+
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+
+  .Star {
+
+    cursor: default;
+
+    .Shell {
+      opacity: 0;
+      transform: scale(0.5);
+      animation-duration: 3s;
+      animation-name: EventSVGStarShellAnimation;
+      animation-direction: normal;
+      animation-timing-function: linear;
+    }
+
+    for $shell in (1..4) {
+      .Shell:nth-child({$shell}) {
+        fill-opacity: ($shell / 10);
+        animation-delay: unit((1 - ($shell / 10)), 's');
+      }
+    }
+
+  }
+
+}
+
+@keyframes EventSVGStarShellAnimation {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.5);
+  }
+
+}
+
+#EventContentContainer {
+  padding-top: 10rem;
+  z-index: 2;
+  overflow: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
 }

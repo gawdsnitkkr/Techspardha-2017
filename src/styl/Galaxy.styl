@@ -1,7 +1,34 @@
-#Galaxy {
+#GalaxySection {
   width: 100vw;
   height: 100vh;
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 0;
+}
+
+#GalaxySVG {
+
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  .Category {
+
+    opacity: 0;
+
+    > text {
+      font-family: $HeadingTwoFontFamily;
+      font-size: $HeadingTwoFontSize;
+      font-weight: 300;
+      fill: $DarkSkyBlue;
+      fill-opacity: 0.67;
+      user-select: none;
+      cursor: default;
+    }
+
+  }
+
 }
