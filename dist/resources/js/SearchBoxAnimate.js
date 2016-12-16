@@ -204,31 +204,37 @@
                 DOM.PrimaryMenuContainer.html('');
                 DOM.searchTab.addClass('activeTab');
                 DOM.categoryTab.removeClass('activeTab');
-                Var.primaryMenuData = Var.searchResult;
-                var url = 'http://anshulmalik.me/api/events?query=' + searchString;
-                $.ajax({
-                    url: url,
-                    dataType: 'json',
-                    type: 'get',
-                    success: function (data) {
-                        Var.searchResult = data['data'];
-                        Functions.RenderSearchResults(Var.searchResult);
-                    }
-                });
+                if (searchString.length == 0) {
+                    Var.searchResult = [];
+                    Functions.RenderSearchResults(Var.searchResult);
+                }
+                else {
+                    var url = 'http://anshulmalik.me/api/events?query=' + searchString;
+                    $.ajax({
+                        url: url,
+                        dataType: 'json',
+                        type: 'get',
+                        success: function (data) {
+                            Var.searchResult = data['data'];
+                            Functions.RenderSearchResults(Var.searchResult);
+                        }
+                    });
+                }
             },
             RenderSearchResults: function (data) {
-                Var.primaryMenuData = Var.searchResult;
-                if (Var.primaryMenuData.length == 0) {
+                Var.primaryMenuData = data;
+                if (data.length == 0) {
                     DOM.PrimaryMenuContainer.append(
                         '<h3>No Results to Display</h3>'
                     );
+                } else {
+                    DOM.PrimaryMenuContainer.append(DOM.searchAnimation);
+                    $(Var.primaryMenuData).each(function () {
+                        DOM.PrimaryMenuContainer.append(
+                            '<div class="menuOption col-md-4"><span class="category">' + this.Name + '</div>'
+                        );
+                    });
                 }
-                DOM.PrimaryMenuContainer.append(DOM.searchAnimation);
-                $(Var.primaryMenuData).each(function () {
-                    DOM.PrimaryMenuContainer.append(
-                        '<div class="menuOption col-md-4"><span class="category">' + this.Name + '</div>'
-                    );
-                });
             }
         };
     dO.ready(function () {
@@ -242,14 +248,15 @@
             });
         DOM.MainMenuCloseButton = $('#menuClose')
             .bind('click', function () {
-                if(!Var.isCollapsed && !Var.isCollapsing)
+                if (!Var.isCollapsed && !Var.isCollapsing)
                     Functions.CloseMenu();
             });
         DOM.PrimaryMenuContainer = $('div#primaryMenuOptions');
         DOM.searchInput = $('#searchBox')
             .bind('keyup', function (e) {
                 if (e.keyCode == 13) {
-                    Functions.GetSearchResults(DOM.searchInput.val());
+                    var s = DOM.searchInput.val();
+                    Functions.GetSearchResults(s);
                 }
             });
         DOM.categoryTab = $('#categoryTabButton')
