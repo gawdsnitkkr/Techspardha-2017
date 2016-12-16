@@ -1,0 +1,123 @@
+@import '../../../src/styl/ColorPalette.styl'
+/*functions*/
+transition(prop, time)
+  -webkit-transition: prop time
+  -moz-transition: prop time
+  -ms-transition: prop time
+  -o-transition: prop time
+  transition: prop time
+
+scaleTo(s)
+  -webkit-transform: scale(s)
+  -moz-transform: scale(s)
+  -ms-transform: scale(s)
+  -o-transform: scale(s)
+  transform: scale(s)
+
+/*Styles*/
+body
+  background $DarkSkyBlue
+  margin 0
+  padding 0
+
+aside#searchMenu
+  position absolute
+  left -100%
+  width 100%
+  height 100vh
+  overflow hidden
+  padding 0
+  color $LighterGreen
+  background rgba($DarkestBlue, 0.8)
+
+#searchBarSVG
+  position fixed
+  margin-left 20px
+  margin-top 20px
+  cursor pointer
+
+#mainMenuWrapper
+  > div#menuClose
+    color $LightPink
+    display none
+    opacity 0.4
+    font-size 20px
+    right 10px
+    top 20px
+    position fixed
+    cursor pointer
+    transition(all, 0.2s)
+    &:hover
+      opacity 1
+      scaleTo(1.2)
+
+#searchBox
+  display: none
+  position fixed
+  margin-top 19px
+  margin-left 60px
+  color rgba($LightGreen, 0.4)
+  background none
+  border none
+  font-size 20px
+  font-weight 100
+  height 40px
+  width 210px
+  &:focus
+    color rgba($LightGreen, 1)
+    transition(all, 0.2s)
+    outline none
+
+div#primaryMenuContainer
+  position relative
+  height 100%
+  top 70px
+
+div#primaryMenuTabs
+  position absolute
+  border-bottom 1px solid rgba($LightDullGreen, 1)
+  height 53.55px
+  width 100%
+  > div.tab
+    margin-top 1px
+    display inline-block
+    padding-top 10px
+    padding-left 20px
+    padding-right 20px
+    padding-bottom 10px
+    font-size 20px
+    opacity 0.3
+    cursor pointer
+    &:hover
+      opacity 1
+      transition(all, 0.2)
+  > div.activeTab
+    opacity 1
+    border-bottom solid 4px $LightDullGreen
+
+div#primaryOptionWrapper
+  position absolute
+  width 100%
+  height calc(100% - 93.55px)
+  margin-top 53.55px
+  overflow-y scroll
+
+div#primaryMenuOptions
+  position relative
+  text-align center
+  height auto
+  > div.menuOption
+    position relative
+    margin-top 10px
+    margin-bottom 10px
+    display inline-block
+    min-width 200px
+    padding 20px
+    font-size 20px
+    font-weight 600
+    border-radius 5px
+    cursor pointer
+    &:hover
+      background $DarkBlue
+      scaleTo(0.9)
+      transition(all, 0.2s)

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Techspardha'17</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="resources/css/search.css" rel="stylesheet">
+    <script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js" defer></script>
+    <script type="text/javascript" src="../node_modules/gsap/src/minified/TweenMax.min.js" defer></script>
+    <script type="text/javascript" src="./resources/js/PathAnimate.js" defer></script>
+    <script type="text/javascript" src="./resources/js/SearchBoxAnimate.js" defer></script>
+</head>
+<body>
+<div id="mainMenuWrapper">
+    <aside id="searchMenu">
+        <div id="primaryMenuContainer">
+            <div id="primaryMenuTabs">
+                <div id="categoryTabButton" class="tab activeTab">Categories</div>
+                <div id="resultTabButton" class="tab">Search Results</div>
+            </div>
+            <div id="primaryOptionWrapper">
+                <div id="primaryMenuOptions" class="row"></div>
+            </div>
+        </div>
+    </aside>
+    <div id="searchInput">
+        <svg cursor="pointer" id="searchBarSVG" height="40" width="250" viewBox="0 0 250 40">
+            <g id="MenuIcon" stroke-linejoin="round" transform="matrix(.81020 0 0 .87264 3.9882 -880.29)" stroke="#fff"
+               stroke-width="2">
+                <path id="menuTopLine" d="m3.4532 1011.17h50"/>
+                <path id="menuBottomLine" d="m3.4532 1052.5h50"/>
+                <path id="searchHandle" d="m 3.4532,1031.6817 50,0"/>
+            </g>
+            <g id="searchBoxBorder" transform="matrix(.81018 0 0 .87129 3.9861 -878.81)" stroke-width="2"
+               stroke="#ffffff" display="none" fill="none">
+                <path id="path4445" d="m 20.7,1010.7 -23.56,0 0,21.4776"/><!--9e8989-->
+                <path id="path4449" d="m 21.763,1052.55 -24.5935,0 0,-20.4454"/><!--5bb7b6-->
+                <path id="path4451" d="m 20.219,1010.7 281.45,0 0,21.092"/><!--d25454-->
+                <path id="path4453" d="m 20.83,1052.55 280.79,0 0,-20.8402"/><!--6d5555-->
+            </g>
+            <path id="magnifying"
+                  d="m 18.916958,23.257858 c -3.140438,-3.140438 -3.140438,-8.232094 0,-11.372532 3.140438,-3.1404479 8.232095,-3.1404479 11.372533,0 3.140438,3.140438 3.140438,8.232094 0,11.372532 -3.140438,3.140438 -8.232095,3.140438 -11.372533,0"
+                  style="fill: none; opacity:0; stroke:#ffffff; stroke-width: 1.5"></path>
+            <rect id="menuButtonOverlay" y="5" x="11" height="32" width="32" fill="red" opacity="0"></rect>
+        </svg>
+        <input id="searchBox" type="text" placeholder="Search"/>
+    </div>
+    <div id="menuClose">
+        <span class="glyphicon glyphicon-remove"></span>
+    </div>
+</div>
+</body>
+</html>
