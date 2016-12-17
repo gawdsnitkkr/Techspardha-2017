@@ -280,10 +280,12 @@
             },
             RevealMenuOptions: function(){
                 t.staggerFromTo(DOM.PrimaryMenuContainer.children().toArray(), 1, {
+                    marginTop: '-10px',
                     opacity: 0
                 },{
+                    marginTop: '10px',
                     opacity: 1,
-                    ease: Back.easeOut
+                    ease: Back.easeIn
                 }, 0.1);
             }
         };
