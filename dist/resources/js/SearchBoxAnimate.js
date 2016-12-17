@@ -49,6 +49,22 @@
             MainMenuButtonOverlay: null
         },
         Functions = {
+            toMonth: function(mon){
+                switch(mon){
+                    case '01': return 'Jan';
+                    case '02': return 'Feb';
+                    case '03': return 'Mar';
+                    case '04': return 'Apr';
+                    case '05': return 'May';
+                    case '06': return 'Jun';
+                    case '07': return 'Jul';
+                    case '08': return 'Aug';
+                    case '09': return 'Sep';
+                    case '10': return 'Oct';
+                    case '11': return 'Nov';
+                    case '12': return 'Dec';
+                }
+            },
             OpenMenu: function () {
                 if (Var.isCollapsed) {
                     t.set(DOM.MainMenuCloseButton, {
@@ -117,6 +133,9 @@
                         ease: Back.easeOut,
                         clearOpacity: true,
                         onComplete: function () {
+                            t.set(DOM.MainMenuCloseButton, {
+                                display: 'none'
+                            });
                             t.set($('#menuTopLine'), {
                                 opacity: 1
                             });
@@ -143,9 +162,6 @@
                                         onComplete: function () {
                                             Var.isCollapsed = true;
                                             Var.isCollapsing = false;
-                                            t.set(DOM.MainMenuCloseButton, {
-                                                display: 'none'
-                                            });
                                         }
                                     });
                                     DOM.PrimaryMenuContainer.html('');
@@ -171,25 +187,27 @@
                 DOM.searchTab.removeClass('activeTab');
                 DOM.PrimaryMenuContainer.html('');
                 Var.primaryMenuData = Var.mainMenuData;
-                $(Var.primaryMenuData).each(function () {
-                    DOM.PrimaryMenuContainer.append(
-                        '<div class="menuOption col-md-4"><span class="category">' + this + '</div>'
-                    );
+                $(Var.primaryMenuData).each(function (a) {
+                    var option = $('<div id="'+Var.primaryMenuData[a]+'" ' +
+                        'class="menuOption col-md-4"><span class="category">'
+                        + Var.primaryMenuData[a] + '</div>')
+                        .bind('click', function(target){
+                            var category = $('span.category', target.currentTarget).html();
+                            console.log(category);
+                            if (category != "") {
+                                var n = Var.categorizedEvents[category].length;
+                                DOM.PrimaryMenuContainer.html('');
+                                for (var i = 1; i < n; i++) {
+                                    DOM.PrimaryMenuContainer.append(
+                                        '<div class="menuOption col-md-4"><span class="category">' + Var.categorizedEvents[category][i] + '</div>'
+                                    );
+                                }
+                                Functions.RevealMenuOptions();
+                            }
+                        });
+                    DOM.PrimaryMenuContainer.append(option);
                 });
-                $('div.menuOption', DOM.MainMenu).on('click', function (e) {
-                    var clkTarget = $(e.target);
-                    var category = $('span.category', clkTarget).html();
-                    console.log(category);
-                    if (category != "") {
-                        var n = Var.categorizedEvents[category].length;
-                        DOM.PrimaryMenuContainer.html('');
-                        for (var i = 1; i < n; i++) {
-                            DOM.PrimaryMenuContainer.append(
-                                '<div class="menuOption col-md-4"><span class="category">' + Var.categorizedEvents[category][i] + '</div>'
-                            );
-                        }
-                    }
-                });
+                Functions.RevealMenuOptions();
             },
             RandomEventGenerator: function () {
                 $.each(Var.mainMenuData, function (e) {
@@ -225,16 +243,48 @@
                 Var.primaryMenuData = data;
                 if (data.length == 0) {
                     DOM.PrimaryMenuContainer.append(
-                        '<h3>No Results to Display</h3>'
+                        '<h3 style="opacity: 0.5; font-size: 40px;">No Results to Display</h3>'
                     );
                 } else {
                     DOM.PrimaryMenuContainer.append(DOM.searchAnimation);
                     $(Var.primaryMenuData).each(function () {
+                        console.log(this);
+                        var hour = parseInt(this.Start.substr(11,2));
+                        var date = {
+                            day: this.Start.substr(8,2),
+                            month: this.Start.substr(5,2),
+                            hour: hour > 12 ? (hour - 12) : hour,
+                            min: this.Start.substr(14,2) + ' ' + (hour >= 12 ? 'pm':'am')
+                        };
                         DOM.PrimaryMenuContainer.append(
-                            '<div class="menuOption col-md-4"><span class="category">' + this.Name + '</div>'
+                            '<div class="searchOption col-md-11">' +
+                                '<div class="row">' +
+                                    '<div class="searchNameInfo">' +
+                                        '<div class="searchName">' + this.Name + '' +
+                                            '<span class="searchDate">'
+                                            + '<span>' + date.day + '</span> ' + Functions.toMonth(date.month) + ', '
+                                            + '<span>' + date.hour + ':' + date.min + '</span>' +
+                                            '</span>' +
+                                        '</div>' +
+                                    '</div>' +
+                                    '<div class="searchDesc">'
+                                        + this.Description +
+                                    '</div>' +
+                                    '<div class="grad"></div>' +
+                                '</div>' +
+                            '</div>'
                         );
                     });
+                    Functions.RevealMenuOptions();
                 }
+            },
+            RevealMenuOptions: function(){
+                t.staggerFromTo(DOM.PrimaryMenuContainer.children().toArray(), 1, {
+                    opacity: 0
+                },{
+                    opacity: 1,
+                    ease: Back.easeOut
+                }, 0.1);
             }
         };
     dO.ready(function () {
@@ -244,7 +294,8 @@
         DOM.MainMenuButton = $('#MenuIcon');
         DOM.MainMenuButtonOverlay = $('#menuButtonOverlay')
             .bind('click', function () {
-                Functions.OpenMenu();
+                if (Var.isCollapsed && !Var.isCollapsing)
+                    Functions.OpenMenu();
             });
         DOM.MainMenuCloseButton = $('#menuClose')
             .bind('click', function () {
