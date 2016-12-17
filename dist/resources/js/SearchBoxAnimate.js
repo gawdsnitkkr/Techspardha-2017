@@ -279,13 +279,13 @@
                 }
             },
             RevealMenuOptions: function(){
-                t.staggerFromTo(DOM.PrimaryMenuContainer.children().toArray(), 1, {
+                t.fromTo(DOM.PrimaryMenuContainer.children(), 1, {
                     marginTop: '-10px',
                     opacity: 0
                 },{
                     marginTop: '10px',
                     opacity: 1,
-                    ease: Back.easeIn
+                    ease: Back.easeOut
                 }, 0.1);
             }
         };

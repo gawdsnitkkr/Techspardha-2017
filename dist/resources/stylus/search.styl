@@ -128,12 +128,15 @@ div#primaryMenuOptions
 div.searchOption
   margin-top 10px
   opacity 0
-  padding 10px
   background-color rgba($DarkestBlue, 0.5)
   font-size 20px
   border-radius 5px
   cursor pointer
   height 82px
+  overflow hidden
+  > div > div.searchNameInfo
+    padding 5px
+    background-color rgba($DarkBlue, 0.2)
   > div > div > div.searchName
     font-weight 600
   > div > div.searchDesc
