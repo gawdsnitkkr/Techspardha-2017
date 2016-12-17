@@ -1,23 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <title>Techspardha'17</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="resources/css/search.css" rel="stylesheet">
+    <meta name="viewport" content="initial-scale=1,width=device-width">
     <script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/css/Main.css">
+    <link href="resources/css/search.css" rel="stylesheet">
     <script type="text/javascript" src="../node_modules/gsap/src/minified/TweenMax.min.js" defer></script>
     <script type="text/javascript" src="./resources/js/PathAnimate.js" defer></script>
+    <script type="text/javascript" src="resources/js/Main.js" defer></script>
     <script type="text/javascript" src="./resources/js/SearchBoxAnimate.js" defer></script>
 </head>
 <body>
+<section id="GalaxySection">
+    <svg id="GalaxySVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+        <g id="GalaxyContainer">
+            <g class="Category">
+                <text text-anchor="middle" x="0" y="0">Category</text>
+                <g class="Event">
+                    <g class="Star">
+                        <circle class="Shell" cx="12" cy="12" r="10"></circle>
+                        <circle class="Shell" cx="12" cy="12" r="8"></circle>
+                        <circle class="Shell" cx="12" cy="12" r="6"></circle>
+                        <circle class="Shell" cx="12" cy="12" r="4"></circle>
+                        <circle class="Core" cx="12" cy="12" r="4"></circle>
+                    </g>
+                    <text text-anchor="middle" x="12" y="44">
+                        Event
+                    </text>
+                </g>
+            </g>
+        </g>
+    </svg>
+</section>
+<section id="EventSection">
+    <svg id="EventSVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+        <g class="Star">
+            <circle class="Shell" cx="12" cy="12" r="10" style="fill: #E7AB3B;"></circle>
+            <circle class="Shell" cx="12" cy="12" r="8" style="fill: #E7AB3B;"></circle>
+            <circle class="Shell" cx="12" cy="12" r="6" style="fill: #E7AB3B;"></circle>
+            <circle class="Shell" cx="12" cy="12" r="4" style="fill: #E7AB3B;"></circle>
+            <circle class="Core" cx="12" cy="12" r="4" style="fill: #E7AB3B;"></circle>
+        </g>
+    </svg>
+    <div id="EventContentContainer" class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <h1 id="EventContentTitle">Event</h1>
+                <h3 id="EventContentCategory">Category</h3>
+                <p id="EventContentDescription">
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+                    industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type
+                    and scrambled it to make a type specimen book. It has survived not only five centuries, but also the
+                    leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s
+                    with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop
+                    publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
 <div id="mainMenuWrapper">
     <aside id="searchMenu">
         <div id="primaryMenuContainer">
             <div id="primaryMenuTabs">
-                <div id="categoryTabButton" class="tab activeTab">Categories</div>
-                <div id="resultTabButton" class="tab">Search Results</div>
+                <div id="categoryTabButton" class="tab activeTab">Categories<div class="tabLine"></div></div>
+                <div id="resultTabButton" class="tab">Search Results<div class="tabLine"></div></div>
             </div>
             <div id="primaryOptionWrapper">
                 <div id="primaryMenuOptions" class="row"></div>

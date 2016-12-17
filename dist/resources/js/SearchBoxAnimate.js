@@ -185,29 +185,33 @@
             DisplayPrimaryOption: function () {
                 DOM.categoryTab.addClass('activeTab');
                 DOM.searchTab.removeClass('activeTab');
+                DOM.categoryTab.html('Categories<div class="tabLine"></div>');
                 DOM.PrimaryMenuContainer.html('');
                 Var.primaryMenuData = Var.mainMenuData;
                 $(Var.primaryMenuData).each(function (a) {
                     var option = $('<div id="'+Var.primaryMenuData[a]+'" ' +
-                        'class="menuOption col-md-4"><span class="category">'
-                        + Var.primaryMenuData[a] + '</div>')
-                        .bind('click', function(target){
-                            var category = $('span.category', target.currentTarget).html();
-                            console.log(category);
-                            if (category != "") {
-                                var n = Var.categorizedEvents[category].length;
-                                DOM.PrimaryMenuContainer.html('');
-                                for (var i = 1; i < n; i++) {
-                                    DOM.PrimaryMenuContainer.append(
-                                        '<div class="menuOption col-md-4"><span class="category">' + Var.categorizedEvents[category][i] + '</div>'
-                                    );
-                                }
-                                Functions.RevealMenuOptions();
-                            }
-                        });
+                                    'class="menuOption"><span class="category">'
+                                    + Var.primaryMenuData[a] + '</div>')
+                                    .bind('click', function(target){
+                                        Functions.DisplayEvents(target);
+                                });
                     DOM.PrimaryMenuContainer.append(option);
                 });
                 Functions.RevealMenuOptions();
+            },
+            DisplayEvents: function(target){
+                var category = $('span.category', target.currentTarget).html();
+                if (category != "") {
+                    var n = Var.categorizedEvents[category].length;
+                    DOM.categoryTab.html('<span style="position: absolute; left: 10px; top: 18px; opacity: 0.5; font-size: 15px;" class="glyphicon glyphicon-chevron-left"></span>'+category+'<div class="tabLine"></div>');
+                    DOM.PrimaryMenuContainer.html('');
+                    for (var i = 1; i < n; i++) {
+                        DOM.PrimaryMenuContainer.append(
+                            '<div class="menuEventOption">' + Var.categorizedEvents[category][i] + '<span class="eventCorner"></span></div>'
+                        );
+                    }
+                    Functions.RevealMenuOptions();
+                }
             },
             RandomEventGenerator: function () {
                 $.each(Var.mainMenuData, function (e) {
@@ -241,9 +245,10 @@
             },
             RenderSearchResults: function (data) {
                 Var.primaryMenuData = data;
+                DOM.categoryTab.html('Categories<div class="tabLine"></div>');
                 if (data.length == 0) {
                     DOM.PrimaryMenuContainer.append(
-                        '<h3 style="opacity: 0.5; font-size: 40px;">No Results to Display</h3>'
+                        '<h3 style="opacity: 0.5; font-size: 20px;">No Results to Display</h3>'
                     );
                 } else {
                     DOM.PrimaryMenuContainer.append(DOM.searchAnimation);
@@ -257,7 +262,7 @@
                             min: this.Start.substr(14,2) + ' ' + (hour >= 12 ? 'pm':'am')
                         };
                         DOM.PrimaryMenuContainer.append(
-                            '<div class="searchOption col-md-11">' +
+                            '<div class="searchOption col-md-12">' +
                                 '<div class="row">' +
                                     '<div class="searchNameInfo">' +
                                         '<div class="searchName">' + this.Name + '' +

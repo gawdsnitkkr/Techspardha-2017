@@ -1,10 +1,5 @@
 /*functions*/
 /*Styles*/
-body {
-  background: #547980;
-  margin: 0;
-  padding: 0;
-}
 aside#searchMenu {
   position: absolute;
   left: -100%;
@@ -80,13 +75,27 @@ div#primaryMenuTabs {
 div#primaryMenuTabs > div.tab {
   margin-top: 1px;
   display: inline-block;
-  padding-top: 10px;
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-bottom: 10px;
-  font-size: 20px;
+  width: 50%;
+  margin-left: -9px;
+  text-align: center;
+  padding: 10px;
+  padding-top: 15px;
+  padding-bottom: 12px;
+  font-size: 15px;
   opacity: 0.3;
   cursor: pointer;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -ms-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  transition: all 0.2s;
+}
+div#primaryMenuTabs > div.tab > div.tabLine {
+  position: absolute;
+  bottom: -4px;
+  height: 4px;
+  width: 0;
+  background-color: #99b898;
   -webkit-transition: all 0.2s;
   -moz-transition: all 0.2s;
   -ms-transition: all 0.2s;
@@ -96,9 +105,19 @@ div#primaryMenuTabs > div.tab {
 div#primaryMenuTabs > div.tab:hover {
   opacity: 1;
 }
+div#primaryMenuTabs > div.tab:hover > span {
+  margin-left: 10px;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -ms-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  transition: all 0.2s;
+}
 div#primaryMenuTabs > div.activeTab {
   opacity: 1;
-  border-bottom: solid 4px #99b898;
+}
+div#primaryMenuTabs > div.activeTab > div.tabLine {
+  width: 100%;
 }
 div#primaryOptionWrapper {
   position: absolute;
@@ -109,6 +128,7 @@ div#primaryOptionWrapper {
   overflow-y: scroll;
 }
 div#primaryMenuOptions {
+  padding-top: 20px;
   padding-left: 10px;
   padding-right: 10px;
   padding-bottom: 20px;
@@ -118,15 +138,16 @@ div#primaryMenuOptions {
 }
 div#primaryMenuOptions > div.menuOption {
   position: relative;
-  margin-top: 10px;
+  margin: 20px;
   display: inline-block;
-  min-width: 200px;
+  width: 250px;
   opacity: 0;
   padding: 20px;
-  font-size: 20px;
   font-weight: 600;
+  font-size: 20px;
   border-radius: 5px;
   cursor: pointer;
+  overflow-x: hidden;
 }
 div#primaryMenuOptions > div.menuOption:hover {
   background: #2a363b;
@@ -141,6 +162,41 @@ div#primaryMenuOptions > div.menuOption:hover {
   -o-transition: all 0.2s;
   transition: all 0.2s;
 }
+div.menuEventOption {
+  position: relative;
+  margin: 20px;
+  display: inline-block;
+  width: 250px;
+  opacity: 0;
+  font-weight: 600;
+  padding: 20px;
+  font-size: 15px;
+  border-radius: 2px;
+  border: 1px solid rgba(255,255,255,0.5);
+  cursor: pointer;
+  overflow: hidden;
+}
+div.menuEventOption:hover {
+  background: #2a363b;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -ms-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  transition: all 0.2s;
+}
+div.menuEventOption > span.eventCorner {
+  width: 10px;
+  height: 10px;
+  background-color: rgba(255,255,255,0.5);
+  position: absolute;
+  bottom: -5px;
+  right: -5px;
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
 div.searchOption {
   margin-top: 10px;
   opacity: 0;
@@ -150,6 +206,9 @@ div.searchOption {
   cursor: pointer;
   height: 82px;
   overflow: hidden;
+}
+div.searchOption > div {
+  text-align: center;
 }
 div.searchOption > div > div.searchNameInfo {
   padding: 5px;
@@ -176,11 +235,6 @@ div.searchOption > div > div > div > span.searchDate {
 div.searchOption:hover {
   background: #2a363b;
   text-shadow: 0 1px 2px rgba(3,3,11,0.5);
-  -webkit-transform: scale(0.95);
-  -moz-transform: scale(0.95);
-  -ms-transform: scale(0.95);
-  -o-transform: scale(0.95);
-  transform: scale(0.95);
   -webkit-transition: all 0.2s;
   -moz-transition: all 0.2s;
   -ms-transition: all 0.2s;
