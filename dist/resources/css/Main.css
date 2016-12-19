@@ -348,6 +348,16 @@ p {
   height: 100vh;
   background-color: rgba(0,0,0,0.7);
 }
+#EventClose {
+  cursor: pointer;
+}
+#EventClose svg {
+  float: right;
+  width: 3.2rem;
+  height: 3.2rem;
+  fill: #e84a5f;
+  margin-top: -3rem;
+}
 @-moz-keyframes EventSVGStarShellAnimation {
   0% {
     opacity: 0;

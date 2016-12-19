@@ -85,7 +85,7 @@
             MoveGalaxyContainerBy: function (dX, dY) {
                 dX = Math.abs(dX) < Globals.MouseDeltaThreshold ? 0 : dX;
                 dY = Math.abs(dY) < Globals.MouseDeltaThreshold ? 0 : dY;
-                t.to($Objects.GalaxyContainer, 1, {
+                t.to($Objects.GalaxyContainer, 2, {
                     x: (Globals.GalaxyContainerX += dX),
                     y: (Globals.GalaxyContainerY += dY),
                     ease: Power4.easeOut
@@ -173,7 +173,7 @@
                     opacity: 1,
                     scale: 1,
                     transformOrigin: '50% 50% 0',
-                    ease: Power4.easeIn,
+                    ease: Power4.easeOut,
                     onComplete: function () {
                         Globals.GalaxyContainerTransiting = false;
                         Globals.GalaxyContainerShowing = true;
@@ -244,7 +244,6 @@
                     delay: halfDuration,
                     onComplete: callback
                 });
-                console.log($Objects.EventContentContainerElements);
                 t.staggerFromTo($Objects.EventContentContainerElements, halfDuration, {
                     opacity: 0,
                     top: 50
@@ -266,12 +265,10 @@
                 callback = callback || undefined;
                 t.fromTo($Objects.EventSection, duration, {
                     display: 'block',
-                    opacity: 0,
-                    top: '100vh'
+                    opacity: 1
                 }, {
-                    opacity: 1,
-                    top: 0,
-                    ease: Power4.easeIn,
+                    opacity: 0,
+                    ease: Power4.easeOut,
                     onComplete: function () {
                         $Objects.EventSVGStarShells.css('display', 'none');
                         $Objects.EventSection.css('display', 'none');
@@ -280,6 +277,10 @@
                         }
                     }
                 });
+            },
+            EventCloseOnClick: function () {
+                Functions.HideEventSection();
+                Functions.ShowGalaxyContainer();
             },
             /**
              * Extends the response object of the Site's API call so as to maintain consistency.
@@ -589,7 +590,8 @@
     });
 
     $(d)
-        .on('click', '.Event', Functions.EventOnClick);
+        .on('click', '.Event', Functions.EventOnClick)
+        .on('click', '#EventClose', Functions.EventCloseOnClick);
 
     $(w)
         .on('resize', Functions.WindowOnResize)
