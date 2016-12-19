@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Techspardha'17</title>
+    <meta name="viewport" content="initial-scale=1,width=device-width">
+    <script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="resources/css/Main.css">
+    <link href="resources/css/search.css" rel="stylesheet">
+    <script type="text/javascript" src="../node_modules/gsap/src/minified/TweenMax.min.js" defer></script>
+    <script type="text/javascript" src="./resources/js/PathAnimate.js" defer></script>
+    <script type="text/javascript" src="resources/js/Main.js" defer></script>
+    <script type="text/javascript" src="./resources/js/SearchBoxAnimate.js" defer></script>
+</head>
+<body>
+<section id="GalaxySection">
+    <svg id="GalaxySVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+        <g id="GalaxyContainer">
+            <g class="Category">
+                <text text-anchor="middle" x="0" y="0">Category</text>
+                <g class="Event">
+                    <g class="Star">
+                        <circle class="Shell" cx="12" cy="12" r="10"></circle>
+                        <circle class="Shell" cx="12" cy="12" r="8"></circle>
+                        <circle class="Shell" cx="12" cy="12" r="6"></circle>
+                        <circle class="Shell" cx="12" cy="12" r="4"></circle>
+                        <circle class="Core" cx="12" cy="12" r="4"></circle>
+                    </g>
+                    <text text-anchor="middle" x="12" y="44">
+                        Event
+                    </text>
+                </g>
+            </g>
+        </g>
+    </svg>
+</section>
+<section id="EventSection">
+    <svg id="EventSVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+        <g class="Star">
+            <circle class="Shell" cx="12" cy="12" r="10" style="fill: #E7AB3B;"></circle>
+            <circle class="Shell" cx="12" cy="12" r="8" style="fill: #E7AB3B;"></circle>
+            <circle class="Shell" cx="12" cy="12" r="6" style="fill: #E7AB3B;"></circle>
+            <circle class="Shell" cx="12" cy="12" r="4" style="fill: #E7AB3B;"></circle>
+            <circle class="Core" cx="12" cy="12" r="4" style="fill: #E7AB3B;"></circle>
+        </g>
+    </svg>
+    <div id="EventContentContainer" class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <h1 id="EventContentTitle">Event</h1>
+                <h3 id="EventContentCategory">Category</h3>
+                <p id="EventContentDescription">
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
+                    industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type
+                    and scrambled it to make a type specimen book. It has survived not only five centuries, but also the
+                    leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s
+                    with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop
+                    publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+<div id="mainMenuWrapper">
+    <aside id="searchMenu">
+        <div id="primaryMenuContainer">
+            <div id="primaryMenuTabs">
+                <div id="categoryTabButton" class="tab activeTab">Categories<div class="tabLine"></div></div>
+                <div id="resultTabButton" class="tab">Search Results<div class="tabLine"></div></div>
+            </div>
+            <div id="primaryOptionWrapper">
+                <div id="primaryMenuOptions" class="row"></div>
+            </div>
+        </div>
+    </aside>
+    <div id="searchInput">
+        <svg cursor="pointer" id="searchBarSVG" height="40" width="250" viewBox="0 0 250 40">
+            <g id="MenuIcon" stroke-linejoin="round" transform="matrix(.81020 0 0 .87264 3.9882 -880.29)" stroke="#fff"
+               stroke-width="2">
+                <path id="menuTopLine" d="m3.4532 1011.17h50"/>
+                <path id="menuBottomLine" d="m3.4532 1052.5h50"/>
+                <path id="searchHandle" d="m 3.4532,1031.6817 50,0"/>
+            </g>
+            <g id="searchBoxBorder" transform="matrix(.81018 0 0 .87129 3.9861 -878.81)" stroke-width="2"
+               stroke="#ffffff" display="none" fill="none">
+                <path id="path4445" d="m 20.7,1010.7 -23.56,0 0,21.4776"/><!--9e8989-->
+                <path id="path4449" d="m 21.763,1052.55 -24.5935,0 0,-20.4454"/><!--5bb7b6-->
+                <path id="path4451" d="m 20.219,1010.7 281.45,0 0,21.092"/><!--d25454-->
+                <path id="path4453" d="m 20.83,1052.55 280.79,0 0,-20.8402"/><!--6d5555-->
+            </g>
+            <path id="magnifying"
+                  d="m 18.916958,23.257858 c -3.140438,-3.140438 -3.140438,-8.232094 0,-11.372532 3.140438,-3.1404479 8.232095,-3.1404479 11.372533,0 3.140438,3.140438 3.140438,8.232094 0,11.372532 -3.140438,3.140438 -8.232095,3.140438 -11.372533,0"
+                  style="fill: none; opacity:0; stroke:#ffffff; stroke-width: 1.5"></path>
+            <rect id="menuButtonOverlay" y="5" x="11" height="32" width="32" fill="red" opacity="0"></rect>
+        </svg>
+        <input id="searchBox" type="text" placeholder="Search"/>
+    </div>
+    <div id="menuClose">
+        <span class="glyphicon glyphicon-remove"></span>
+    </div>
+</div>
+</body>
+</html>

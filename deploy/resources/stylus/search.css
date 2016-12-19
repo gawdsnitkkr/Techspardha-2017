@@ -1,0 +1,114 @@
+/*functions*/
+/*Styles*/
+body {
+  background: #547980;
+  margin: 0;
+  padding: 0;
+}
+aside#searchMenu {
+  position: absolute;
+  width: 0;
+  height: 100vh;
+  overflow: hidden;
+  padding: 0;
+  color: #e5fcc2;
+  background: #03030b;
+}
+#searchBarSVG {
+  position: fixed;
+  margin-left: 20px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+#searchBox {
+  display: none;
+  position: fixed;
+  margin-top: 19px;
+  margin-left: 60px;
+  color: #9de0ad;
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-weight: 100;
+  height: 40px;
+  width: 210px;
+}
+#searchBox:focus {
+  outline: none;
+}
+div#primaryMenuContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  top: 100px;
+  overflow-y: scroll;
+}
+div#primaryMenuOptions {
+  position: relative;
+  width: 100%;
+}
+div#primaryMenuOptions > div.menuOption {
+  position: relative;
+  width: 100%;
+  padding: 10px;
+  padding-left: 20px;
+  cursor: pointer;
+}
+div#primaryMenuOptions > div.menuOption:hover {
+  padding-left: 30px;
+  width: 300px;
+  background: #2a363b;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -ms-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  transition: all 0.2s;
+}
+div#primaryMenuOptions > div.menuOption:hover > span.glyphicon {
+  margin-right: 10px;
+  opacity: 1;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -ms-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  transition: all 0.2s;
+}
+div#primaryMenuOptions > div.menuOption > span.glyphicon {
+  float: right;
+  opacity: 0;
+  margin-right: 0;
+  color: #fff;
+}
+div#secondaryMenu {
+  position: absolute;
+  padding-top: 100px;
+  left: -300px;
+  top: 0;
+  width: 300px;
+  height: 100vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  color: #9de0ad;
+  background: #2a363b;
+}
+div#secondaryMenu > div#secondaryMenuOptions {
+  overflow: hidden;
+}
+div#secondaryMenu > div#secondaryMenuOptions > div.secMenuOption {
+  position: relative;
+  width: 100%;
+  padding: 10px;
+  padding-left: 20px;
+  cursor: pointer;
+}
+div#secondaryMenu > div#secondaryMenuOptions > div.secMenuOption:hover {
+  padding-left: 30px;
+  width: 300px;
+  background: #99b898;
+  color: #2a363b;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -ms-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  transition: all 0.2s;
+}

@@ -85,4 +85,23 @@
   height: 3.2rem;
   fill: #E84A5F;
   margin-top: -3rem;
+  transition: fill 0.3s ease-in-out;
+}
+
+#EventClose svg path {
+  transition: transform 0.3s ease-in-out;
+  transform: rotate(0deg) scale(1);
+  transform-origin: 50% 50% 0;
+}
+
+#EventClose:hover svg {
+  fill: #ff4f64;
+}
+
+#EventClose:hover svg path.InnerCross {
+  transform: rotate(90deg) scale(0.8);
+}
+
+#EventClose:active svg path.OuterCircle {
+  transform: scale(0.8);
 }
