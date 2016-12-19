@@ -16,7 +16,6 @@
   ],
   "main": "index.js",
   "dependencies": {
-    "angular2": "latest",
     "jquery": "latest",
     "gsap": "latest",
     "bootstrap": "latest"

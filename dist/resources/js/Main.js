@@ -369,6 +369,7 @@
     var $Cache = {},
         $Objects = {},
         Globals = {
+            SiteAddress: 'http://anshulmalik.me/api',
             WindowWidth: w.innerWidth,
             WindowHeight: w.innerHeight,
             WindowHalfWidth: w.innerWidth / 2,
@@ -385,6 +386,10 @@
             EventSVGStarScale: 100,
             EventSVGStarHalfSize: 400, // ActualSize * EventSVGStarScale
             EventDefaultProperties: {
+                /** @type Number */
+                id: 0,
+                /** @type Number */
+                societyID: 0,
                 /** @type String */
                 title: 'Event',
                 /** @type String */
@@ -393,16 +398,14 @@
                 delay: 0
             },
             CategoryDefaultProperties: {
+                /** @type Number */
+                id: 0,
                 /** @type String */
                 title: 'Category'
             },
             CategoryDiameter: 512,
             /** @type Point[] */
-            CategoriesPosition: [
-                new Point(512, 360),
-                new Point(128, 128),
-                new Point(1024, 512)
-            ],
+            CategoriesPosition: [],
             /** @type Category[] */
             Categories: []
         },
@@ -625,6 +628,83 @@
                         }
                     }
                 });
+            },
+            /**
+             * Extends the response object of the Site's API call so as to maintain consistency.
+             * @param {Object} response - Response object of the Site's API call.
+             */
+            ExtendResponse: function (response) {
+                return $.extend({
+                    status: {
+                        code: 200,
+                        message: 'SUCCESS'
+                    },
+                    data: []
+                }, response);
+            },
+            Initialize: function () {
+                $.ajax({
+                    url: Globals.SiteAddress + '/categories',
+                    type: 'GET',
+                    beforeSend: function () {
+
+                    },
+                    success: function (response) {
+                        response = Functions.ExtendResponse(response);
+                        if (response.status.code === 200) {
+                            var categories = response.data,
+                                categoryCount = categories.length;
+                            $.ajax({
+                                url: Globals.SiteAddress + '/events',
+                                type: 'GET',
+                                beforeSend: function () {
+
+                                },
+                                success: function (response) {
+                                    response = Functions.ExtendResponse(response);
+                                    if (response.status.code === 200) {
+                                        var events = response.data,
+                                            eventCount = events.length,
+                                            event,
+                                            categoryEventMap = {},
+                                            categoryIndex,
+                                            category;
+                                        Globals.CategoriesPosition = [];
+                                        // Initialize the Category-Event Map.
+                                        for (categoryIndex = 0; categoryIndex < categoryCount; categoryIndex++) {
+                                            categoryEventMap[categories[categoryIndex].Id] = [];
+                                            Globals.CategoriesPosition.push(new Point(
+                                                (Math.random() - 0.5) * 2048 + Globals.WindowHalfWidth,
+                                                (Math.random() - 0.5) * 2048 + Globals.WindowHalfHeight));
+                                        }
+                                        // Populate the Category-Event Map.
+                                        for (var eventIndex = 0; eventIndex < eventCount; eventIndex++) {
+                                            event = events[eventIndex];
+                                            categoryEventMap[event.CategoryId].push({
+                                                id: event.Id,
+                                                societyID: event.SocietyId,
+                                                title: event.Name
+                                            });
+                                        }
+                                        Globals.Categories = [];
+                                        for (categoryIndex = 0; categoryIndex < categoryCount; categoryIndex++) {
+                                            category = categories[categoryIndex];
+                                            Globals.Categories.push(new Category(categoryIndex, {
+                                                title: category.Name
+                                            }, categoryEventMap[category.Id]));
+                                        }
+                                    }
+                                },
+                                complete: function () {
+
+                                }
+                            });
+                        }
+                    },
+                    complete: function () {
+
+                    }
+                });
             }
         };
 
@@ -843,49 +923,6 @@
         $Objects.EventContentCategory = $('#EventContentCategory', $Objects.EventContentContainer);
         $Objects.EventContentDescription = $('#EventContentDescription', $Objects.EventContentContainer);
 
-        Globals.Categories.push(new Category(0, 'Category', [
-            {
-                title: 'Red'
-            },
-            {
-                title: 'Blue'
-            },
-            {
-                title: 'Green'
-            },
-            {
-                title: 'Yellow'
-            }
-        ]));
-        Globals.Categories.push(new Category(1, 'Category', [
-            {
-                title: 'Red'
-            },
-            {
-                title: 'Blue'
-            },
-            {
-                title: 'Green'
-            },
-            {
-                title: 'Yellow'
-            }
-        ]));
-        Globals.Categories.push(new Category(2, 'Category', [
-            {
-                title: 'Red'
-            },
-            {
-                title: 'Blue'
-            },
-            {
-                title: 'Green'
-            },
-            {
-                title: 'Yellow'
-            }
-        ]));
-
         Functions.WindowOnResize();
         Globals.GalaxyMovementAnimationFrameID = RequestAnimationFrame(Functions.GalaxyMovementAnimationLoop);
         /*
@@ -894,6 +931,9 @@
          in the GreenSockJS documentation.
          */
         $Objects.EventSection.css('display', 'none');
+
+        Functions.Initialize();
+
     });
 
     $(d)
