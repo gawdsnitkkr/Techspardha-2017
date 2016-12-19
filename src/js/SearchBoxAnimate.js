@@ -1,8 +1,10 @@
 /**
  * Created by Kaushik on 11/2/2016.
  */
+
 (function (d, dO, w, $, t) {
-    var Var = {
+    var Globals = {},
+        Var = {
             isCollapsed: true,
             isCollapsing: false,
             isSecondaryCollapsed: true,
@@ -41,7 +43,7 @@
             },
             primaryMenuData: [],
             searchResult: [],
-            primaryUrl: 'http://anshulmalik.me'
+            primaryUrl: 'http://anshulmalik.me/api'
         },
         DOM = {
             SearchSVG: null,
@@ -187,11 +189,11 @@
                 DOM.searchTab.removeClass('activeTab');
                 DOM.categoryTab.html('Categories<div class="tabLine"></div>');
                 DOM.PrimaryMenuContainer.html('');
-                Var.primaryMenuData = Var.mainMenuData;
+                Var.primaryMenuData = Globals.Categories;
                 $(Var.primaryMenuData).each(function (a) {
-                    var option = $('<div id="'+Var.primaryMenuData[a]+'" ' +
+                    var option = $('<div id="category'+ Var.primaryMenuData[a].Id +'" ' +
                                     'class="menuOption"><span class="category">'
-                                    + Var.primaryMenuData[a] + '</div>')
+                                    + Var.primaryMenuData[a].Name + '</div>')
                                     .bind('click', function(target){
                                         Functions.DisplayEvents(target);
                                 });
@@ -200,14 +202,24 @@
                 Functions.RevealMenuOptions();
             },
             DisplayEvents: function(target){
-                var category = $('span.category', target.currentTarget).html();
+                var category = $('span.category', target.currentTarget).html(),
+                    id = $(target.currentTarget).attr('id').substr(8);
+                console.log(id);
                 if (category != "") {
-                    var n = Var.categorizedEvents[category].length;
-                    DOM.categoryTab.html('<span style="position: absolute; left: 10px; top: 18px; opacity: 0.5; font-size: 15px;" class="glyphicon glyphicon-chevron-left"></span>'+category+'<div class="tabLine"></div>');
                     DOM.PrimaryMenuContainer.html('');
-                    for (var i = 1; i < n; i++) {
+                    DOM.categoryTab.html('<span style="position: absolute; left: 10px; top: 18px; opacity: 0.5; font-size: 15px;" class="glyphicon glyphicon-chevron-left"></span>'+category+'<div class="tabLine"></div>');
+                    var isEmpty = true;
+                    for (var i = 0; i < Globals.Events.length; i++){
+                        if(Globals.Events[i].CategoryId == id){
+                            DOM.PrimaryMenuContainer.append(
+                                '<div class="menuEventOption">' + Globals.Events[i].Name + '<span class="eventCorner"></span></div>'
+                            );
+                            isEmpty = false;
+                        }
+                    }
+                    if(isEmpty){
                         DOM.PrimaryMenuContainer.append(
-                            '<div class="menuEventOption">' + Var.categorizedEvents[category][i] + '<span class="eventCorner"></span></div>'
+                            '<h3 style="opacity: 0.5; font-size: 20px;">Events coming soon</h3>'
                         );
                     }
                     Functions.RevealMenuOptions();
@@ -231,11 +243,9 @@
                     Functions.RenderSearchResults(Var.searchResult);
                 }
                 else {
-                    var url = 'http://anshulmalik.me/api/events?query=' + searchString;
                     $.ajax({
-                        url: url,
-                        dataType: 'json',
-                        type: 'get',
+                        url: Var.primaryUrl + '/events?query=' + searchString,
+                        type: 'GET',
                         success: function (data) {
                             Var.searchResult = data['data'];
                             Functions.RenderSearchResults(Var.searchResult);
@@ -253,7 +263,6 @@
                 } else {
                     DOM.PrimaryMenuContainer.append(DOM.searchAnimation);
                     $(Var.primaryMenuData).each(function () {
-                        console.log(this);
                         var hour = parseInt(this.Start.substr(11,2));
                         var date = {
                             day: this.Start.substr(8,2),
@@ -261,24 +270,23 @@
                             hour: hour > 12 ? (hour - 12) : hour,
                             min: this.Start.substr(14,2) + ' ' + (hour >= 12 ? 'pm':'am')
                         };
-                        DOM.PrimaryMenuContainer.append(
-                            '<div class="searchOption col-md-12">' +
-                                '<div class="row">' +
-                                    '<div class="searchNameInfo">' +
-                                        '<div class="searchName">' + this.Name + '' +
-                                            '<span class="searchDate">'
-                                            + '<span>' + date.day + '</span> ' + Functions.toMonth(date.month) + ', '
-                                            + '<span>' + date.hour + ':' + date.min + '</span>' +
-                                            '</span>' +
-                                        '</div>' +
-                                    '</div>' +
-                                    '<div class="searchDesc">'
-                                        + this.Description +
-                                    '</div>' +
-                                    '<div class="grad"></div>' +
-                                '</div>' +
-                            '</div>'
-                        );
+                        var searchResult = $('<div class="searchOption">' +
+                            '<div class="row">' +
+                            '<div class="searchNameInfo">' +
+                            '<div class="searchName">' + this.Name + '' +
+                            '<span class="searchDate">'
+                            + '<span>' + date.day + '</span> ' + Functions.toMonth(date.month) + ', '
+                            + '<span>' + date.hour + ':' + date.min + '</span>' +
+                            '</span>' +
+                            '</div>' +
+                            '</div>' +
+                            '<div class="searchDesc">'
+                            + this.Description +
+                            '</div>' +
+                            '<div class="grad"></div>' +
+                            '</div>' +
+                            '</div>');
+                        DOM.PrimaryMenuContainer.append(searchResult);
                     });
                     Functions.RevealMenuOptions();
                 }
@@ -292,10 +300,53 @@
                     opacity: 1,
                     ease: Back.easeOut
                 }, 0.1);
+            },
+            ExtendResponse: function (response) {
+                return $.extend({
+                    status: {
+                        code: 200,
+                        message: 'SUCCESS'
+                    },
+                    data: []
+                }, response);
+            },
+            Initialize: function () {
+                $.ajax({
+                    url: Var.primaryUrl + '/categories',
+                    type: 'GET',
+                    beforeSend: function () {
+
+                    },
+                    success: function (response) {
+                        response = Functions.ExtendResponse(response);
+                        if (response.status.code === 200) {
+                            Globals.Categories = response.data;
+                            $.ajax({
+                                url: Var.primaryUrl+ '/events',
+                                type: 'GET',
+                                beforeSend: function () {
+
+                                },
+                                success: function (response) {
+                                    response = Functions.ExtendResponse(response);
+                                    if (response.status.code === 200) {
+                                        Globals.Events = response.data;
+                                    }
+                                },
+                                complete: function () {
+
+                                }
+                            });
+                        }
+                    },
+                    complete: function () {
+
+                    }
+                });
             }
         };
     dO.ready(function () {
-        Functions.RandomEventGenerator();
+        Functions.Initialize();
         DOM.SearchSVG = $('svg#searchBarSVG');
         DOM.MainMenu = $('aside#searchMenu');
         DOM.MainMenuButton = $('#MenuIcon');

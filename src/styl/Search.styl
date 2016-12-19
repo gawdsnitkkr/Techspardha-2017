@@ -1,4 +1,4 @@
-@import '../../../src/styl/ColorPalette.styl'
+@import 'ColorPalette.styl'
 /*functions*/
 transition(prop, time)
   -webkit-transition: prop time
@@ -42,15 +42,20 @@ div#menuClose
   color $LightPink
   display none
   opacity 0.4
-  font-size 20px
+  height 30px
+  width 30px
   right 10px
-  top 10px
+  top 20px
   position fixed
   cursor pointer
   transition(all, 0.2s)
   &:hover
     opacity 1
     scaleTo(1.2)
+  > svg
+    height 30px
+    fill $LightPink
+    width 30px
 
 #searchBox
   display: none
@@ -169,10 +174,14 @@ div.menuEventOption
     rotateTo(45deg)
 
 div.searchOption
+  position relative
+  display inline-block
+  width 300px
+  margin 20px
   margin-top 10px
   opacity 0
   background-color rgba($DarkestBlue, 0.5)
-  font-size 20px
+  font-size 15px
   border-radius 5px
   cursor pointer
   height 82px
