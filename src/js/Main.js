@@ -59,7 +59,9 @@
             /** @type Point[] */
             CategoriesPosition: [],
             /** @type Category[] */
-            Categories: []
+            Categories: [],
+            CategoryIDToIndexMap: {},
+            EventIDToIndexMap: {}
         },
         Functions = {
             /**
@@ -321,11 +323,17 @@
                                             event,
                                             categoryEventMap = {},
                                             categoryIndex,
-                                            category;
+                                            category,
+                                            categoryID;
                                         Globals.CategoriesPosition = [];
+                                        Globals.CategoryIDToIndexMap = {};
                                         // Initialize the Category-Event Map.
                                         for (categoryIndex = 0; categoryIndex < categoryCount; categoryIndex++) {
-                                            categoryEventMap[categories[categoryIndex].Id] = [];
+                                            categoryID = categories[categoryIndex].Id;
+                                            categoryEventMap[categoryID] = [];
+                                            // Will be needed later to get Category object from the Category ID
+                                            // retrieved by the Site's API.
+                                            Globals.CategoryIDToIndexMap[categoryID] = categoryIndex;
                                             Globals.CategoriesPosition.push(new Point(
                                                 (Math.random() - 0.5) * 2048 + Globals.WindowHalfWidth,
                                                 (Math.random() - 0.5) * 2048 + Globals.WindowHalfHeight));
@@ -340,6 +348,8 @@
                                             });
                                         }
                                         Globals.Categories = [];
+                                        // This will be populated by the constructor of the Category Object.
+                                        Globals.EventIDToIndexMap = {};
                                         for (categoryIndex = 0; categoryIndex < categoryCount; categoryIndex++) {
                                             category = categories[categoryIndex];
                                             Globals.Categories.push(new Category(categoryIndex, {
@@ -358,8 +368,32 @@
 
                     }
                 });
+            },
+            /**
+             * Fetches the Category Object of the Category based on the Category ID given by the Site's API.
+             * @param {Number} categoryID - Category ID of the Category to be fetched.
+             * @return Category
+             */
+            GetCategoryFromID: function (categoryID) {
+                return Globals.Categories[Globals.CategoryIDToIndexMap[categoryID]];
+            },
+            /**
+             * Fetches the Event Object of the Event based on the Category ID and the Event ID given by the Site's API.
+             * @param {Number} categoryID - Category ID of the Category to be fetched.
+             * @param {Number} eventID - Event ID of the Event to be fetched.
+             * @return Event
+             */
+            GetEventFromID: function (categoryID, eventID) {
+                return Functions.GetCategoryFromID(categoryID).events[Globals.EventIDToIndexMap[eventID]];
             }
         };
+
+    // Give global (outside the scope of this anonymous function) reference to the public methods.
+    w.GetCategoryFromID = Functions.GetCategoryFromID;
+    w.GetEventFromID = Functions.GetEventFromID;
+
+    // Give global reference to the public variables and properties.
+    w.Categories = Globals.Categories;
 
     /**
      * Category entity.
@@ -409,9 +443,15 @@
             this.clearEvents();
             var events = this.events,
                 eventCount = eventPropertiesArray.length,
-                eventIndex = 0;
+                eventIndex = 0,
+                eventProperty;
             for (; eventIndex < eventCount; eventIndex++) {
-                events.push(new Event(this, eventIndex, eventPropertiesArray[eventIndex]));
+                eventProperty = eventPropertiesArray[eventIndex];
+                // Will be need later to get Event object from EventID and CategoryID in O(1) time.
+                // Note : Different Events will have the same index, and hence it cannot be used alone to identify
+                // an event. Instead the combination of Category ID and Event ID is used.
+                Globals.EventIDToIndexMap[eventProperty.id] = eventIndex;
+                events.push(new Event(this, eventIndex, eventProperty));
             }
             return this;
         },
@@ -485,6 +525,8 @@
             }
         }
     };
+    // Give global reference to the Category Object.
+    w.Category = Category;
 
     /**
      * Event entity.
@@ -554,6 +596,8 @@
             return this;
         }
     };
+    // Give global reference to the Event Object.
+    w.Event = Event;
 
     $(function () {
 

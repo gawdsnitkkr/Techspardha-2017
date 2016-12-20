@@ -909,6 +909,10 @@
         $Objects.GalaxyContainer = $('#GalaxyContainer', $Objects.GalaxySVG);
         // Cache .Event element and remove the original.
         $Cache.Event = $Objects.GalaxyContainer.find('.Event').clone();
+        // Cross-Browser Fix for transform-origin not getting applied correctly.
+        t.set($Cache.Event.find('.Shell, .Core'), {
+            transformOrigin: '50% 50% 0'
+        });
         $Objects.GalaxyContainer.find('.Event').remove();
         // Cache .Category element and remove the original.
         $Cache.Category = $Objects.GalaxyContainer.find('.Category').clone();
