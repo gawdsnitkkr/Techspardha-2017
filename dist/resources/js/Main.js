@@ -1253,6 +1253,7 @@
                         type: 'GET',
                         success: function (data) {
                             Var.searchResult = data.data;
+                            console.log(Var.searchResult);
                             Functions.RenderSearchResults(Var.searchResult);
                         }
                     });
@@ -1268,7 +1269,7 @@
                     // DOM.searchAnimation not defined, verify this.
                     // $Object.PrimaryMenuContainer.append(DOM.searchAnimation);
                     // Try not to use $.each() as it is very slow, convert the logic to for () {...} loop.
-                    for(var i = 0; i < Var.primaryMenuData; i++){
+                    for(var i = 0; i < Var.primaryMenuData.length; i++){
                         var $this = Var.primaryMenuData[i],
                             hour = parseInt($this.Start.substr(11, 2)),
                             date = {
