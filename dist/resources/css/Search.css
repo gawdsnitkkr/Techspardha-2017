@@ -125,12 +125,11 @@ div#primaryMenuTabs > div.activeTab {
 div#primaryMenuTabs > div.activeTab > div.tabLine {
   width: 100%;
 }
-div#primaryMenuTabs > div > .glyphicon {
+div#primaryMenuTabs > div > span {
   position: absolute;
-  left: 10px;
-  top: 18px;
   opacity: 0.5;
-  font-size: 15px;
+  left: 15px;
+  top: 18px;
 }
 div#primaryOptionWrapper {
   position: absolute;
@@ -148,6 +147,10 @@ div#primaryMenuOptions {
   position: relative;
   text-align: center;
   height: auto;
+}
+div#primaryMenuOptions > h3 {
+  opacity: 0.5;
+  font-size: 20px;
 }
 div#primaryMenuOptions > div.menuOption {
   position: relative;
