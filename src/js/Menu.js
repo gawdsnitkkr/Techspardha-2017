@@ -372,6 +372,7 @@
             GetEventFromID: w.GetEventFromID
         };
     dO.ready(function () {
+        console.log(Globals.Categories);
         Functions.Initialize();
         DOM.SearchSVG = $('svg#searchBarSVG');
         DOM.MainMenu = $('aside#searchMenu');
