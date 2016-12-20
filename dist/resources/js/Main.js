@@ -8,6 +8,7 @@
  * @author Divya Mamgai <divyamamgai21@gmail.com>
  *
  */
+
 // Wrap Source - https://github.com/umdjs/umd/blob/master/templates/jqueryPlugin.js
 // Added window and document support. Made undefined alter-secured (not need in ES6).
 ;(function (factory, undefined) {
