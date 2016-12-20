@@ -125,6 +125,13 @@ div#primaryMenuTabs > div.activeTab {
 div#primaryMenuTabs > div.activeTab > div.tabLine {
   width: 100%;
 }
+div#primaryMenuTabs > div > .glyphicon {
+  position: absolute;
+  left: 10px;
+  top: 18px;
+  opacity: 0.5;
+  font-size: 15px;
+}
 div#primaryOptionWrapper {
   position: absolute;
   width: 100%;
