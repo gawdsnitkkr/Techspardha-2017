@@ -695,7 +695,12 @@
                                                 title: event.Name
                                             });
                                         }
-                                        Globals.Categories = [];
+                                        /*
+                                         The bellow statement is much faster, but since we need to maintain the
+                                         reference of the original array intact we have no choice.
+                                         w.Categories = Globals.Categories = [];
+                                         */
+                                        Globals.Categories.length = 0;
                                         // This will be populated by the constructor of the Category Object.
                                         Globals.EventIDToIndexMap = {};
                                         for (categoryIndex = 0; categoryIndex < categoryCount; categoryIndex++) {
@@ -978,6 +983,10 @@
         $Objects.EventSection.css('display', 'none');
 
         Functions.Initialize();
+
+        setInterval(function () {
+            console.log('Main.js', Globals.Categories, w.Categories);
+        }, 1000);
 
     });
 
@@ -1328,46 +1337,53 @@
             },
             Initialize: function () {
                 // Why are you doing a AJAX call? It has already been done Main.js.
-                $.ajax({
-                    url: Var.primaryUrl + '/categories',
-                    type: 'GET',
-                    beforeSend: function () {
-
-                    },
-                    success: function (response) {
-                        response = Functions.ExtendResponse(response);
-                        if (response.status.code === 200) {
-                            Globals.Categories = response.data;
-                            $.ajax({
-                                url: Var.primaryUrl + '/events',
-                                type: 'GET',
-                                beforeSend: function () {
-
-                                },
-                                success: function (response) {
-                                    response = Functions.ExtendResponse(response);
-                                    if (response.status.code === 200) {
-                                        Globals.Events = response.data;
-                                    }
-                                },
-                                complete: function () {
-
-                                }
-                            });
-                        }
-                    },
-                    complete: function () {
-
-                    }
-                });
+                // $.ajax({
+                //     url: Var.primaryUrl + '/categories',
+                //     type: 'GET',
+                //     beforeSend: function () {
+                //
+                //     },
+                //     success: function (response) {
+                //         response = Functions.ExtendResponse(response);
+                //         if (response.status.code === 200) {
+                //             Globals.Categories = response.data;
+                //             $.ajax({
+                //                 url: Var.primaryUrl + '/events',
+                //                 type: 'GET',
+                //                 beforeSend: function () {
+                //
+                //                 },
+                //                 success: function (response) {
+                //                     response = Functions.ExtendResponse(response);
+                //                     if (response.status.code === 200) {
+                //                         Globals.Events = response.data;
+                //                     }
+                //                 },
+                //                 complete: function () {
+                //
+                //                 }
+                //             });
+                //         }
+                //     },
+                //     complete: function () {
+                //
+                //     }
+                // });
             },
             // Public methods inherited from the Main.js
             GetCategoryFromID: w.GetCategoryFromID,
             GetEventFromID: w.GetEventFromID
         };
     dO.ready(function () {
+        // Works!
+        // Just make a Global (Public) Initialize function of this module which will be called from the Main.js code.
+        // Create a module AddCategory or something which will be automatically called when a new Category object
+        // is created to add the Category into the Menu's HTML Component.
+        // Note: Take a look at line 424, there your function will be called, just make that function accept a Category
+        // type object and then use its properties to create the Category Menu Button. (Category.properties has all
+        // that you need.)
         setInterval(function () {
-            console.log(Globals.Categories);
+            console.log('Menu.js', Globals.Categories, w.Categories);
         }, 1000);
         Functions.Initialize();
         DOM.SearchSVG = $('svg#searchBarSVG');

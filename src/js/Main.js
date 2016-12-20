@@ -347,7 +347,13 @@
                                                 title: event.Name
                                             });
                                         }
-                                        Globals.Categories = [];
+                                        /*
+                                         The bellow statement is much faster, but since we need to maintain the
+                                         reference of the original array intact we have no choice.
+                                         Well let's hope we do not have to call Initialize() more than once, :P.
+                                         w.Categories = Globals.Categories = [];
+                                         */
+                                        Globals.Categories.length = 0;
                                         // This will be populated by the constructor of the Category Object.
                                         Globals.EventIDToIndexMap = {};
                                         for (categoryIndex = 0; categoryIndex < categoryCount; categoryIndex++) {
@@ -630,6 +636,10 @@
         $Objects.EventSection.css('display', 'none');
 
         Functions.Initialize();
+
+        setInterval(function () {
+            console.log('Main.js', Globals.Categories, w.Categories);
+        }, 1000);
 
     });
 

@@ -334,38 +334,38 @@
             },
             Initialize: function () {
                 // Why are you doing a AJAX call? It has already been done Main.js.
-                $.ajax({
-                    url: Var.primaryUrl + '/categories',
-                    type: 'GET',
-                    beforeSend: function () {
-
-                    },
-                    success: function (response) {
-                        response = Functions.ExtendResponse(response);
-                        if (response.status.code === 200) {
-                            Globals.Categories = response.data;
-                            $.ajax({
-                                url: Var.primaryUrl + '/events',
-                                type: 'GET',
-                                beforeSend: function () {
-
-                                },
-                                success: function (response) {
-                                    response = Functions.ExtendResponse(response);
-                                    if (response.status.code === 200) {
-                                        Globals.Events = response.data;
-                                    }
-                                },
-                                complete: function () {
-
-                                }
-                            });
-                        }
-                    },
-                    complete: function () {
-
-                    }
-                });
+                // $.ajax({
+                //     url: Var.primaryUrl + '/categories',
+                //     type: 'GET',
+                //     beforeSend: function () {
+                //
+                //     },
+                //     success: function (response) {
+                //         response = Functions.ExtendResponse(response);
+                //         if (response.status.code === 200) {
+                //             Globals.Categories = response.data;
+                //             $.ajax({
+                //                 url: Var.primaryUrl + '/events',
+                //                 type: 'GET',
+                //                 beforeSend: function () {
+                //
+                //                 },
+                //                 success: function (response) {
+                //                     response = Functions.ExtendResponse(response);
+                //                     if (response.status.code === 200) {
+                //                         Globals.Events = response.data;
+                //                     }
+                //                 },
+                //                 complete: function () {
+                //
+                //                 }
+                //             });
+                //         }
+                //     },
+                //     complete: function () {
+                //
+                //     }
+                // });
             },
             // Public methods inherited from the Main.js
             GetCategoryFromID: w.GetCategoryFromID,
@@ -380,7 +380,7 @@
         // type object and then use its properties to create the Category Menu Button. (Category.properties has all
         // that you need.)
         setInterval(function () {
-            console.log(Globals.Categories);
+            console.log('Menu.js', Globals.Categories, w.Categories);
         }, 1000);
         Functions.Initialize();
         DOM.SearchSVG = $('svg#searchBarSVG');
