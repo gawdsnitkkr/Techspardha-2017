@@ -21,7 +21,7 @@
     var $Cache = {},
         $Objects = {},
         Globals = {
-            SiteAddress: 'http://anshulmalik.me/api',
+            APIAddress: 'http://anshulmalik.me/api',
             WindowWidth: w.innerWidth,
             WindowHeight: w.innerHeight,
             WindowHalfWidth: w.innerWidth / 2,
@@ -299,7 +299,7 @@
             },
             Initialize: function () {
                 $.ajax({
-                    url: Globals.SiteAddress + '/categories',
+                    url: Globals.APIAddress + '/categories',
                     type: 'GET',
                     beforeSend: function () {
 
@@ -310,7 +310,7 @@
                             var categories = response.data,
                                 categoryCount = categories.length;
                             $.ajax({
-                                url: Globals.SiteAddress + '/events',
+                                url: Globals.APIAddress + '/events',
                                 type: 'GET',
                                 beforeSend: function () {
 
@@ -399,6 +399,7 @@
     w.GetEventFromID = Functions.GetEventFromID;
 
     // Give global reference to the public variables and properties.
+    w.APIAddress = Globals.APIAddress;
     w.Categories = Globals.Categories;
 
     /**

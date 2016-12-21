@@ -11,6 +11,8 @@
             isCollapsing: false,
             isSecondaryCollapsed: true,
             isSecondaryCollapsing: false,
+            // IMPORTANT : Do not create new data, use the one provided via Main.js.
+            // Why use more memory and hurt the performance.
             mainMenuData: [
                 "Managerial",
                 "Quizzes",
@@ -27,6 +29,8 @@
                 "ElectroVolt",
                 "Robotic Challenge"
             ],
+            // Again use the data from the Main.js, don't create a copy since it makes the code way less modular
+            // and more difficult to debug.
             categorizedEvents: {
                 "Managerial": [],
                 "Quizzes": [],
@@ -45,7 +49,7 @@
             },
             primaryMenuData: [],
             searchResult: [],
-            primaryUrl: 'http://anshulmalik.me/api'
+            APIAddress: w.APIAddress
         },
         $Objects = {
             SearchSVG: null,
@@ -86,7 +90,6 @@
                     t.set($Objects.MainMenuCloseButton, {
                         display: 'block'
                     });
-
                     TweenLite.fromTo($Objects.MainMenuButton, 0.5, {
                         scale: 0.5
                     }, {
@@ -159,6 +162,9 @@
                             t.set($('#menuBottomLine'), {
                                 opacity: 1
                             });
+                            // Already cached object at $Objects.SearchInput.
+                            // Also cache all of the non-dynamic elements like #searchBoxBorder, since doing jQuery
+                            // selection over and over again hurts performance significantly.
                             t.set($('input#searchBox'), {
                                 display: 'none'
                             });
@@ -200,13 +206,25 @@
                 }
             },
             DisplayPrimaryOption: function () {
-                $Objects.categoryTab.addClass('activeTab');
-                $Objects.searchTab.removeClass('activeTab');
-                $Objects.categoryTab.html('Categories<div class="tabLine"></div>');
+                /*
+                 IMPORTANT : Why is this function being called more than once?
+                 Every time the user clicks the Category button all of the categories will be created again.
+                 Consider the complexity and performance degradation it will cause when there are
+                 100 categories. All this function should do is Hide or Show the Category Menu section
+                 not create and append new elements. Only one function should be initially to append the elements as
+                 it is a very costly operation.
+                 */
+                $Objects.CategoryTab.addClass('activeTab');
+                $Objects.SearchTab.removeClass('activeTab');
+                // Why use a div, when you can use a pseudo element, this again degrades the performance since the
+                // changing HTML is same as append.
+                $Objects.CategoryTab.html('Categories<div class="tabLine"></div>');
                 $Objects.PrimaryMenuContainer.html('');
+                // When you have Globals.Categories why are you then using creating a new redundant reference?
+                // This is just stupid XD XD XD
                 Globals.primaryMenuData = Globals.Categories;
-                for (var a = 0; a < Globals.primaryMenuData.length; a++){
-                    var option = $("<div id=\"menuCategory" + a + "\" class=\"menuOption\"><span id = \"MenuCategory"+ a +"\" class=\"category\">" + Globals.primaryMenuData[a].$title[0].innerHTML + "</div>")
+                for (var a = 0; a < Globals.primaryMenuData.length; a++) {
+                    var option = $("<div id=\"menuCategory" + a + "\" class=\"menuOption\"><span id = \"MenuCategory" + a + "\" class=\"category\">" + Globals.primaryMenuData[a].$title[0].innerHTML + "</div>")
                         .bind('click', Functions.DisplayEvents);
                     $Objects.PrimaryMenuContainer.append(option);
                 }
@@ -216,9 +234,9 @@
                 var CategoryIndex = $(target.target).attr('id').substr(12),
                     CategoryObject = Globals.Categories[CategoryIndex];
                 $Objects.PrimaryMenuContainer.html('');
-                $Objects.categoryTab.html('<span class="glyphicon glyphicon-chevron-left"></span>' + CategoryObject.$title[0].innerHTML + '<div class="tabLine"></div>');
+                $Objects.CategoryTab.html('<span class="glyphicon glyphicon-chevron-left"></span>' + CategoryObject.$title[0].innerHTML + '<div class="tabLine"></div>');
                 for (var i = 0; i < CategoryObject.events.length; i++) {
-                    var Event = $("<div id=\""+ CategoryObject.events[i].$title[0].innerHTML +"\" class=\"menuEventOption\">" + CategoryObject.events[i].$title[0].innerHTML + "<span class=\"eventCorner\"></span></div>")
+                    var Event = $("<div id=\"" + CategoryObject.events[i].$title[0].innerHTML + "\" class=\"menuEventOption\">" + CategoryObject.events[i].$title[0].innerHTML + "<span class=\"eventCorner\"></span></div>")
                         .bind('click', Functions.MenuEventClicked);
                     $Objects.PrimaryMenuContainer.append(Event);
                 }
@@ -227,7 +245,7 @@
                 }
                 Functions.RevealMenuOptions();
             },
-            MenuEventClicked: function(target){
+            MenuEventClicked: function (target) {
                 console.log("Hello" + target.target.innerText);
             },
             RandomEventGenerator: function () {
@@ -241,15 +259,15 @@
             },
             GetSearchResults: function (searchString) {
                 $Objects.PrimaryMenuContainer.html('');
-                $Objects.searchTab.addClass('activeTab');
-                $Objects.categoryTab.removeClass('activeTab');
+                $Objects.SearchTab.addClass('activeTab');
+                $Objects.CategoryTab.removeClass('activeTab');
                 if (searchString.length === 0) {
                     Globals.searchResult = [];
                     Functions.RenderSearchResults(Globals.searchResult);
                 }
                 else {
                     $.ajax({
-                        url: Globals.primaryUrl + '/events?query=' + searchString,
+                        url: Globals.APIAddress + '/events?query=' + searchString,
                         type: 'GET',
                         success: function (data) {
                             Globals.searchResult = data.data;
@@ -260,11 +278,15 @@
             },
             RenderSearchResults: function (data) {
                 Globals.primaryMenuData = data;
-                $Objects.categoryTab.html('Categories<div class="tabLine"></div>');
+                $Objects.CategoryTab.html('Categories<div class="tabLine"></div>');
                 if (data.length === 0) {
                     $Objects.PrimaryMenuContainer.append('<h3 style="opacity: 0.5; font-size: 20px;">No Results to Display</h3>');
                 } else {
-                    for(var i = 0; i < Globals.primaryMenuData.length; i++){
+                    for (var i = 0; i < Globals.primaryMenuData.length; i++) {
+                        // Why is this variable named $this?
+                        // - It's not a jQuery object.
+                        // - It's not a this reference of anything :|
+                        // Properly rename this variable.
                         var $this = Globals.primaryMenuData[i],
                             hour = parseInt($this.Start.substr(11, 2));
                         var date = {
@@ -289,6 +311,7 @@
                     ease: Back.easeOut
                 });
             },
+            // Remove the unused function.
             ExtendResponse: function (response) {
                 return $.extend({
                     status: {
@@ -317,20 +340,20 @@
                     Functions.CloseMenu();
             });
         $Objects.PrimaryMenuContainer = $('div#primaryMenuOptions');
-        $Objects.searchInput = $('#searchBox')
+        $Objects.SearchInput = $('#searchBox')
             .bind('keyup', function (e) {
                 if (e.keyCode == 13) {
-                    var s = $Objects.searchInput.val();
+                    var s = $Objects.SearchInput.val();
                     Functions.GetSearchResults(s);
                 }
             });
-        $Objects.categoryTab = $('#categoryTabButton')
+        $Objects.CategoryTab = $('#categoryTabButton')
             .bind('click', function () {
                 Functions.DisplayPrimaryOption();
             });
-        $Objects.searchTab = $('#resultTabButton')
+        $Objects.SearchTab = $('#resultTabButton')
             .bind('click', function () {
-                Functions.GetSearchResults($Objects.searchInput.val());
+                Functions.GetSearchResults($Objects.SearchInput.val());
             });
         dO.on("keyup", function (e) {
             if (e.keyCode == 27 && !Globals.isCollapsed && !Globals.isCollapsing) {

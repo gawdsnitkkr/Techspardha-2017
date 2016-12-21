@@ -369,7 +369,7 @@
     var $Cache = {},
         $Objects = {},
         Globals = {
-            SiteAddress: 'http://anshulmalik.me/api',
+            APIAddress: 'http://anshulmalik.me/api',
             WindowWidth: w.innerWidth,
             WindowHeight: w.innerHeight,
             WindowHalfWidth: w.innerWidth / 2,
@@ -647,7 +647,7 @@
             },
             Initialize: function () {
                 $.ajax({
-                    url: Globals.SiteAddress + '/categories',
+                    url: Globals.APIAddress + '/categories',
                     type: 'GET',
                     beforeSend: function () {
 
@@ -658,7 +658,7 @@
                             var categories = response.data,
                                 categoryCount = categories.length;
                             $.ajax({
-                                url: Globals.SiteAddress + '/events',
+                                url: Globals.APIAddress + '/events',
                                 type: 'GET',
                                 beforeSend: function () {
 
@@ -1049,7 +1049,7 @@
             },
             primaryMenuData: [],
             searchResult: [],
-            primaryUrl: 'http://anshulmalik.me/api'
+            APIAddress: 'http://anshulmalik.me/api'
         },
         $Objects = {
             SearchSVG: null,
@@ -1204,9 +1204,9 @@
                 }
             },
             DisplayPrimaryOption: function () {
-                $Objects.categoryTab.addClass('activeTab');
-                $Objects.searchTab.removeClass('activeTab');
-                $Objects.categoryTab.html('Categories<div class="tabLine"></div>');
+                $Objects.CategoryTab.addClass('activeTab');
+                $Objects.SearchTab.removeClass('activeTab');
+                $Objects.CategoryTab.html('Categories<div class="tabLine"></div>');
                 $Objects.PrimaryMenuContainer.html('');
                 Globals.primaryMenuData = Globals.Categories;
                 for (var a = 0; a < Globals.primaryMenuData.length; a++){
@@ -1220,7 +1220,7 @@
                 var CategoryIndex = $(target.target).attr('id').substr(12),
                     CategoryObject = Globals.Categories[CategoryIndex];
                 $Objects.PrimaryMenuContainer.html('');
-                $Objects.categoryTab.html('<span class="glyphicon glyphicon-chevron-left"></span>' + CategoryObject.$title[0].innerHTML + '<div class="tabLine"></div>');
+                $Objects.CategoryTab.html('<span class="glyphicon glyphicon-chevron-left"></span>' + CategoryObject.$title[0].innerHTML + '<div class="tabLine"></div>');
                 for (var i = 0; i < CategoryObject.events.length; i++) {
                     var Event = $("<div id=\""+ CategoryObject.events[i].$title[0].innerHTML +"\" class=\"menuEventOption\">" + CategoryObject.events[i].$title[0].innerHTML + "<span class=\"eventCorner\"></span></div>")
                         .bind('click', Functions.MenuEventClicked);
@@ -1245,15 +1245,15 @@
             },
             GetSearchResults: function (searchString) {
                 $Objects.PrimaryMenuContainer.html('');
-                $Objects.searchTab.addClass('activeTab');
-                $Objects.categoryTab.removeClass('activeTab');
+                $Objects.SearchTab.addClass('activeTab');
+                $Objects.CategoryTab.removeClass('activeTab');
                 if (searchString.length === 0) {
                     Globals.searchResult = [];
                     Functions.RenderSearchResults(Globals.searchResult);
                 }
                 else {
                     $.ajax({
-                        url: Globals.primaryUrl + '/events?query=' + searchString,
+                        url: Globals.APIAddress + '/events?query=' + searchString,
                         type: 'GET',
                         success: function (data) {
                             Globals.searchResult = data.data;
@@ -1264,7 +1264,7 @@
             },
             RenderSearchResults: function (data) {
                 Globals.primaryMenuData = data;
-                $Objects.categoryTab.html('Categories<div class="tabLine"></div>');
+                $Objects.CategoryTab.html('Categories<div class="tabLine"></div>');
                 if (data.length === 0) {
                     $Objects.PrimaryMenuContainer.append('<h3 style="opacity: 0.5; font-size: 20px;">No Results to Display</h3>');
                 } else {
@@ -1321,20 +1321,20 @@
                     Functions.CloseMenu();
             });
         $Objects.PrimaryMenuContainer = $('div#primaryMenuOptions');
-        $Objects.searchInput = $('#searchBox')
+        $Objects.SearchInput = $('#searchBox')
             .bind('keyup', function (e) {
                 if (e.keyCode == 13) {
-                    var s = $Objects.searchInput.val();
+                    var s = $Objects.SearchInput.val();
                     Functions.GetSearchResults(s);
                 }
             });
-        $Objects.categoryTab = $('#categoryTabButton')
+        $Objects.CategoryTab = $('#categoryTabButton')
             .bind('click', function () {
                 Functions.DisplayPrimaryOption();
             });
-        $Objects.searchTab = $('#resultTabButton')
+        $Objects.SearchTab = $('#resultTabButton')
             .bind('click', function () {
-                Functions.GetSearchResults($Objects.searchInput.val());
+                Functions.GetSearchResults($Objects.SearchInput.val());
             });
         dO.on("keyup", function (e) {
             if (e.keyCode == 27 && !Globals.isCollapsed && !Globals.isCollapsing) {

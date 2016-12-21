@@ -41,7 +41,7 @@
             },
             primaryMenuData: [],
             searchResult: [],
-            primaryUrl: 'http://anshulmalik.me'
+            APIAddress: 'http://anshulmalik.me'
         },
         DOM = {
             SearchSVG: null,
@@ -183,9 +183,9 @@
                 }
             },
             DisplayPrimaryOption: function () {
-                DOM.categoryTab.addClass('activeTab');
-                DOM.searchTab.removeClass('activeTab');
-                DOM.categoryTab.html('Categories<div class="tabLine"></div>');
+                DOM.CategoryTab.addClass('activeTab');
+                DOM.SearchTab.removeClass('activeTab');
+                DOM.CategoryTab.html('Categories<div class="tabLine"></div>');
                 DOM.PrimaryMenuContainer.html('');
                 Var.primaryMenuData = Var.mainMenuData;
                 $(Var.primaryMenuData).each(function (a) {
@@ -203,7 +203,7 @@
                 var category = $('span.category', target.currentTarget).html();
                 if (category != "") {
                     var n = Var.categorizedEvents[category].length;
-                    DOM.categoryTab.html('<span style="position: absolute; left: 10px; top: 18px; opacity: 0.5; font-size: 15px;" class="glyphicon glyphicon-chevron-left"></span>'+category+'<div class="tabLine"></div>');
+                    DOM.CategoryTab.html('<span style="position: absolute; left: 10px; top: 18px; opacity: 0.5; font-size: 15px;" class="glyphicon glyphicon-chevron-left"></span>'+category+'<div class="tabLine"></div>');
                     DOM.PrimaryMenuContainer.html('');
                     for (var i = 1; i < n; i++) {
                         DOM.PrimaryMenuContainer.append(
@@ -224,8 +224,8 @@
             },
             GetSearchResults: function (searchString) {
                 DOM.PrimaryMenuContainer.html('');
-                DOM.searchTab.addClass('activeTab');
-                DOM.categoryTab.removeClass('activeTab');
+                DOM.SearchTab.addClass('activeTab');
+                DOM.CategoryTab.removeClass('activeTab');
                 if (searchString.length == 0) {
                     Var.searchResult = [];
                     Functions.RenderSearchResults(Var.searchResult);
@@ -245,7 +245,7 @@
             },
             RenderSearchResults: function (data) {
                 Var.primaryMenuData = data;
-                DOM.categoryTab.html('Categories<div class="tabLine"></div>');
+                DOM.CategoryTab.html('Categories<div class="tabLine"></div>');
                 if (data.length == 0) {
                     DOM.PrimaryMenuContainer.append(
                         '<h3 style="opacity: 0.5; font-size: 20px;">No Results to Display</h3>'
@@ -310,20 +310,20 @@
                     Functions.CloseMenu();
             });
         DOM.PrimaryMenuContainer = $('div#primaryMenuOptions');
-        DOM.searchInput = $('#searchBox')
+        DOM.SearchInput = $('#searchBox')
             .bind('keyup', function (e) {
                 if (e.keyCode == 13) {
-                    var s = DOM.searchInput.val();
+                    var s = DOM.SearchInput.val();
                     Functions.GetSearchResults(s);
                 }
             });
-        DOM.categoryTab = $('#categoryTabButton')
+        DOM.CategoryTab = $('#categoryTabButton')
             .bind('click', function () {
                 Functions.DisplayPrimaryOption();
             });
-        DOM.searchTab = $('#resultTabButton')
+        DOM.SearchTab = $('#resultTabButton')
             .bind('click', function () {
-                Functions.GetSearchResults(DOM.searchInput.val());
+                Functions.GetSearchResults(DOM.SearchInput.val());
             });
         dO.on("keyup", function (e) {
             if (e.keyCode == 27 && !Var.isCollapsed && !Var.isCollapsing) {
