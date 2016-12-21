@@ -174,7 +174,7 @@
                 $Objects.CategoryTab.html('Categories<div class="tabLine"></div>');
                 $Objects.PrimaryMenuContainer.html('');
                 for (var a = 0; a < Globals.Categories.length; a++) {
-                    var option = $("<div data-catid=\"" + Globals.Categories[a].properties.id + "\" class=\"menuOption\">" + Globals.Categories[a].properties.title + "</div>")
+                    var option = $("<div data-index=\"" + a + "\" data-catid=\"" + Globals.Categories[a].properties.id + "\" class=\"menuOption\">" + Globals.Categories[a].properties.title + "</div>")
                         .bind('click', Functions.DisplayEvents);
                     $Objects.PrimaryMenuContainer.append(option);
                 }
@@ -182,12 +182,12 @@
             },
             DisplayEvents: function (target) {
                 Globals.isCategoriesDisplayed = false;
-                var CategoryId = $(target.target).data().catid,
-                    CategoryObject = Globals.Categories[CategoryId];
+                var CategoryIndex = $(target.target).data().index,
+                    CategoryId = $(target.target).data().catid,
+                    CategoryObject = Globals.Categories[CategoryIndex];
                 $Objects.PrimaryMenuContainer.html('');
                 $Objects.CategoryTab.html('<span class="glyphicon glyphicon-chevron-left"></span>' + CategoryObject.properties.title + '<div class="tabLine"></div>');
                 for (var i = 0; i < CategoryObject.events.length; i++) {
-                    console.log(CategoryId, CategoryObject.events[i].properties.id);
                     //Category id stored in Category.properties is not correct i think, all categories have id = 0
                     var Event = $("<div data-catid=\""+ (CategoryId + 1) +"\" data-eventid=\""+ CategoryObject.events[i].properties.id + "\" class=\"menuEventOption\">" + CategoryObject.events[i].properties.title + "<span class=\"eventCorner\"></span></div>")
                         .bind('click', Functions.MenuEventClicked);
