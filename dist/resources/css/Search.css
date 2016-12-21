@@ -124,6 +124,11 @@ div#primaryMenuTabs > div.activeTab {
 }
 div#primaryMenuTabs > div.activeTab > div.tabLine {
   width: 100%;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -ms-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  transition: all 0.2s;
 }
 div#primaryMenuTabs > div > span {
   position: absolute;
