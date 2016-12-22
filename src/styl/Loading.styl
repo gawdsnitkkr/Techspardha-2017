@@ -1,0 +1,137 @@
+#LoadingFrame {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+#LoadingSVG {
+  width: 12.8rem;
+  height: 12.8rem;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#LoadingSVG .InnerCircle {
+  fill: $DarkBlue;
+  transform-origin: 50% 50% 0;
+  animation-duration: 2s;
+  animation-name: LoadingSVGInnerCircleAnimation;
+  animation-direction: alternate;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-delay: 2s;
+}
+
+#LoadingSVG .MiddleCircle {
+  fill: $DarkSkyBlue;
+  transform-origin: 50% 50% 0;
+  animation-duration: 2s;
+  animation-name: LoadingSVGMiddleCircleAnimation;
+  animation-direction: alternate;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-delay: 2s;
+  transform: scale(0.7);
+}
+
+#LoadingSVG .MiddleLoop {
+  stroke: $DarkSkyBlue;
+  transform-origin: 50% 50% 0;
+  animation-duration: 4s;
+  animation-name: LoadingSVGMiddleLoopAnimation;
+  animation-direction: normal;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+#LoadingSVG .OuterArcs {
+  fill: $DarkBlue;
+  transform-origin: 50% 50% 0;
+  animation-duration: 4s;
+  animation-name: LoadingSVGOuterArcsAnimation;
+  animation-direction: normal;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+#LoadingSVG .InnerArcs {
+  fill: $DarkSkyBlue;
+  transform-origin: 50% 50% 0;
+  animation-duration: 4s;
+  animation-name: LoadingSVGInnerArcsAnimation;
+  animation-direction: normal;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes LoadingSVGOuterArcsAnimation {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  75% {
+    transform: rotate(360deg) scale(1);
+  }
+  87.5% {
+    transform: rotate(360deg) scale(1.2);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes LoadingSVGInnerArcsAnimation {
+  0% {
+    transform: rotate(0deg) scale(1);
+    fill: $SkyBlue;
+  }
+  75% {
+    transform: rotate(360deg) scale(1);
+    fill: $SkyBlue;
+  }
+  87.5% {
+    transform: rotate(450deg) scale(1.1);
+    fill: $Pink;
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    fill: $SkyBlue;
+  }
+}
+
+@keyframes LoadingSVGMiddleLoopAnimation {
+  0% {
+    transform: rotate(360deg) scale(1);
+    stroke: $SkyBlue;
+  }
+  75% {
+    transform: rotate(0deg) scale(1);
+    stroke: $SkyBlue;
+  }
+  87.5% {
+    transform: rotate(-90deg) scale(1.15);
+    stroke: $Pink;
+  }
+  100% {
+    transform: rotate(0deg) scale(1);
+    stroke: $SkyBlue;
+  }
+}
+
+@keyframes LoadingSVGMiddleCircleAnimation {
+  0% {
+    transform: scale(0.7);
+  }
+  75% {
+    transform: scale(1.8);
+  }
+  100% {
+    transform: scale(1.6);
+  }
+}
