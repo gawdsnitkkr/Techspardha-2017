@@ -1,5 +1,17 @@
 // @include ./plugins/Trail.js
 
+/**
+ * @preserve
+ *
+ * Main.js
+ * Includes important functioning of the various elements of the website, including fetching the data and displaying
+ * the Galaxy and Stars.
+ *
+ * @licence MIT
+ * @author Divya Mamgai <divyamamgai21@gmail.com>
+ *
+ */
+
 (function ($, w, d, t, undefined) {
     'use strict';
 
@@ -359,6 +371,7 @@
                                         for (categoryIndex = 0; categoryIndex < categoryCount; categoryIndex++) {
                                             category = categories[categoryIndex];
                                             Globals.Categories.push(new Category(categoryIndex, {
+                                                id: category.Id,
                                                 title: category.Name
                                             }, categoryEventMap[category.Id]));
                                         }

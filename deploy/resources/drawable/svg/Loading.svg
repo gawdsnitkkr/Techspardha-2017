@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" height="256" width="256" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" viewBox="0 0 256 256">
+ <g id="LoadingContainer" transform="translate(0 -796.36)">
+  <g id="OuterCircle" fill="#2a363b" transform="matrix(1.1636 0 0 1.1636 -411.07 -119.87)">
+   <g transform="matrix(.93957 0 0 1 212.77 24.186)">
+    <path d="m156.6-910.82a117.06 110 0 0 1 110 -72.378 117.06 110 0 0 1 110 72.378m-220 75.244a117.06 110 0 0 0 110 72.378 117.06 110 0 0 0 110 -72.378" transform="scale(1,-1)" fill="#2a363b"/>
+   </g>
+   <path d="m543.26 897.39a80 80 0 0 1 -80 80 80 80 0 0 1 -80 -80 80 80 0 0 1 80 -80 80 80 0 0 1 80 80z"/>
+  </g>
+  <path id="MiddleCircle" d="m128 821.96c-43.923 0-81.2 27.391-95.797 66.083h-17.382v72.628h17.382c14.597 38.7 51.874 66.13 95.797 66.13s81.2-27.391 95.797-66.083h17.382v-72.628h-17.382c-14.6-38.73-51.88-66.13-95.8-66.13z" stroke="#45ada8" stroke-width="5" fill="none"/>
+  <path id="InnerCircle" d="m128 852.44c-33.708 0-61.852 22.96-69.725 54.156h139.45c-7.87-31.2-36.01-54.16-69.72-54.16zm-69.725 89.698c7.8732 31.195 36.017 54.156 69.725 54.156s61.852-22.96 69.725-54.156h-139.45z" fill="#e84a5f"/>
+ </g>
+</svg>

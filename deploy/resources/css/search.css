@@ -20,9 +20,10 @@ div#menuClose {
   color: #ff847c;
   display: none;
   opacity: 0.4;
-  font-size: 20px;
+  height: 30px;
+  width: 30px;
   right: 10px;
-  top: 10px;
+  top: 20px;
   position: fixed;
   cursor: pointer;
   -webkit-transition: all 0.2s;
@@ -38,6 +39,11 @@ div#menuClose:hover {
   -ms-transform: scale(1.2);
   -o-transform: scale(1.2);
   transform: scale(1.2);
+}
+div#menuClose > svg {
+  height: 30px;
+  fill: #ff847c;
+  width: 30px;
 }
 #searchBox {
   display: none;
@@ -118,6 +124,17 @@ div#primaryMenuTabs > div.activeTab {
 }
 div#primaryMenuTabs > div.activeTab > div.tabLine {
   width: 100%;
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -ms-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  transition: all 0.2s;
+}
+div#primaryMenuTabs > div > span {
+  position: absolute;
+  opacity: 0.5;
+  left: 15px;
+  top: 18px;
 }
 div#primaryOptionWrapper {
   position: absolute;
@@ -135,6 +152,10 @@ div#primaryMenuOptions {
   position: relative;
   text-align: center;
   height: auto;
+}
+div#primaryMenuOptions > h3 {
+  opacity: 0.5;
+  font-size: 20px;
 }
 div#primaryMenuOptions > div.menuOption {
   position: relative;
@@ -198,10 +219,14 @@ div.menuEventOption > span.eventCorner {
   transform: rotate(45deg);
 }
 div.searchOption {
+  position: relative;
+  display: inline-block;
+  width: 300px;
+  margin: 20px;
   margin-top: 10px;
   opacity: 0;
   background-color: rgba(3,3,11,0.5);
-  font-size: 20px;
+  font-size: 15px;
   border-radius: 5px;
   cursor: pointer;
   height: 82px;

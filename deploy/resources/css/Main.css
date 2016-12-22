@@ -276,6 +276,7 @@ p {
   cursor: default;
 }
 #EventSVG .Star .Shell {
+  display: block;
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
@@ -284,6 +285,11 @@ p {
   -o-transform: scale(0.5);
   -ms-transform: scale(0.5);
   transform: scale(0.5);
+  -webkit-transform-origin: 50% 50% 0;
+  -moz-transform-origin: 50% 50% 0;
+  -o-transform-origin: 50% 50% 0;
+  -ms-transform-origin: 50% 50% 0;
+  transform-origin: 50% 50% 0;
   -webkit-animation-duration: 3s;
   -moz-animation-duration: 3s;
   -o-animation-duration: 3s;
