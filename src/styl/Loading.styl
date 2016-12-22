@@ -15,7 +15,18 @@
   position: relative;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(0.7);
+  transform-origin: 50% 50% 0;
+  animation-duration: 0.5s;
+  animation-name: LoadingSVGShowAnimation;
+  animation-direction: normal;
+  animation-timing-function: ease-in-out;
+  display: none;
+}
+
+#LoadingFrame.Show #LoadingSVG {
+  display: block;
+  transform: translate(-50%, -50%) scale(1);
 }
 
 #LoadingSVG .InnerCircle {
@@ -30,7 +41,7 @@
 }
 
 #LoadingSVG .MiddleCircle {
-  fill: $DarkSkyBlue;
+  fill: $Yellow;
   transform-origin: 50% 50% 0;
   animation-duration: 2s;
   animation-name: LoadingSVGMiddleCircleAnimation;
@@ -71,6 +82,17 @@
   animation-iteration-count: infinite;
 }
 
+@keyframes LoadingSVGShowAnimation {
+  0% {
+    transform: translate(-50%, -50%) scale(0.7);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
 @keyframes LoadingSVGOuterArcsAnimation {
   0% {
     transform: rotate(0deg) scale(1);
@@ -96,7 +118,7 @@
     fill: $SkyBlue;
   }
   87.5% {
-    transform: rotate(450deg) scale(1.1);
+    transform: rotate(472.5deg) scale(1.1);
     fill: $Pink;
   }
   100% {
@@ -108,19 +130,19 @@
 @keyframes LoadingSVGMiddleLoopAnimation {
   0% {
     transform: rotate(360deg) scale(1);
-    stroke: $SkyBlue;
+    stroke: $PaperWhite;
   }
   75% {
     transform: rotate(0deg) scale(1);
-    stroke: $SkyBlue;
+    stroke: $PaperWhite;
   }
   87.5% {
-    transform: rotate(-90deg) scale(1.15);
+    transform: rotate(-112.5deg) scale(1);
     stroke: $Pink;
   }
   100% {
     transform: rotate(0deg) scale(1);
-    stroke: $SkyBlue;
+    stroke: $PaperWhite;
   }
 }
 

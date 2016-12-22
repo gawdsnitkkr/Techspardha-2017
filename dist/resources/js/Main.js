@@ -348,6 +348,18 @@
 }));
 
 
+/**
+ * @preserve
+ *
+ * Main.js
+ * Includes important functioning of the various elements of the website, including fetching the data and displaying
+ * the Galaxy and Stars.
+ *
+ * @licence MIT
+ * @author Divya Mamgai <divyamamgai21@gmail.com>
+ *
+ */
+
 (function ($, w, d, t, undefined) {
     'use strict';
 
@@ -707,6 +719,7 @@
                                         for (categoryIndex = 0; categoryIndex < categoryCount; categoryIndex++) {
                                             category = categories[categoryIndex];
                                             Globals.Categories.push(new Category(categoryIndex, {
+                                                id: category.Id,
                                                 title: category.Name
                                             }, categoryEventMap[category.Id]));
                                         }
@@ -1074,6 +1087,7 @@
                         display: 'block'
                     });
                     SearchBorders.each(function () {
+                        // This will be broken, fix it :P
                         var $Path = $(this).PathAnimation();
                         $Path.data('PathAnimation').Animate(1, {
                             delay: 0.4,
@@ -1091,6 +1105,7 @@
                         },
                         ease: Power4.easeOut,
                         onComplete: function () {
+                            // This will be broken, fix it :P
                             var glass = $Objects.SearchBox.Glass.PathAnimation();
                             glass.data('PathAnimation').Animate(1, {
                                 ease: Back.easeOut,
@@ -1116,6 +1131,7 @@
                 if (Globals.isCollapsed === false) {
                     var SearchBorders = $Objects.SearchBox.Borders.children();
                     Globals.isCollapsing = true;
+                    // This will be broken, fix it :P
                     var glass = $Objects.SearchBox.Glass.PathAnimation();
                     glass.data('PathAnimation').ReverseDraw(1, {
                         ease: Back.easeOut,
@@ -1161,6 +1177,7 @@
                         }
                     });
                     SearchBorders.each(function () {
+                        // This will be broken, fix it :P
                         var $Path = $(this).PathAnimation();
                         $Path.data('PathAnimation').ReverseDraw(1, {
                             delay: 0.4,
@@ -1194,7 +1211,7 @@
                 $Objects.CategoryTab.html('<span class="glyphicon glyphicon-chevron-left"></span>' + CategoryObject.properties.title + '<div class="tabLine"></div>');
                 for (var i = 0; i < CategoryObject.events.length; i++) {
                     //Category id stored in Category.properties is not correct i think, all categories have id = 0
-                    var Event = $("<div data-catid=\""+ (CategoryId + 1) +"\" data-eventid=\""+ CategoryObject.events[i].properties.id + "\" class=\"menuEventOption\">" + CategoryObject.events[i].properties.title + "<span class=\"eventCorner\"></span></div>")
+                    var Event = $("<div data-catid=\"" + (CategoryId + 1) + "\" data-eventid=\"" + CategoryObject.events[i].properties.id + "\" class=\"menuEventOption\">" + CategoryObject.events[i].properties.title + "<span class=\"eventCorner\"></span></div>")
                         .bind('click', Functions.MenuEventClicked);
                     $Objects.PrimaryMenuContainer.append(Event);
                 }
@@ -1274,9 +1291,9 @@
             BottomLine: $('#menuBottomLine')
         };
         $Objects.SearchBox = {
-            Borders : $('#searchBoxBorder'),
-            Glass : $('#magnifying'),
-            GlassHandle : $('#searchHandle')
+            Borders: $('#searchBoxBorder'),
+            Glass: $('#magnifying'),
+            GlassHandle: $('#searchHandle')
         };
         $Objects.MainMenuButtonOverlay = $('#menuButtonOverlay')
             .bind('click', function () {
@@ -1298,7 +1315,7 @@
             });
         $Objects.CategoryTab = $('#categoryTabButton')
             .bind('click', function () {
-                if(!Globals.isCategoriesDisplayed)
+                if (!Globals.isCategoriesDisplayed)
                     Functions.DisplayPrimaryOption();
             });
         $Objects.SearchTab = $('#resultTabButton')
