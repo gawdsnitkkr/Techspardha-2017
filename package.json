@@ -27,7 +27,8 @@
     "stylus": "latest",
     "nib": "latest",
     "clean-css": "latest",
-    "rimraf": "latest"
+    "rimraf": "latest",
+    "replace": "latest"
   },
   "scripts": {
     "lint": "jshint src/js",
