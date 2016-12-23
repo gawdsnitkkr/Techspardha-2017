@@ -999,10 +999,6 @@
 
         Functions.Initialize();
 
-        setInterval(function () {
-            console.log('Main.js', Globals.Categories, w.Categories);
-        }, 1000);
-
     });
 
     $(d)
