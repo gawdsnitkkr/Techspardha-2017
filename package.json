@@ -38,7 +38,8 @@
     "build": "npm run build:js && npm run build:css",
     "predeploy": "npm run clean",
     "deploy": "cp -r dist/* deploy/",
-    "postdeploy": "uglifyjs deploy/resources/js/Main.js > deploy/resources/js/Main.min.js -mc && rimraf deploy/resources/js/Main.js",
+    "postdeploy": "uglifyjs deploy/resources/js/Main.js > deploy/resources/js/Main.min.js -mc && rimraf deploy/resources/js/Main.js && scriptSourceFix",
+    "scriptSourceFix": "replace 'resources/js/Main.js' 'resources/js/Main.min.js' deploy -r --include=\"*.html\"",
     "clean": "rimraf deploy/ && mkdir deploy"
   },
   "repository": {
