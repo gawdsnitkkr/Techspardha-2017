@@ -6,7 +6,6 @@
     <title>Techspardha 2017</title>
     <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="resources/css/Main.css">
-    <link rel="stylesheet" type="text/css" href="resources/css/Search.css">
     <script type="text/javascript" src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="../node_modules/gsap/src/minified/TweenMax.min.js"></script>
     <script type="text/javascript" src="resources/js/Main.js"></script>
@@ -121,13 +120,15 @@
                 <path id="path4451" d="m 20.219,1010.7 281.45,0 0,21.092"></path>
                 <path id="path4453" d="m 20.83,1052.55 280.79,0 0,-20.8402"></path>
             </g>
+            <!-- magnifying what? :P -->
             <path id="magnifying"
                   d="m 18.916958,23.257858 c -3.140438,-3.140438 -3.140438,-8.232094 0,-11.372532 3.140438,-3.1404479 8.232095,-3.1404479 11.372533,0 3.140438,3.140438 3.140438,8.232094 0,11.372532 -3.140438,3.140438 -8.232095,3.140438 -11.372533,0"
-                  style="fill: none; opacity:0; stroke:#ffffff; stroke-width: 1.5"></path>
+                  fill="none" stroke="#FFFFFF" stroke-width="1.5" opacity="0"></path>
             <rect id="menuButtonOverlay" y="5" x="11" height="32" width="32" fill="red" opacity="0"></rect>
         </svg>
-        <input id="searchBox" type="text" placeholder="Search"/>
+        <input id="searchBox" type="text" placeholder="Search" spellcheck="false" maxlength="255"/>
     </div>
+    <!-- Change it's ID since its very close to MenuClose of the SVG. -->
     <div id="menuClose">
         <svg id="MenuClose" x="0px" y="0px" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 475.2 475.2"
              style="enable-background:new 0 0 475.2 475.2;">

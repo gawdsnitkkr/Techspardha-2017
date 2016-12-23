@@ -71,6 +71,7 @@
                     paths.push(element);
                     break;
                 case 'svg':
+                case 'g':
                     paths = $(element).find('path').toArray();
                     if (compareFunction !== undefined) {
                         paths = paths.sort(compareFunction);

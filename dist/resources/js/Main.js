@@ -71,6 +71,7 @@
                     paths.push(element);
                     break;
                 case 'svg':
+                case 'g':
                     paths = $(element).find('path').toArray();
                     if (compareFunction !== undefined) {
                         paths = paths.sort(compareFunction);
@@ -1021,13 +1022,13 @@
             // Public variables and properties inherited from Main.js
             /** @type Category[] */
             Categories: w.Categories,
+            APIAddress: w.APIAddress,
             //Variables
             isCollapsed: true,
             isCollapsing: false,
             isCategoriesDisplayed: false,
             primaryMenuData: [],
-            searchResult: [],
-            APIAddress: w.APIAddress
+            searchResult: []
         },
         //JQuery objects
         $Objects = {
@@ -1069,28 +1070,24 @@
                     t.set($Objects.MainMenuCloseButton, {
                         display: 'block'
                     });
-                    TweenLite.fromTo($Objects.MainMenuButton, 0.5, {
+                    t.fromTo($Objects.MainMenuButton, 0.5, {
                         scale: 0.5
                     }, {
                         scale: 0.88,
-                        ease: Back.easeOut
+                        ease: Power4.easeOut
                     });
                     t.to($Objects.MainMenu, 0.2, {
                         left: '0'
                     });
-                    var SearchBorders = $Objects.SearchBox.Borders.children();
-                    t.set($Objects.SearchBox.Borders, {
-                        display: 'block'
-                    });
-                    SearchBorders.each(function () {
-                        // This will be broken, fix it :P
-                        var $Path = $(this).PathAnimation();
-                        $Path.data('PathAnimation').Animate(1, {
+                    $Objects.SearchBox.Borders
+                        .css('display', 'block')
+                        .Trail({
+                            stagger: true,
+                            staggerDelay: 0,
                             delay: 0.4,
-                            ease: Power4.easeOut,
-                            clearOpacity: true
+                            duration: 1,
+                            ease: Power4.easeOut
                         });
-                    });
                     t.fromTo($Objects.SearchBox.GlassHandle, 0.5, {
                         attr: {
                             d: 'm 3.4532481,1031.6817 48.8640159,0'
@@ -1101,20 +1098,26 @@
                         },
                         ease: Power4.easeOut,
                         onComplete: function () {
-                            // This will be broken, fix it :P
-                            var glass = $Objects.SearchBox.Glass.PathAnimation();
-                            glass.data('PathAnimation').Animate(1, {
-                                ease: Back.easeOut,
-                                clearOpacity: true
-                            });
+                            $Objects.SearchBox.Glass
+                                .css('opacity', '1')
+                                .Trail({
+                                    duration: 1,
+                                    ease: Power4.easeOut
+                                });
                             t.set($Objects.MenuButton.TopLine, {
                                 opacity: 0
                             });
                             t.set($Objects.MenuButton.BottomLine, {
                                 opacity: 0
                             });
-                            t.set($Objects.SearchInput, {
-                                display: 'block'
+                            t.fromTo($Objects.SearchInput, 1, {
+                                display: 'block',
+                                opacity: 0,
+                                x: 48
+                            }, {
+                                opacity: 1,
+                                x: 0,
+                                ease: Power4.easeOut
                             });
                             Globals.isCollapsed = false;
                             $Objects.SearchInput.focus();
