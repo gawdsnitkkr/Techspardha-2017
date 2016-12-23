@@ -49,14 +49,62 @@ p {
   text-align: justify;
   cursor: default;
 }
-#Header {
-  z-index: 4;
-}
 #Logo {
+  z-index: 4;
   width: 25.6rem;
   height: 6.4rem;
   margin: 1rem 0 0 0;
-  float: right;
+  position: fixed;
+  top: 0;
+  right: 1.6rem;
+}
+.CloseButton {
+  cursor: pointer;
+}
+.CloseButton svg {
+  width: 3.2rem;
+  height: 3.2rem;
+  fill: #e84a5f;
+  margin-top: -3rem;
+  -webkit-transition: fill 0.3s ease-in-out;
+  -moz-transition: fill 0.3s ease-in-out;
+  -o-transition: fill 0.3s ease-in-out;
+  -ms-transition: fill 0.3s ease-in-out;
+  transition: fill 0.3s ease-in-out;
+}
+.CloseButton svg path {
+  -webkit-transition: -webkit-transform 0.3s ease-in-out;
+  -moz-transition: -moz-transform 0.3s ease-in-out;
+  -o-transition: -o-transform 0.3s ease-in-out;
+  -ms-transition: -ms-transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+  -webkit-transform: rotate(0deg) scale(1);
+  -moz-transform: rotate(0deg) scale(1);
+  -o-transform: rotate(0deg) scale(1);
+  -ms-transform: rotate(0deg) scale(1);
+  transform: rotate(0deg) scale(1);
+  -webkit-transform-origin: 50% 50% 0;
+  -moz-transform-origin: 50% 50% 0;
+  -o-transform-origin: 50% 50% 0;
+  -ms-transform-origin: 50% 50% 0;
+  transform-origin: 50% 50% 0;
+}
+.CloseButton:hover svg {
+  fill: #ff4f64;
+}
+.CloseButton:hover svg path.InnerCross {
+  -webkit-transform: rotate(90deg) scale(0.8);
+  -moz-transform: rotate(90deg) scale(0.8);
+  -o-transform: rotate(90deg) scale(0.8);
+  -ms-transform: rotate(90deg) scale(0.8);
+  transform: rotate(90deg) scale(0.8);
+}
+.CloseButton:active svg path.OuterCircle {
+  -webkit-transform: scale(0.8);
+  -moz-transform: scale(0.8);
+  -o-transform: scale(0.8);
+  -ms-transform: scale(0.8);
+  transform: scale(0.8);
 }
 #LoadingFrame {
   margin: 0;
@@ -1163,55 +1211,13 @@ p {
   width: 100vw;
   height: 100vh;
   background-color: rgba(0,0,0,0.7);
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 #EventClose {
-  cursor: pointer;
-}
-#EventClose svg {
   float: right;
-  width: 3.2rem;
-  height: 3.2rem;
-  fill: #e84a5f;
-  margin-top: -3rem;
-  -webkit-transition: fill 0.3s ease-in-out;
-  -moz-transition: fill 0.3s ease-in-out;
-  -o-transition: fill 0.3s ease-in-out;
-  -ms-transition: fill 0.3s ease-in-out;
-  transition: fill 0.3s ease-in-out;
-}
-#EventClose svg path {
-  -webkit-transition: -webkit-transform 0.3s ease-in-out;
-  -moz-transition: -moz-transform 0.3s ease-in-out;
-  -o-transition: -o-transform 0.3s ease-in-out;
-  -ms-transition: -ms-transform 0.3s ease-in-out;
-  transition: transform 0.3s ease-in-out;
-  -webkit-transform: rotate(0deg) scale(1);
-  -moz-transform: rotate(0deg) scale(1);
-  -o-transform: rotate(0deg) scale(1);
-  -ms-transform: rotate(0deg) scale(1);
-  transform: rotate(0deg) scale(1);
-  -webkit-transform-origin: 50% 50% 0;
-  -moz-transform-origin: 50% 50% 0;
-  -o-transform-origin: 50% 50% 0;
-  -ms-transform-origin: 50% 50% 0;
-  transform-origin: 50% 50% 0;
-}
-#EventClose:hover svg {
-  fill: #ff4f64;
-}
-#EventClose:hover svg path.InnerCross {
-  -webkit-transform: rotate(90deg) scale(0.8);
-  -moz-transform: rotate(90deg) scale(0.8);
-  -o-transform: rotate(90deg) scale(0.8);
-  -ms-transform: rotate(90deg) scale(0.8);
-  transform: rotate(90deg) scale(0.8);
-}
-#EventClose:active svg path.OuterCircle {
-  -webkit-transform: scale(0.8);
-  -moz-transform: scale(0.8);
-  -o-transform: scale(0.8);
-  -ms-transform: scale(0.8);
-  transform: scale(0.8);
 }
 @-moz-keyframes EventSVGStarShellAnimation {
   0% {
@@ -1347,61 +1353,37 @@ p {
   left: 0;
   z-index: 5;
 }
-aside#searchMenu {
+#searchMenu {
   position: absolute;
-  left: -100%;
-  width: 100%;
+  top: 100vh;
+  width: 100vw;
   height: 100vh;
   overflow: hidden;
   padding: 0;
-  color: #e5fcc2;
-  background: rgba(3,3,11,0.8);
+  color: #f4f4f4;
+  font-family: "Roboto", sans-serif;
+  background-color: rgba(3,3,11,0.7);
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
 }
 #searchBarSVG {
   position: fixed;
   margin-left: 20px;
   margin-top: 20px;
+}
+#searchBarSVG * {
+  stroke: #45ada8;
+}
+#menuButtonOverlay {
   cursor: pointer;
-}
-div#menuClose {
-  color: #ff847c;
-  display: none;
-  opacity: 0.4;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=40)";
-  filter: alpha(opacity=40);
-  height: 30px;
-  width: 30px;
-  right: 10px;
-  top: 20px;
-  position: fixed;
-  cursor: pointer;
-  -webkit-transition: all 0.2s ease-in-out;
-  -moz-transition: all 0.2s ease-in-out;
-  -o-transition: all 0.2s ease-in-out;
-  -ms-transition: all 0.2s ease-in-out;
-  transition: all 0.2s ease-in-out;
-}
-div#menuClose:hover {
-  opacity: 1;
-  -ms-filter: none;
-  filter: none;
-  -webkit-transform: scale(1.2);
-  -moz-transform: scale(1.2);
-  -o-transform: scale(1.2);
-  -ms-transform: scale(1.2);
-  transform: scale(1.2);
-}
-div#menuClose > svg {
-  height: 30px;
-  fill: #ff847c;
-  width: 30px;
 }
 #searchBox {
   display: none;
   position: fixed;
   margin-top: 19px;
   margin-left: 60px;
-  color: rgba(157,224,173,0.4);
+  color: rgba(244,244,244,0.7);
   background: none;
   border: none;
   font-size: 1.6rem;
@@ -1415,21 +1397,20 @@ div#menuClose > svg {
   transition: color 0.2s ease-in-out;
 }
 #searchBox:focus {
-  color: #9de0ad;
+  color: #f4f4f4;
   outline: none;
 }
-div#primaryMenuContainer {
+#primaryMenuContainer {
   position: relative;
-  height: 100%;
   top: 70px;
 }
-div#primaryMenuTabs {
+#primaryMenuTabs {
   position: absolute;
-  border-bottom: 1px solid #99b898;
+  border-bottom: 1px solid #547980;
   height: 53.55px;
   width: 100%;
 }
-div#primaryMenuTabs > div.tab {
+#primaryMenuTabs > div.tab {
   margin-top: 1px;
   display: inline-block;
   width: 50%;
@@ -1449,24 +1430,24 @@ div#primaryMenuTabs > div.tab {
   -ms-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
 }
-div#primaryMenuTabs > div.tab > div.tabLine {
+#primaryMenuTabs > div.tab > div.tabLine {
   position: absolute;
   bottom: -4px;
   height: 4px;
   width: 0;
-  background-color: #99b898;
+  background-color: #547980;
   -webkit-transition: all 0.2s ease-in-out;
   -moz-transition: all 0.2s ease-in-out;
   -o-transition: all 0.2s ease-in-out;
   -ms-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
 }
-div#primaryMenuTabs > div.tab:hover {
+#primaryMenuTabs > div.tab:hover {
   opacity: 1;
   -ms-filter: none;
   filter: none;
 }
-div#primaryMenuTabs > div.tab:hover > span {
+#primaryMenuTabs > div.tab:hover > span {
   margin-left: 10px;
   -webkit-transition: all 0.2s ease-in-out;
   -moz-transition: all 0.2s ease-in-out;
@@ -1474,12 +1455,12 @@ div#primaryMenuTabs > div.tab:hover > span {
   -ms-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
 }
-div#primaryMenuTabs > div.activeTab {
+#primaryMenuTabs > div.activeTab {
   opacity: 1;
   -ms-filter: none;
   filter: none;
 }
-div#primaryMenuTabs > div.activeTab > div.tabLine {
+#primaryMenuTabs > div.activeTab > div.tabLine {
   width: 100%;
   -webkit-transition: all 0.2s ease-in-out;
   -moz-transition: all 0.2s ease-in-out;
@@ -1487,7 +1468,7 @@ div#primaryMenuTabs > div.activeTab > div.tabLine {
   -ms-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
 }
-div#primaryMenuTabs > div > span {
+#primaryMenuTabs > div > span {
   position: absolute;
   opacity: 0.5;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
@@ -1495,15 +1476,15 @@ div#primaryMenuTabs > div > span {
   left: 15px;
   top: 18px;
 }
-div#primaryOptionWrapper {
+#primaryOptionWrapper {
   position: absolute;
   width: 100%;
   height: calc(100% - 120px);
   margin-top: 53.55px;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
-div#primaryMenuOptions {
+#primaryMenuOptions {
   padding-top: 20px;
   padding-left: 10px;
   padding-right: 10px;
@@ -1512,13 +1493,13 @@ div#primaryMenuOptions {
   text-align: center;
   height: auto;
 }
-div#primaryMenuOptions > h3 {
+#primaryMenuOptions > h3 {
   opacity: 0.5;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
   font-size: 20px;
 }
-div#primaryMenuOptions > div.menuOption {
+#primaryMenuOptions > div.menuOption {
   position: relative;
   margin: 20px;
   display: inline-block;
@@ -1527,26 +1508,25 @@ div#primaryMenuOptions > div.menuOption {
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
   padding: 20px;
-  font-weight: 600;
   font-size: 20px;
   border-radius: 5px;
   cursor: pointer;
   overflow-x: hidden;
+  -webkit-transition: -webkit-transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+  -moz-transition: -moz-transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+  -o-transition: -o-transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+  -ms-transition: -ms-transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
 }
-div#primaryMenuOptions > div.menuOption:hover {
+#primaryMenuOptions > div.menuOption:hover {
   background: #2a363b;
   -webkit-transform: scale(0.9);
   -moz-transform: scale(0.9);
   -o-transform: scale(0.9);
   -ms-transform: scale(0.9);
   transform: scale(0.9);
-  -webkit-transition: all 0.2s ease-in-out;
-  -moz-transition: all 0.2s ease-in-out;
-  -o-transition: all 0.2s ease-in-out;
-  -ms-transition: all 0.2s ease-in-out;
-  transition: all 0.2s ease-in-out;
 }
-div.menuEventOption {
+.menuEventOption {
   position: relative;
   margin: 20px;
   display: inline-block;
@@ -1554,7 +1534,6 @@ div.menuEventOption {
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
-  font-weight: 600;
   padding: 20px;
   font-size: 15px;
   border-radius: 2px;
@@ -1562,7 +1541,7 @@ div.menuEventOption {
   cursor: pointer;
   overflow: hidden;
 }
-div.menuEventOption:hover {
+.menuEventOption:hover {
   background: #2a363b;
   -webkit-transition: all 0.2s ease-in-out;
   -moz-transition: all 0.2s ease-in-out;
@@ -1570,7 +1549,7 @@ div.menuEventOption:hover {
   -ms-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
 }
-div.menuEventOption > span.eventCorner {
+.menuEventOption > span.eventCorner {
   width: 10px;
   height: 10px;
   background-color: rgba(255,255,255,0.5);
@@ -1583,7 +1562,7 @@ div.menuEventOption > span.eventCorner {
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
-div.searchOption {
+.searchOption {
   position: relative;
   display: inline-block;
   width: 300px;
@@ -1599,17 +1578,14 @@ div.searchOption {
   height: 82px;
   overflow: hidden;
 }
-div.searchOption > div {
+.searchOption > div {
   text-align: center;
 }
-div.searchOption > div > div.searchNameInfo {
+.searchOption > div > div.searchNameInfo {
   padding: 5px;
   background-color: rgba(42,54,59,0.2);
 }
-div.searchOption > div > div > div.searchName {
-  font-weight: 600;
-}
-div.searchOption > div > div.searchDesc {
+.searchOption > div > div.searchDesc {
   border-top: 1px solid rgba(153,184,152,0.4);
   padding-left: 10px;
   padding-right: 10px;
@@ -1621,14 +1597,14 @@ div.searchOption > div > div.searchDesc {
   font-size: 12px;
   overflow-y: hidden;
 }
-div.searchOption > div > div > div > span.searchDate {
+.searchOption > div > div > div > span.searchDate {
   padding-left: 10px;
   color: #e5fcc2;
   opacity: 0.5;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
   filter: alpha(opacity=50);
 }
-div.searchOption:hover {
+.searchOption:hover {
   background: #2a363b;
   text-shadow: 0 1px 2px rgba(3,3,11,0.5);
   -webkit-transition: all 0.2s ease-in-out;
@@ -1636,4 +1612,18 @@ div.searchOption:hover {
   -o-transition: all 0.2s ease-in-out;
   -ms-transition: all 0.2s ease-in-out;
   transition: all 0.2s ease-in-out;
+}
+#MenuClose {
+  position: absolute;
+  top: 4.8rem;
+  right: 2.4rem;
+}
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background-color: #e84a5f;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #ff847c;
 }

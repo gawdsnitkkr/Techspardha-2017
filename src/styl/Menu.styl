@@ -7,47 +7,42 @@
   z-index: 5;
 }
 
-aside#searchMenu
+/*
+  Do not use ELEMENT#ID or ELEMENT.CLASS because end user might want to change the ELEMENT from DIV to something else.
+  Also its slightly faster for JavaScript engines to do #ID instead of ELEMENT#ID, so make a habit of
+  using only #ID whenever possible.
+*/
+#searchMenu
   position absolute
-  left -100%
-  width 100%
+  top 100vh
+  width 100vw
   height 100vh
   overflow hidden
   padding 0
-  color $LighterGreen
-  background rgba($DarkestBlue, 0.8)
+  color $PaperWhite
+  font-family $ContentFontFamily
+  background-color rgba($DarkestBlue, 0.7)
+  opacity: 0
 
 #searchBarSVG
   position fixed
   margin-left 20px
   margin-top 20px
-  cursor pointer
 
-div#menuClose
-  color $LightPink
-  display none
-  opacity 0.4
-  height 30px
-  width 30px
-  right 10px
-  top 20px
-  position fixed
-  cursor pointer
-  transition all 0.2s ease-in-out
-  &:hover
-    opacity 1
-    transform scale(1.2)
-  > svg
-    height 30px
-    fill $LightPink
-    width 30px
+#searchBarSVG * {
+  stroke $SkyBlue
+}
+
+#menuButtonOverlay {
+  cursor: pointer;
+}
 
 #searchBox
   display: none
   position fixed
   margin-top 19px
   margin-left 60px
-  color rgba($LightGreen, 0.4)
+  color rgba($PaperWhite, 0.7)
   background none
   border none
   font-size 1.6rem
@@ -56,17 +51,16 @@ div#menuClose
   width 200px
   transition color 0.2s ease-in-out
   &:focus
-    color rgba($LightGreen, 1)
+    color rgba($PaperWhite, 1)
     outline none
 
-div#primaryMenuContainer
+#primaryMenuContainer
   position relative
-  height 100%
   top 70px
 
-div#primaryMenuTabs
+#primaryMenuTabs
   position absolute
-  border-bottom 1px solid rgba($LightDullGreen, 1)
+  border-bottom 1px solid rgba($DarkSkyBlue, 1)
   height 53.55px
   width 100%
   > div.tab
@@ -87,7 +81,7 @@ div#primaryMenuTabs
       bottom -4px
       height 4px
       width 0
-      background-color $LightDullGreen
+      background-color $DarkSkyBlue
       transition all 0.2s ease-in-out
     &:hover
       opacity 1
@@ -105,16 +99,16 @@ div#primaryMenuTabs
     left 15px
     top 18px
 
-div#primaryOptionWrapper
+#primaryOptionWrapper
   position absolute
   width 100%
   // Try to avoid calc() since older browsers won't be supported.
   height calc(100% - 120px)
   margin-top 53.55px
   overflow-x hidden
-  overflow-y scroll
+  overflow-y auto
 
-div#primaryMenuOptions
+#primaryMenuOptions
   padding-top 20px
   padding-left 10px
   padding-right 10px
@@ -132,23 +126,21 @@ div#primaryMenuOptions
     width 250px
     opacity 0
     padding 20px
-    font-weight 600
     font-size 20px
     border-radius 5px
     cursor pointer
     overflow-x hidden
+    transition transform 0.2s ease-in-out, background-color 0.2s ease-in-out
     &:hover
       background $DarkBlue
       transform scale(0.9)
-      transition all 0.2s ease-in-out
 
-div.menuEventOption
+.menuEventOption
   position relative
   margin 20px
   display inline-block
   width 250px
   opacity 0
-  font-weight 600
   padding 20px
   font-size 15px
   border-radius 2px
@@ -167,7 +159,7 @@ div.menuEventOption
     right -5px
     transform rotate(45deg)
 
-div.searchOption
+.searchOption
   position relative
   display inline-block
   width 300px
@@ -185,8 +177,6 @@ div.searchOption
   > div > div.searchNameInfo
     padding 5px
     background-color rgba($DarkBlue, 0.2)
-  > div > div > div.searchName
-    font-weight 600
   > div > div.searchDesc
     border-top 1px solid rgba($LightDullGreen, 0.4)
     padding-left 10px
@@ -204,3 +194,9 @@ div.searchOption
     background $DarkBlue
     text-shadow 0 1px 2px rgba($DarkestBlue, 0.5)
     transition all 0.2s ease-in-out
+
+#MenuClose {
+  position: absolute;
+  top: 4.8rem;
+  right: 2.4rem;
+}
