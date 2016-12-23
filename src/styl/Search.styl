@@ -29,7 +29,7 @@ div#menuClose
   transition all 0.2s ease-in-out
   &:hover
     opacity 1
-    scaleTo(1.2)
+    transform scale(1.2)
   > svg
     height 30px
     fill $LightPink
@@ -101,6 +101,7 @@ div#primaryMenuTabs
 div#primaryOptionWrapper
   position absolute
   width 100%
+  // Try to avoid calc() since older browsers won't be supported.
   height calc(100% - 120px)
   margin-top 53.55px
   overflow-x hidden
