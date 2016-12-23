@@ -1,27 +1,5 @@
 @import 'ColorPalette.styl'
-/*functions*/
-transition(prop, time)
-  -webkit-transition: prop time
-  -moz-transition: prop time
-  -ms-transition: prop time
-  -o-transition: prop time
-  transition: prop time
 
-scaleTo(s)
-  -webkit-transform: scale(s)
-  -moz-transform: scale(s)
-  -ms-transform: scale(s)
-  -o-transform: scale(s)
-  transform: scale(s)
-
-rotateTo(s)
-  -webkit-transform: rotate(s)
-  -moz-transform: rotate(s)
-  -ms-transform: rotate(s)
-  -o-transform: rotate(s)
-  transform: rotate(s)
-
-/*Styles*/
 aside#searchMenu
   position absolute
   left -100%
@@ -48,7 +26,7 @@ div#menuClose
   top 20px
   position fixed
   cursor pointer
-  transition(all, 0.2s)
+  transition all 0.2s ease-in-out
   &:hover
     opacity 1
     scaleTo(1.2)
@@ -69,7 +47,7 @@ div#menuClose
   font-weight 100
   height 40px
   width 210px
-  transition(all, 0.2s)
+  transition all 0.2s ease-in-out
   &:focus
     color rgba($LightGreen, 1)
     outline none
@@ -96,24 +74,24 @@ div#primaryMenuTabs
     font-size 15px
     opacity 0.3
     cursor pointer
-    transition(all, 0.2s)
+    transition all 0.2s ease-in-out
     > div.tabLine
       position absolute
       bottom -4px
       height 4px
       width 0
       background-color $LightDullGreen
-      transition(all, 0.2s)
+      transition all 0.2s ease-in-out
     &:hover
       opacity 1
       > span
         margin-left 10px
-        transition(all, 0.2s)
+        transition all 0.2s ease-in-out
   > div.activeTab
     opacity 1
     > div.tabLine
       width 100%
-      transition(all, 0.2s)
+      transition all 0.2s ease-in-out
   > div > span
     position absolute
     opacity 0.5
@@ -153,8 +131,8 @@ div#primaryMenuOptions
     overflow-x hidden
     &:hover
       background $DarkBlue
-      scaleTo(0.9)
-      transition(all, 0.2s)
+      transform scale(0.9)
+      transition all 0.2s ease-in-out
 
 div.menuEventOption
   position relative
@@ -171,7 +149,7 @@ div.menuEventOption
   overflow hidden
   &:hover
     background $DarkBlue
-    transition(all, 0.2s)
+    transition all 0.2s ease-in-out
   > span.eventCorner
     width 10px
     height 10px
@@ -179,7 +157,7 @@ div.menuEventOption
     position absolute
     bottom -5px
     right -5px
-    rotateTo(45deg)
+    transform rotate(45deg)
 
 div.searchOption
   position relative
@@ -217,4 +195,4 @@ div.searchOption
   &:hover
     background $DarkBlue
     text-shadow 0 1px 2px rgba($DarkestBlue, 0.5)
-    transition(all, 0.2s)
+    transition all 0.2s ease-in-out
