@@ -185,33 +185,32 @@
                 $Objects.PrimaryMenuContainer.html('');
                 for (var i = 0; i < Globals.Categories.length; i++) {
                     $Objects.PrimaryMenuContainer
-                        .append($("<div data-index=\"" + i + "\" data-catid=\"" + Globals.Categories[i].properties.id + "\" class=\"menuOption\">" + Globals.Categories[i].properties.title + "</div>")
+                        .append($("<div data-index=\"" + i + "\" class=\"menuOption\">" + Globals.Categories[i].properties.title + "</div>")
                             .on('click', Functions.DisplayEvents));
                 }
                 Functions.RevealMenuOptions();
             },
-            DisplayEvents: function (target) {
+            DisplayEvents: function () {
                 Globals.isCategoriesDisplayed = false;
-                var CategoryIndex = $(target.target).data().index,
-                    CategoryId = $(target.target).data().catid,
-                    CategoryObject = Globals.Categories[CategoryIndex];
+                var CategoryIndex = $(this).attr('data-index'),
+                    CategoryObject = Globals.Categories[CategoryIndex],
+                    CategoryId = CategoryObject.properties.id;
                 $Objects.PrimaryMenuContainer.html('');
                 $Objects.CategoryTab.html('<span class="glyphicon glyphicon-chevron-left"></span>' + CategoryObject.properties.title + '<div class="tabLine"></div>');
                 for (var i = 0; i < CategoryObject.events.length; i++) {
-                    //Category id stored in Category.properties is not correct i think, all categories have id = 0
-                    var Event = $("<div data-catid=\"" + (CategoryId + 1) + "\" data-eventid=\"" + CategoryObject.events[i].properties.id + "\" class=\"menuEventOption\">" + CategoryObject.events[i].properties.title + "<span class=\"eventCorner\"></span></div>")
+                    var Event = $("<div data-catid=\"" + CategoryId + "\" data-eventid=\"" + CategoryObject.events[i].properties.id + "\" class=\"menuEventOption\">\n    " + CategoryObject.events[i].properties.title + "<span class=\"eventCorner\"></span>\n</div>")
                         .on('click', Functions.MenuEventClicked);
                     $Objects.PrimaryMenuContainer.append(Event);
                 }
                 if (CategoryObject.events.length === 0) {
-                    $Objects.PrimaryMenuContainer.append('<h3>Events coming soon</h3>');
+                    $Objects.PrimaryMenuContainer.append('<h3>Events Coming Soon!</h3>');
                 }
                 Functions.RevealMenuOptions();
             },
-            MenuEventClicked: function (target) {
-                var Id = $(target.target).data();
+            MenuEventClicked: function () {
+                var $this = $(this);
                 Functions.CloseMenu();
-                Functions.GetEventFromID(Id.catid, Id.eventid).showDetails();
+                Functions.GetEventFromID($this.attr('data-catid'), $this.attr('data-eventid')).showDetails();
             },
             GetSearchResults: function (searchString) {
                 $Objects.PrimaryMenuContainer.html('');

@@ -15,6 +15,23 @@
 (function ($, w, d, t, undefined) {
     'use strict';
 
+    String.prototype.capitalize = function () {
+        var WordArray = this.split(' '),
+            WordIndex = 0,
+            WordCount = WordArray.length,
+            Word,
+            CapitalizedString = '';
+        if (WordCount > 0) {
+            Word = WordArray[WordIndex++];
+            CapitalizedString += Word.charAt(0).toUpperCase() + Word.slice(1);
+            for (; WordIndex < WordCount; WordIndex++) {
+                Word = WordArray[WordIndex];
+                CapitalizedString += ' ' + Word.charAt(0).toUpperCase() + Word.slice(1);
+            }
+        }
+        return CapitalizedString;
+    };
+
     /**
      * A point having X and Y coordinates.
      * @param {Number} x - X coordinate of the point.
@@ -58,8 +75,20 @@
                 title: 'Event',
                 /** @type String */
                 description: 'Description',
+                image: 'IMAGE_URL',
+                venue: 'Venue',
+                startTime: 'Start Time',
+                endTime: 'End Time',
+                currentRound: 1,
+                totalRounds: 1,
+                maxParticipants: 1,
+                status: 'Not Started',
+                pdf: 'PDF_URL',
+                rules: 'Rules',
+                coordinators: [],
                 /** @type Number */
-                delay: 0
+                delay: 0,
+                color: 'rgb(255, 255, 255)'
             },
             CategoryDefaultProperties: {
                 /** @type Number */
@@ -138,15 +167,39 @@
                 }
             },
             /**
+             * Generates a random RGB color representation in the form rgb(R, G, B) and returns it as a string.
+             * @param {int} [minRed]
+             * @param {int} [maxRed]
+             * @param {int} [minGreen]
+             * @param {int} [maxGreen]
+             * @param {int} [minBlue]
+             * @param {int} [maxBlue]
+             * @return {String}
+             */
+            GenerateRandomColor: function (minRed, maxRed, minGreen, maxGreen, minBlue, maxBlue) {
+                minRed = minRed || 0;
+                maxRed = maxRed || 255;
+                minGreen = minGreen || 0;
+                maxGreen = maxGreen || 255;
+                minBlue = minBlue || 0;
+                maxBlue = maxBlue || 255;
+                var R = Math.round(Math.random() * (maxRed - minRed + 1) + minRed),
+                    G = Math.round(Math.random() * (maxGreen - minGreen + 1) + minGreen),
+                    B = Math.round(Math.random() * (maxBlue - minBlue + 1) + minBlue);
+                return 'rgb(' + R + ', ' + G + ', ' + B + ')';
+            },
+            /**
              * Creates a new Event jQuery object with given attributes and returns it.
              * @param {String} title - Title for the Event element.
+             * @param {String} color - RGB representation of the Color of the Event Star.
              * @param {Object} [attributes] - Attributes to be given to the new Event jQuery object which are
              * applied using TweenMax.set().
              * @return {jQuery}
              */
-            $CreateEvent: function (title, attributes) {
+            $CreateEvent: function (title, color, attributes) {
                 var $clone = $Cache.Event.clone();
                 $clone.find('text').html(title);
+                $clone.find('.Star').css('fill', color);
                 t.set($clone, attributes);
                 return $clone;
             },
@@ -356,7 +409,19 @@
                                             categoryEventMap[event.CategoryId].push({
                                                 id: event.Id,
                                                 societyID: event.SocietyId,
-                                                title: event.Name
+                                                title: event.Name,
+                                                description: event.Description,
+                                                image: event.Image,
+                                                venue: event.Venue,
+                                                startTime: event.Start,
+                                                endTime: event.End,
+                                                currentRound: event.CurrentRound,
+                                                totalRounds: event.TotalRounds,
+                                                maxParticipants: event.MaxContestants,
+                                                status: event.Status,
+                                                pdf: event.Pdf,
+                                                rules: event.Rules,
+                                                coordinators: event.Coordinators
                                             });
                                         }
                                         /*
@@ -372,7 +437,7 @@
                                             category = categories[categoryIndex];
                                             Globals.Categories.push(new Category(categoryIndex, {
                                                 id: category.Id,
-                                                title: category.Name
+                                                title: category.Name.toLowerCase().capitalize()
                                             }, categoryEventMap[category.Id]));
                                         }
                                     }
@@ -567,11 +632,17 @@
                 position = this.position = new Point(
                     Globals.CategoryDiameter * (Math.random() - 0.5),
                     Globals.CategoryDiameter * (Math.random() - 0.5)),
-                $event = this.$event = Functions.$CreateEvent(properties.title, {
-                    x: position.x,
-                    y: position.y,
-                    display: 'none'
-                });
+                $event = this.$event = Functions.$CreateEvent(
+                    properties.title,
+                    (properties.color = Functions.GenerateRandomColor(
+                        160, 255,
+                        160, 255,
+                        160, 255)),
+                    {
+                        x: position.x,
+                        y: position.y,
+                        display: 'none'
+                    });
             $.data($event.get(0), 'Event', this);
             this.$title = $event.find('text');
             return this;
@@ -608,9 +679,11 @@
          * @return {Event}
          */
         showDetails: function () {
+            $Objects.EventSVGStar.css('fill', this.properties.color);
             $Objects.EventContentTitle.text(this.properties.title);
             $Objects.EventContentCategory.text(this.category.properties.title);
             $Objects.EventContentDescription.text(this.properties.description);
+            $Objects.EventContentRules.text(this.properties.rules);
             Functions.ShowEventSection();
             Functions.HideGalaxyContainer();
             return this;
@@ -639,6 +712,7 @@
         $Objects.EventContentTitle = $('#EventContentTitle', $Objects.EventContentContainer);
         $Objects.EventContentCategory = $('#EventContentCategory', $Objects.EventContentContainer);
         $Objects.EventContentDescription = $('#EventContentDescription', $Objects.EventContentContainer);
+        $Objects.EventContentRules = $('#EventContentRules', $Objects.EventContentContainer);
 
         Functions.WindowOnResize();
         Globals.GalaxyMovementAnimationFrameID = RequestAnimationFrame(Functions.GalaxyMovementAnimationLoop);

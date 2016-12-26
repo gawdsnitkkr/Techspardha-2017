@@ -1,5 +1,5 @@
 <svg cursor="pointer" id="searchBarSVG" height="40" width="250" viewBox="0 0 250 40">
-	<g id="MenuIcon" stroke-linejoin="round" transform="matrix(.81020 0 0 .87264 3.9882 -880.29)" stroke="#fff" stroke-width="2">
+	<g id="MenuIcon" transform="matrix(.81020 0 0 .87264 3.9882 -880.29)" stroke="#000" stroke-width="2.3">
 		<path id="menuTopLine" d="m3.4532 1011.17h50"/>
 		<path id="menuBottomLine" d="m3.4532 1052.5h50"/>
 		<path id="searchHandle" d="m 3.4532,1031.6817 50,0"/>
