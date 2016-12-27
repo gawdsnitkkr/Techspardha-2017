@@ -1,198 +1,278 @@
 @import 'ColorPalette.styl'
 
-#mainMenuWrapper {
+#MenuSection {
+  width: 100vw;
+  height: 100vh;
   position: fixed;
-  top: 0;
+  top: 100vh;
   left: 0;
-  z-index: 5;
+  z-index: 2;
+  opacity: 0;
+  color: $PaperWhite;
+  background-color: rgba($DarkestBlue, 0.93);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-/*
-  Do not use ELEMENT#ID or ELEMENT.CLASS because end user might want to change the ELEMENT from DIV to something else.
-  Also its slightly faster for JavaScript engines to do #ID instead of ELEMENT#ID, so make a habit of
-  using only #ID whenever possible.
-*/
-#searchMenu
-  position absolute
-  top 100vh
-  width 100vw
-  height 100vh
-  overflow hidden
-  padding 0
-  color $PaperWhite
-  font-family $ContentFontFamily
-  background-color rgba($DarkestBlue, 0.9)
-  opacity: 0
-
-#searchBarSVG
-  position fixed
-  margin-left 20px
-  margin-top 20px
-
-#searchBarSVG * {
-  stroke $SkyBlue
+#MenuContainer {
+  padding-top: 8.8rem;
+  font-size: 1.6rem;
 }
 
-#menuButtonOverlay {
-  cursor: pointer;
+#MenuItemRow {
+  background-color: $Yellow;
+  .MenuItem {
+
+    display: block;
+    font-size: 1.8rem;
+    font-family: $HeadingThreeFontFamily;
+    font-weight: 600;
+    text-decoration: none;
+    color: $DarkestBlue;
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+    padding-top: 1.2rem;
+    padding-bottom: 1rem;
+    text-align: center
+    user-select: none;
+
+    &:hover {
+      color: $DarkBlue;
+    }
+
+  }
 }
 
-#searchBox
-  display: none
-  position fixed
-  margin-top 19px
-  margin-left 60px
-  color rgba($PaperWhite, 0.7)
-  background none
-  border none
-  font-size 1.6rem
-  font-family $ContentFontFamily
-  height 40px
-  width 200px
-  transition color 0.2s ease-in-out
-  &:focus
-    color rgba($PaperWhite, 1)
-    outline none
+#MenuHeadingFrame {
 
-#primaryMenuContainer
-  position relative
-  top 70px
+  height: 9.6rem;
+  user-select: none;
 
-#primaryMenuTabs
-  position absolute
-  border-bottom 1px solid rgba($DarkSkyBlue, 1)
-  height 54px
-  width 100%
-  margin-top: -54px;
-  > div.tab
-    margin-top 1px
-    display inline-block
-    width 50%
-    margin-left -9px
-    text-align center
-    padding 10px
-    padding-top 15px
-    padding-bottom 12px
-    font-size 15px
-    text-transform: capitalize;
-    opacity 0.3
-    cursor pointer
-    transition all 0.2s ease-in-out
-    > div.tabLine
-      position absolute
-      bottom -4px
-      height 4px
-      width 0
-      background-color $DarkSkyBlue
-      transition all 0.2s ease-in-out
-    &:hover
-      opacity 1
-      > span
-        margin-left 10px
-        transition all 0.2s ease-in-out
-  > div.activeTab
-    opacity 1
-    > div.tabLine
-      width 100%
-      transition all 0.2s ease-in-out
-  > div > span
-    position absolute
-    opacity 0.5
-    left 15px
-    top 18px
+  .MenuHeading {
 
-#primaryOptionWrapper
-  margin-top 54px
+    position: absolute;
+    top: 2rem;
+    left: -24rem;
+    margin: 0;
+    padding: 0;
+    opacity: 0;
 
-#primaryMenuOptions
-  padding-top 20px
-  padding-left 10px
-  padding-right 10px
-  padding-bottom 20px
-  position relative
-  text-align center
-  height auto
-  > h3
-    opacity 0.5
-    font-size 20px
-  > div.menuOption
-    position relative
-    margin 20px
-    display inline-block
-    width 250px
-    opacity 0
-    padding 20px
-    font-size 20px
-    border-radius 5px
-    cursor pointer
-    overflow-x hidden
-    transition transform 0.2s ease-in-out, background-color 0.2s ease-in-out
-    &:hover
-      background $DarkBlue
-      transform scale(0.9)
+    &.Active {
+      left: 1rem;
+      opacity: 1;
+    }
 
-.menuEventOption
-  position relative
-  margin 20px
-  display inline-block
-  width 250px
-  opacity 0
-  padding 20px
-  font-size 15px
-  border-radius 2px
-  border 1px solid rgba(#fff, 0.5)
-  cursor pointer
-  overflow hidden
-  &:hover
-    background $DarkBlue
-    transition all 0.2s ease-in-out
-  > span.eventCorner
-    width 10px
-    height 10px
-    background-color rgba(#fff, 0.5)
-    position absolute
-    bottom -5px
-    right -5px
-    transform rotate(45deg)
+  }
 
-.searchOption
-  position relative
-  display inline-block
-  width 300px
-  margin 20px
-  margin-top 10px
-  opacity 0
-  background-color rgba($DarkestBlue, 0.5)
-  font-size 15px
-  border-radius 5px
-  cursor pointer
-  height 82px
-  overflow hidden
-  > div
-    text-align center
-  > div > div.searchNameInfo
-    padding 5px
-    background-color rgba($DarkBlue, 0.2)
-  > div > div.searchDesc
-    border-top 1px solid rgba($LightDullGreen, 0.4)
-    padding-left 24px
-    padding-right 24px
-    height 40px
-    padding-top 5px
-    opacity 0.6
-    font-size 12px
-    overflow-y hidden
-  > div > div > div > span.searchDate
-    padding-left 10px
-    color $LighterGreen
-    opacity 0.5
-  &:hover
-    background $DarkBlue
-    text-shadow 0 1px 2px rgba($DarkestBlue, 0.5)
-    transition all 0.2s ease-in-out
+  #MenuBackButton {
 
-#MenuClose {
+    cursor: pointer;
+    position: absolute;
+    top: 3rem;
+    left: -4.2rem;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+
+    svg {
+
+      fill: $Pink;
+      width: 3.2rem;
+      height: 3.2rem;
+      transform: rotate(0deg);
+      transform-origin: 50% 50% 0;
+      transition: fill 0.3s ease-in-out, transform 0.3s ease-in-out;
+
+      g {
+        transform: scale(1);
+        transition: transform 0.3s ease-in-out;
+        transform-origin: 50% 50% 0;
+      }
+
+      &:hover {
+
+        fill: $LightPink;
+        transform: rotate(120deg);
+
+      }
+
+      &:active {
+        g {
+          transform: scale(0.8);
+        }
+      }
+
+    }
+
+    &.Show {
+      left: 1rem;
+      opacity: 1;
+    }
+
+  }
+
+}
+
+.MenuFrame {
+
   position: absolute;
-  top: 4.8rem;
-  right: 2.4rem;
+  top: 30rem;
+  left: 0;
+  width: 100vw;
+  height: auto;
+  padding: 0.5rem 1.5rem 1.5rem 1.5rem;
+  display: none;
+  opacity: 0;
+
+  &.Active {
+    display: block;
+    opacity: 1;
+    top: 0;
+  }
+
+}
+
+#CategoryListFrame {
+  .CategoryButton {
+
+    padding-bottom: 1rem;
+
+    .CategoryButtonSVG {
+
+      width: 100%;
+      max-width: 30rem;
+      height: auto;
+      cursor: pointer;
+      user-select: none;
+
+      text {
+        font-family: $HeadingThreeFontFamily;
+        font-weight: 300;
+        font-size: 4.8rem;
+        fill: rgba($PaperWhite, 0.7);
+        transform: translateX(0);
+        transition: transform 0.3s ease-out, fill 0.3s ease-out;
+      }
+
+      path {
+        stroke: $DarkSkyBlue;
+        fill: $DarkSkyBlue;
+        stroke-width: 2.4;
+        transform: scaleX(0.8);
+        transition: transform 0.5s ease-out, stroke 0.5s ease-out, fill 0.5s ease-out;
+      }
+
+      &:hover {
+        text {
+          transform: translateX(2rem);
+          fill: rgba($PaperWhite, 1);
+        }
+        path {
+          transform: scaleX(1);
+          stroke: $SkyBlue;
+          fill: $SkyBlue;
+        }
+      }
+      &:active {
+        text {
+          transform: translateX(1rem);
+          fill: rgba($SkyBlue, 1);
+        }
+        path {
+          transform: scaleX(0.9);
+          stroke: $Yellow;
+          fill: $Yellow;
+        }
+      }
+
+    }
+  }
+}
+
+.EventButton {
+
+  padding: 1rem;
+
+  .EventButtonContainer {
+
+    border: solid 0.1rem $DarkSkyBlue;
+    padding: 1rem;
+    margin: 0;
+    font-family: $ContentFontFamily;
+    cursor: pointer;
+    user-select: none;
+    transition: border 0.3s ease-in-out;
+
+    span {
+      display: inline-block;
+      font-family: $HeadingThreeFontFamily;
+      font-size: 2rem;
+      font-weight: 400;
+      color: $SkyBlue;
+      padding: 0;
+      transition: padding 0.3s ease-in-out;
+    }
+
+    svg {
+      position: absolute;
+      bottom: 0.2rem;
+      right: 0.2rem;
+      fill: $DarkSkyBlue;
+      width: 1.6rem;
+      height: 1.6rem;
+      transform: scale(1);
+      transform-origin: 100% 100% 0;
+      transition: transform 0.3s ease-in-out, fill 0.3s ease-in-out;
+    }
+
+    &:hover {
+
+      border-color: $SkyBlue;
+
+      span {
+        padding-left: 1rem;
+      }
+
+      svg {
+        fill: $Yellow;
+        transform: scale(1.2);
+      }
+
+    }
+
+    &:active {
+
+      span {
+        padding-left: 0.5rem;
+      }
+
+      svg {
+        fill: $Pink;
+        transform: scale(0.8);
+      }
+
+    }
+
+  }
+}
+
+#SearchListFrame {
+  #NoSearchResults {
+    margin: auto;
+    h3 {
+      color: $Pink;
+    }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #MenuItemRow {
+    .MenuItem {
+      font-size: 1.6rem;
+    }
+    .col-xs-3 {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }
 }

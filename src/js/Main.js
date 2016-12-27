@@ -47,10 +47,12 @@
     var RequestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.mozRequestAnimationFrame,
         CancelAnimationFrame = w.cancelAnimationFrame || w.webkitCancelAnimationFrame || w.mozCancelAnimationFrame;
 
+    /** @property {jQuery} */
     var $Cache = {},
-        $Objects = {},
-        Globals = {
-            APIAddress: 'http://anshulmalik.me/api',
+        $Objects = {};
+
+    var Globals = {
+            APIAddress: 'http://techspardha.org/api',
             WindowWidth: w.innerWidth,
             WindowHeight: w.innerHeight,
             WindowHalfWidth: w.innerWidth / 2,
@@ -64,6 +66,8 @@
             GalaxyContainerY: 0,
             GalaxyMovementSpeed: 2,
             GalaxyMovementAnimationFrameID: undefined,
+            EventSectionShowing: false,
+            EventSectionTransiting: false,
             EventSVGStarScale: 100,
             EventSVGStarHalfSize: 400, // ActualSize * EventSVGStarScale
             EventDefaultProperties: {
@@ -105,6 +109,26 @@
             EventIDToIndexMap: {}
         },
         Functions = {
+            ShowLoading: function () {
+                $Objects.LoadingFrame.addClass('Show');
+            },
+            HideLoading: function () {
+                t.killTweensOf($Objects.LoadingFrame);
+                t.fromTo($Objects.LoadingFrame, 1, {
+                    opacity: 1,
+                    scale: 1,
+                    transformOrigin: '50% 50% 0'
+                }, {
+                    opacity: 0,
+                    scale: 1.3,
+                    transformOrigin: '50% 50% 0',
+                    ease: Power4.easeInOut,
+                    clearProps: 'all',
+                    onComplete: function () {
+                        $Objects.LoadingFrame.removeClass('Show');
+                    }
+                });
+            },
             /**
              * Sets the viewBox attribute of the #GalaxySVG and the #EventSVG to '0 0 WINDOW_WIDTH WINDOW_HEIGHT'.
              */
@@ -135,15 +159,29 @@
                 });
             },
             /**
+             * Requests the Galaxy Movement Animation Loop and defines the Globals.GalaxyMovementAnimationFrameID with
+             * the value returned by the RequestAnimationFrame() function as animation loop ID.
+             */
+            RequestGalaxyMovementAnimationLoop: function () {
+                Globals.GalaxyMovementAnimationFrameID = RequestAnimationFrame(Functions.GalaxyMovementAnimationLoop);
+            },
+            /**
+             * Cancels the Galaxy Movement Animation Loop defined by the Globals.GalaxyMovementAnimationFrameID and
+             * makes it undefined to signify that the animation loop has been canceled.
+             */
+            CancelGalaxyMovementAnimationLoop: function () {
+                CancelAnimationFrame(Globals.GalaxyMovementAnimationFrameID);
+                Globals.GalaxyMovementAnimationFrameID = undefined;
+            },
+            /**
              * Galaxy movement animation loop.
              */
             GalaxyMovementAnimationLoop: function () {
                 if (Globals.GalaxyContainerShowing && !Globals.GalaxyContainerTransiting) {
                     Functions.MoveGalaxyContainerBy(Globals.MouseDeltaX, Globals.MouseDeltaY);
-                    Globals.GalaxyMovementAnimationFrameID = RequestAnimationFrame(Functions.GalaxyMovementAnimationLoop);
+                    Functions.RequestGalaxyMovementAnimationLoop();
                 } else {
-                    CancelAnimationFrame(Globals.GalaxyMovementAnimationFrameID);
-                    Globals.GalaxyMovementAnimationFrameID = undefined;
+                    Functions.CancelGalaxyMovementAnimationLoop();
                 }
             },
             WindowOnResize: function () {
@@ -152,18 +190,23 @@
                 Functions.UpdateViewBoxSize();
                 Functions.UpdateEventSVGStarPosition();
             },
-            WindowOnMouseMove: function (e) {
-                Globals.MouseDeltaX = ((Globals.WindowHalfWidth - e.pageX) / Globals.WindowHalfWidth) * Globals.GalaxyMovementSpeed;
-                Globals.MouseDeltaY = ((Globals.WindowHalfHeight - e.pageY) / Globals.WindowHalfHeight) * Globals.GalaxyMovementSpeed;
-                if (Globals.GalaxyMovementAnimationFrameID === undefined) {
-                    Globals.GalaxyMovementAnimationFrameID = RequestAnimationFrame(Functions.GalaxyMovementAnimationLoop);
+            WindowOnMouseMove: function (event) {
+                Globals.MouseDeltaX = ((Globals.WindowHalfWidth - event.pageX) / Globals.WindowHalfWidth) * Globals.GalaxyMovementSpeed;
+                Globals.MouseDeltaY = ((Globals.WindowHalfHeight - event.pageY) / Globals.WindowHalfHeight) * Globals.GalaxyMovementSpeed;
+                if (!Globals.MenuSectionShowing && !Globals.EventSectionShowing &&
+                    Globals.GalaxyMovementAnimationFrameID === undefined) {
+                    Functions.RequestGalaxyMovementAnimationLoop();
                 }
             },
-            WindowOnMouseOut: function (e) {
-                var target = e.target;
+            WindowOnMouseOut: function (event) {
+                var target = event.target;
                 if (!target || ((target.nodeName.toLowerCase() === 'svg') && (target.id === 'GalaxySVG'))) {
-                    CancelAnimationFrame(Globals.GalaxyMovementAnimationFrameID);
-                    Globals.GalaxyMovementAnimationFrameID = undefined;
+                    Functions.CancelGalaxyMovementAnimationLoop();
+                }
+            },
+            WindowOnKeyDown: function (event) {
+                if (event.keyCode === 27) {
+                    Functions.HeaderCloseButtonOnClick();
                 }
             },
             /**
@@ -222,132 +265,231 @@
                 event.showDetails();
             },
             /**
+             * Shows the #Logo element in the given duration and calls the given callback function
+             * on transition completion.
+             * @param {Number} [duration]
+             * @param {Function} [callback]
+             */
+            ShowLogo: function (duration, callback) {
+                duration = duration || 1;
+                callback = callback || undefined;
+                t.killTweensOf($Objects.Logo);
+                t.fromTo($Objects.Logo, duration, {
+                    top: '-6.4rem'
+                }, {
+                    top: '1.2rem',
+                    ease: Power4.easeOut,
+                    onComplete: callback
+                });
+            },
+            /**
+             * Hides the #Logo element in the given duration and calls the given callback function
+             * on transition completion.
+             * @param {Number} [duration]
+             * @param {Function} [callback]
+             */
+            HideLogo: function (duration, callback) {
+                duration = duration || 1;
+                callback = callback || undefined;
+                t.killTweensOf($Objects.Logo);
+                t.fromTo($Objects.Logo, duration, {
+                    top: '1.2rem'
+                }, {
+                    top: '-6.4rem',
+                    ease: Power4.easeOut,
+                    onComplete: callback
+                });
+            },
+            /**
+             * Shows the #HeaderCloseButton element in the given duration and calls the given callback function
+             * on transition completion.
+             * @param {Number} [duration]
+             * @param {Function} [callback]
+             */
+            ShowHeaderCloseButton: function (duration, callback) {
+                duration = duration || 1;
+                callback = callback || undefined;
+                t.killTweensOf($Objects.HeaderCloseButton);
+                t.fromTo($Objects.HeaderCloseButton, duration, {
+                    top: '12.4rem',
+                    opacity: 0
+                }, {
+                    top: '5.4rem',
+                    opacity: 1,
+                    ease: Power4.easeOut,
+                    onComplete: callback
+                });
+            },
+            /**
+             * Hides the #HeaderCloseButton element in the given duration and calls the given callback function
+             * on transition completion.
+             * @param {Number} [duration]
+             * @param {Function} [callback]
+             */
+            HideHeaderCloseButton: function (duration, callback) {
+                duration = duration || 1;
+                callback = callback || undefined;
+                t.killTweensOf($Objects.HeaderCloseButton);
+                t.fromTo($Objects.HeaderCloseButton, duration, {
+                    top: '5.4rem',
+                    opacity: 1
+                }, {
+                    top: '12.4rem',
+                    opacity: 0,
+                    ease: Power4.easeOut,
+                    onComplete: callback
+                });
+            },
+            /**
              * Shows the #GalaxyContainer element in the given duration and calls the given callback function
              * on transition completion.
-             * @param [duration]
-             * @param [callback]
+             * @param {Number} [duration]
+             * @param {Function} [callback]
              */
             ShowGalaxyContainer: function (duration, callback) {
                 duration = duration || 2;
                 callback = callback || undefined;
-                Globals.GalaxyContainerTransiting = true;
-                t.fromTo($Objects.GalaxyContainer, duration, {
-                    display: 'block',
-                    opacity: 0,
-                    scale: 0.5,
-                    transformOrigin: '50% 50% 0'
-                }, {
-                    opacity: 1,
-                    scale: 1,
-                    transformOrigin: '50% 50% 0',
-                    ease: Power4.easeOut,
-                    onComplete: function () {
-                        Globals.GalaxyContainerTransiting = false;
-                        Globals.GalaxyContainerShowing = true;
-                        if ($.isFunction(callback)) {
-                            callback();
+                if (!Globals.GalaxyContainerShowing && !Globals.GalaxyContainerTransiting) {
+                    Globals.GalaxyContainerTransiting = true;
+                    t.killTweensOf($Objects.GalaxyContainer);
+                    t.fromTo($Objects.GalaxyContainer, duration, {
+                        display: 'block',
+                        opacity: 0,
+                        scale: 0.5,
+                        transformOrigin: '50% 50% 0'
+                    }, {
+                        opacity: 1,
+                        scale: 1,
+                        transformOrigin: '50% 50% 0',
+                        ease: Power4.easeOut,
+                        onComplete: function () {
+                            Globals.GalaxyContainerTransiting = false;
+                            Globals.GalaxyContainerShowing = true;
+                            if ($.isFunction(callback)) {
+                                callback();
+                            }
                         }
-                    }
-                });
+                    });
+                }
             },
             /**
              * Hides the #GalaxyContainer element in the given duration and calls the given callback function
              * on transition completion.
-             * @param [duration]
-             * @param [callback]
+             * @param {Number} [duration]
+             * @param {Function} [callback]
              */
             HideGalaxyContainer: function (duration, callback) {
                 duration = duration || 2;
                 callback = callback || undefined;
-                Globals.GalaxyContainerTransiting = true;
-                t.fromTo($Objects.GalaxyContainer, duration, {
-                    display: 'block',
-                    opacity: 1,
-                    scale: 1,
-                    transformOrigin: '50% 50% 0'
-                }, {
-                    opacity: 0,
-                    scale: 0.5,
-                    transformOrigin: '50% 50% 0',
-                    ease: Power4.easeOut,
-                    onComplete: function () {
-                        Globals.GalaxyContainerTransiting = false;
-                        $Objects.GalaxyContainer.css('display', 'none');
-                        Globals.GalaxyContainerShowing = false;
-                        if ($.isFunction(callback)) {
-                            callback();
+                if (Globals.GalaxyContainerShowing && !Globals.GalaxyContainerTransiting) {
+                    Globals.GalaxyContainerTransiting = true;
+                    t.killTweensOf($Objects.GalaxyContainer);
+                    t.fromTo($Objects.GalaxyContainer, duration, {
+                        display: 'block',
+                        opacity: 1,
+                        scale: 1,
+                        transformOrigin: '50% 50% 0'
+                    }, {
+                        opacity: 0,
+                        scale: 0.5,
+                        transformOrigin: '50% 50% 0',
+                        ease: Power4.easeOut,
+                        onComplete: function () {
+                            Globals.GalaxyContainerTransiting = false;
+                            $Objects.GalaxyContainer.css('display', 'none');
+                            Globals.GalaxyContainerShowing = false;
+                            if ($.isFunction(callback)) {
+                                callback();
+                            }
                         }
-                    }
-                });
+                    });
+                }
             },
             /**
              * Shows the #EventSection element in the given duration and calls the given callback function
              * on transition completion.
-             * @param [duration]
-             * @param [callback]
+             * @param {Number} [duration]
+             * @param {Function} [callback]
              */
             ShowEventSection: function (duration, callback) {
                 duration = duration || 2;
                 callback = callback || undefined;
-                var halfDuration = duration / 2;
-                $Objects.EventSVGStarShells.css('display', 'none');
-                t.fromTo($Objects.EventSection, duration, {
-                    display: 'block',
-                    opacity: 0,
-                    top: '100vh'
-                }, {
-                    opacity: 1,
-                    top: 0,
-                    ease: Power4.easeOut,
-                    onComplete: function () {
-                        $Objects.EventSVGStarShells.css('display', 'block');
-                    }
-                });
-                t.fromTo($Objects.EventContentContainer, halfDuration, {
-                    opacity: 0
-                }, {
-                    opacity: 1,
-                    ease: Power4.easeOut,
-                    delay: halfDuration,
-                    onComplete: callback
-                });
-                t.staggerFromTo($Objects.EventContentContainerElements, halfDuration, {
-                    opacity: 0,
-                    top: 50
-                }, {
-                    opacity: 1,
-                    top: 0,
-                    ease: Power4.easeOut,
-                    delay: halfDuration
-                }, 0.2);
+                if (!Globals.EventSectionShowing && !Globals.EventSectionTransiting) {
+                    var halfDuration = duration / 2;
+                    Globals.EventSectionTransiting = true;
+                    $Objects.EventSVGStarShells.css('display', 'none');
+                    Functions.HideLogo();
+                    Functions.ShowHeaderCloseButton();
+                    t.killTweensOf($Objects.EventSection);
+                    t.fromTo($Objects.EventSection, duration, {
+                        display: 'block',
+                        opacity: 0,
+                        top: '100vh'
+                    }, {
+                        opacity: 1,
+                        top: 0,
+                        ease: Power4.easeOut,
+                        onComplete: function () {
+                            $Objects.EventSVGStarShells.css('display', 'block');
+                        }
+                    });
+                    t.killTweensOf($Objects.EventContentContainer);
+                    t.fromTo($Objects.EventContentContainer, halfDuration, {
+                        opacity: 0
+                    }, {
+                        opacity: 1,
+                        ease: Power4.easeOut,
+                        delay: halfDuration,
+                        onComplete: function () {
+                            Globals.EventSectionTransiting = false;
+                            Globals.EventSectionShowing = true;
+                            if ($.isFunction(callback)) {
+                                callback();
+                            }
+                        }
+                    });
+                    t.killTweensOf($Objects.EventContentContainerElements);
+                    t.staggerFromTo($Objects.EventContentContainerElements, halfDuration, {
+                        opacity: 0,
+                        top: 50
+                    }, {
+                        opacity: 1,
+                        top: 0,
+                        ease: Power4.easeOut,
+                        delay: halfDuration
+                    }, 0.2);
+                }
             },
             /**
              * Hides the #EventSection element in the given duration and calls the given callback function
              * on transition completion.
-             * @param [duration]
-             * @param [callback]
+             * @param {Number} [duration]
+             * @param {Function} [callback]
              */
             HideEventSection: function (duration, callback) {
                 duration = duration || 2;
                 callback = callback || undefined;
-                t.fromTo($Objects.EventSection, duration, {
-                    display: 'block',
-                    opacity: 1
-                }, {
-                    opacity: 0,
-                    ease: Power4.easeOut,
-                    onComplete: function () {
-                        $Objects.EventSVGStarShells.css('display', 'none');
-                        $Objects.EventSection.css('display', 'none');
-                        if ($.isFunction(callback)) {
-                            callback();
+                if (Globals.EventSectionShowing && !Globals.EventSectionTransiting) {
+                    Functions.ShowLogo();
+                    Functions.HideHeaderCloseButton();
+                    t.killTweensOf($Objects.EventSection);
+                    t.fromTo($Objects.EventSection, duration, {
+                        display: 'block',
+                        opacity: 1
+                    }, {
+                        opacity: 0,
+                        ease: Power4.easeOut,
+                        onComplete: function () {
+                            Globals.EventSectionTransiting = false;
+                            $Objects.EventSVGStarShells.css('display', 'none');
+                            $Objects.EventSection.css('display', 'none');
+                            Globals.EventSectionShowing = false;
+                            if ($.isFunction(callback)) {
+                                callback();
+                            }
                         }
-                    }
-                });
-            },
-            EventCloseOnClick: function () {
-                Functions.HideEventSection();
-                Functions.ShowGalaxyContainer();
+                    });
+                }
             },
             /**
              * Extends the response object of the Site's API call so as to maintain consistency.
@@ -413,8 +555,8 @@
                                                 description: event.Description,
                                                 image: event.Image,
                                                 venue: event.Venue,
-                                                startTime: event.Start,
-                                                endTime: event.End,
+                                                startTime: new Date(event.Start),
+                                                endTime: new Date(event.End),
                                                 currentRound: event.CurrentRound,
                                                 totalRounds: event.TotalRounds,
                                                 maxParticipants: event.MaxContestants,
@@ -440,6 +582,7 @@
                                                 title: category.Name.toLowerCase().capitalize()
                                             }, categoryEventMap[category.Id]));
                                         }
+                                        $(d).trigger('initialized');
                                     }
                                 },
                                 complete: function () {
@@ -469,16 +612,26 @@
              */
             GetEventFromID: function (categoryID, eventID) {
                 return Functions.GetCategoryFromID(categoryID).events[Globals.EventIDToIndexMap[eventID]];
+            },
+            LogoOnClick: function () {
+                if (!Globals.GalaxyContainerShowing) {
+                    Functions.HideEventSection();
+                    Functions.ShowGalaxyContainer();
+                }
+            },
+            HeaderCloseButtonOnClick: function () {
+                if (Globals.MenuSectionShowing) {
+                    Functions.HideMenuSection();
+                } else if (Globals.EventSectionShowing) {
+                    Functions.HideEventSection();
+                    Functions.ShowGalaxyContainer();
+                }
             }
         };
 
-    // Give global (outside the scope of this anonymous function) reference to the public methods.
-    w.GetCategoryFromID = Functions.GetCategoryFromID;
-    w.GetEventFromID = Functions.GetEventFromID;
-
-    // Give global reference to the public variables and properties.
-    w.APIAddress = Globals.APIAddress;
-    w.Categories = Globals.Categories;
+    // Give truly global references to Globals and Functions.
+    w.Globals = Globals;
+    w.Functions = Functions;
 
     /**
      * Category entity.
@@ -694,6 +847,9 @@
 
     $(function () {
 
+        $Objects.LoadingFrame = $('#LoadingFrame', d);
+        $Objects.Logo = $('#Logo', d).on('click', Functions.LogoOnClick);
+        $Objects.HeaderCloseButton = $('#HeaderCloseButton', d).on('click', Functions.HeaderCloseButtonOnClick);
         $Objects.GalaxySVG = $('#GalaxySVG', d);
         $Objects.GalaxyContainer = $('#GalaxyContainer', $Objects.GalaxySVG);
         // Cache .Event element and remove the original.
@@ -715,7 +871,7 @@
         $Objects.EventContentRules = $('#EventContentRules', $Objects.EventContentContainer);
 
         Functions.WindowOnResize();
-        Globals.GalaxyMovementAnimationFrameID = RequestAnimationFrame(Functions.GalaxyMovementAnimationLoop);
+        Functions.RequestGalaxyMovementAnimationLoop();
         /*
          Due to a bug with Chrome (possibly other browsers too :p), the transformation does not apply
          correctly to the #EventSVGStar in the Functions.UpdateEventSVGStarPosition(). This is also mentioned
@@ -729,12 +885,13 @@
 
     $(d)
         .on('click', '.Event', Functions.EventOnClick)
-        .on('click', '#EventClose', Functions.EventCloseOnClick);
+        .on('initialized', Functions.HideLoading);
 
     $(w)
         .on('resize', Functions.WindowOnResize)
         .on('mouseout', Functions.WindowOnMouseOut)
-        .on('mousemove', Functions.WindowOnMouseMove);
+        .on('mousemove', Functions.WindowOnMouseMove)
+        .on('keydown', Functions.WindowOnKeyDown);
 
 })(jQuery, window, document, TweenMax);
 

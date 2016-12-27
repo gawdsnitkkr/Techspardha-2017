@@ -1,0 +1,59 @@
+@import 'ColorPalette.styl'
+
+#SearchBar {
+  position: absolute;
+  top: 2.4rem;
+  left: 1.4rem;
+  #SearchBarSVG {
+    * {
+      stroke: $SkyBlue;
+      fill: none;
+    }
+    #MenuIconOverlay {
+      fill: $SkyBlue;
+      opacity: 0;
+      stroke: none;
+      stroke-width: 0;
+      cursor: pointer;
+    }
+    #SearchBarBorder, #SearchGlass {
+      display: none;
+    }
+    #SearchGlass, #MenuIconMiddle {
+      stroke: $Yellow;
+    }
+  }
+  #SearchBarInput {
+    position: absolute;
+    top: 0.8rem;
+    left: 4.2rem;
+    width: 20rem;
+    outline: none;
+    border: none;
+    background: none;
+    font-family: $ContentFontFamily;
+    font-weight: 400;
+    font-size: 1.6rem;
+    color: rgba($PaperWhite, 0.5);
+    display: none;
+    transition: color 0.3s ease-in-out;
+
+    &::-webkit-input-placeholder {
+      color: $DarkSkyBlue;
+    }
+    &::-moz-placeholder {
+      color: $DarkSkyBlue;
+    }
+    &:-ms-input-placeholder {
+      color: $DarkSkyBlue;
+    }
+    &:-moz-placeholder {
+      color: $DarkSkyBlue;
+    }
+
+    &:focus {
+      color: rgba($PaperWhite, 1);
+    }
+
+  }
+}

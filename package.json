@@ -38,8 +38,11 @@
     "build": "npm run build:js && npm run build:css",
     "predeploy": "npm run clean",
     "deploy": "cp -r dist/* deploy/",
-    "postdeploy": "uglifyjs deploy/resources/js/Main.js > deploy/resources/js/Main.min.js -mc && rimraf deploy/resources/js/Main.js && npm run scriptSourceFix",
+    "postdeploy": "uglifyjs deploy/resources/js/Main.js > deploy/resources/js/Main.min.js -mc && rimraf deploy/resources/js/Main.js && npm run scriptSourceFix && npm run CDNBootstrap && npm run CDNjQuery && npm run CDNTweenMax",
     "scriptSourceFix": "replace \"resources/js/Main.js\" \"resources/js/Main.min.js\" deploy -r --include=\"*.html\"",
+    "CDNBootstrap": "replace \"../node_modules/bootstrap/dist/css/bootstrap.min.css\" \"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\" deploy -r --include=\"*.html\"",
+    "CDNjQuery": "replace \"../node_modules/jquery/dist/jquery.min.js\" \"https://code.jquery.com/jquery-3.1.1.min.js\" deploy -r --include=\"*.html\"",
+    "CDNTweenMax": "replace \"../node_modules/gsap/src/minified/TweenMax.min.js\" \"https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenMax.min.js\" deploy -r --include=\"*.html\"",
     "clean": "rimraf deploy/ && mkdir deploy"
   },
   "repository": {

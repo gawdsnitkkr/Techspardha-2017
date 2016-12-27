@@ -396,10 +396,12 @@
     var RequestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.mozRequestAnimationFrame,
         CancelAnimationFrame = w.cancelAnimationFrame || w.webkitCancelAnimationFrame || w.mozCancelAnimationFrame;
 
+    /** @property {jQuery} */
     var $Cache = {},
-        $Objects = {},
-        Globals = {
-            APIAddress: 'http://anshulmalik.me/api',
+        $Objects = {};
+
+    var Globals = {
+            APIAddress: 'http://techspardha.org/api',
             WindowWidth: w.innerWidth,
             WindowHeight: w.innerHeight,
             WindowHalfWidth: w.innerWidth / 2,
@@ -413,6 +415,8 @@
             GalaxyContainerY: 0,
             GalaxyMovementSpeed: 2,
             GalaxyMovementAnimationFrameID: undefined,
+            EventSectionShowing: false,
+            EventSectionTransiting: false,
             EventSVGStarScale: 100,
             EventSVGStarHalfSize: 400, // ActualSize * EventSVGStarScale
             EventDefaultProperties: {
@@ -454,6 +458,26 @@
             EventIDToIndexMap: {}
         },
         Functions = {
+            ShowLoading: function () {
+                $Objects.LoadingFrame.addClass('Show');
+            },
+            HideLoading: function () {
+                t.killTweensOf($Objects.LoadingFrame);
+                t.fromTo($Objects.LoadingFrame, 1, {
+                    opacity: 1,
+                    scale: 1,
+                    transformOrigin: '50% 50% 0'
+                }, {
+                    opacity: 0,
+                    scale: 1.3,
+                    transformOrigin: '50% 50% 0',
+                    ease: Power4.easeInOut,
+                    clearProps: 'all',
+                    onComplete: function () {
+                        $Objects.LoadingFrame.removeClass('Show');
+                    }
+                });
+            },
             /**
              * Sets the viewBox attribute of the #GalaxySVG and the #EventSVG to '0 0 WINDOW_WIDTH WINDOW_HEIGHT'.
              */
@@ -484,15 +508,29 @@
                 });
             },
             /**
+             * Requests the Galaxy Movement Animation Loop and defines the Globals.GalaxyMovementAnimationFrameID with
+             * the value returned by the RequestAnimationFrame() function as animation loop ID.
+             */
+            RequestGalaxyMovementAnimationLoop: function () {
+                Globals.GalaxyMovementAnimationFrameID = RequestAnimationFrame(Functions.GalaxyMovementAnimationLoop);
+            },
+            /**
+             * Cancels the Galaxy Movement Animation Loop defined by the Globals.GalaxyMovementAnimationFrameID and
+             * makes it undefined to signify that the animation loop has been canceled.
+             */
+            CancelGalaxyMovementAnimationLoop: function () {
+                CancelAnimationFrame(Globals.GalaxyMovementAnimationFrameID);
+                Globals.GalaxyMovementAnimationFrameID = undefined;
+            },
+            /**
              * Galaxy movement animation loop.
              */
             GalaxyMovementAnimationLoop: function () {
                 if (Globals.GalaxyContainerShowing && !Globals.GalaxyContainerTransiting) {
                     Functions.MoveGalaxyContainerBy(Globals.MouseDeltaX, Globals.MouseDeltaY);
-                    Globals.GalaxyMovementAnimationFrameID = RequestAnimationFrame(Functions.GalaxyMovementAnimationLoop);
+                    Functions.RequestGalaxyMovementAnimationLoop();
                 } else {
-                    CancelAnimationFrame(Globals.GalaxyMovementAnimationFrameID);
-                    Globals.GalaxyMovementAnimationFrameID = undefined;
+                    Functions.CancelGalaxyMovementAnimationLoop();
                 }
             },
             WindowOnResize: function () {
@@ -501,18 +539,23 @@
                 Functions.UpdateViewBoxSize();
                 Functions.UpdateEventSVGStarPosition();
             },
-            WindowOnMouseMove: function (e) {
-                Globals.MouseDeltaX = ((Globals.WindowHalfWidth - e.pageX) / Globals.WindowHalfWidth) * Globals.GalaxyMovementSpeed;
-                Globals.MouseDeltaY = ((Globals.WindowHalfHeight - e.pageY) / Globals.WindowHalfHeight) * Globals.GalaxyMovementSpeed;
-                if (Globals.GalaxyMovementAnimationFrameID === undefined) {
-                    Globals.GalaxyMovementAnimationFrameID = RequestAnimationFrame(Functions.GalaxyMovementAnimationLoop);
+            WindowOnMouseMove: function (event) {
+                Globals.MouseDeltaX = ((Globals.WindowHalfWidth - event.pageX) / Globals.WindowHalfWidth) * Globals.GalaxyMovementSpeed;
+                Globals.MouseDeltaY = ((Globals.WindowHalfHeight - event.pageY) / Globals.WindowHalfHeight) * Globals.GalaxyMovementSpeed;
+                if (!Globals.MenuSectionShowing && !Globals.EventSectionShowing &&
+                    Globals.GalaxyMovementAnimationFrameID === undefined) {
+                    Functions.RequestGalaxyMovementAnimationLoop();
                 }
             },
-            WindowOnMouseOut: function (e) {
-                var target = e.target;
+            WindowOnMouseOut: function (event) {
+                var target = event.target;
                 if (!target || ((target.nodeName.toLowerCase() === 'svg') && (target.id === 'GalaxySVG'))) {
-                    CancelAnimationFrame(Globals.GalaxyMovementAnimationFrameID);
-                    Globals.GalaxyMovementAnimationFrameID = undefined;
+                    Functions.CancelGalaxyMovementAnimationLoop();
+                }
+            },
+            WindowOnKeyDown: function (event) {
+                if (event.keyCode === 27) {
+                    Functions.HeaderCloseButtonOnClick();
                 }
             },
             /**
@@ -571,132 +614,231 @@
                 event.showDetails();
             },
             /**
+             * Shows the #Logo element in the given duration and calls the given callback function
+             * on transition completion.
+             * @param {Number} [duration]
+             * @param {Function} [callback]
+             */
+            ShowLogo: function (duration, callback) {
+                duration = duration || 1;
+                callback = callback || undefined;
+                t.killTweensOf($Objects.Logo);
+                t.fromTo($Objects.Logo, duration, {
+                    top: '-6.4rem'
+                }, {
+                    top: '1.2rem',
+                    ease: Power4.easeOut,
+                    onComplete: callback
+                });
+            },
+            /**
+             * Hides the #Logo element in the given duration and calls the given callback function
+             * on transition completion.
+             * @param {Number} [duration]
+             * @param {Function} [callback]
+             */
+            HideLogo: function (duration, callback) {
+                duration = duration || 1;
+                callback = callback || undefined;
+                t.killTweensOf($Objects.Logo);
+                t.fromTo($Objects.Logo, duration, {
+                    top: '1.2rem'
+                }, {
+                    top: '-6.4rem',
+                    ease: Power4.easeOut,
+                    onComplete: callback
+                });
+            },
+            /**
+             * Shows the #HeaderCloseButton element in the given duration and calls the given callback function
+             * on transition completion.
+             * @param {Number} [duration]
+             * @param {Function} [callback]
+             */
+            ShowHeaderCloseButton: function (duration, callback) {
+                duration = duration || 1;
+                callback = callback || undefined;
+                t.killTweensOf($Objects.HeaderCloseButton);
+                t.fromTo($Objects.HeaderCloseButton, duration, {
+                    top: '12.4rem',
+                    opacity: 0
+                }, {
+                    top: '5.4rem',
+                    opacity: 1,
+                    ease: Power4.easeOut,
+                    onComplete: callback
+                });
+            },
+            /**
+             * Hides the #HeaderCloseButton element in the given duration and calls the given callback function
+             * on transition completion.
+             * @param {Number} [duration]
+             * @param {Function} [callback]
+             */
+            HideHeaderCloseButton: function (duration, callback) {
+                duration = duration || 1;
+                callback = callback || undefined;
+                t.killTweensOf($Objects.HeaderCloseButton);
+                t.fromTo($Objects.HeaderCloseButton, duration, {
+                    top: '5.4rem',
+                    opacity: 1
+                }, {
+                    top: '12.4rem',
+                    opacity: 0,
+                    ease: Power4.easeOut,
+                    onComplete: callback
+                });
+            },
+            /**
              * Shows the #GalaxyContainer element in the given duration and calls the given callback function
              * on transition completion.
-             * @param [duration]
-             * @param [callback]
+             * @param {Number} [duration]
+             * @param {Function} [callback]
              */
             ShowGalaxyContainer: function (duration, callback) {
                 duration = duration || 2;
                 callback = callback || undefined;
-                Globals.GalaxyContainerTransiting = true;
-                t.fromTo($Objects.GalaxyContainer, duration, {
-                    display: 'block',
-                    opacity: 0,
-                    scale: 0.5,
-                    transformOrigin: '50% 50% 0'
-                }, {
-                    opacity: 1,
-                    scale: 1,
-                    transformOrigin: '50% 50% 0',
-                    ease: Power4.easeOut,
-                    onComplete: function () {
-                        Globals.GalaxyContainerTransiting = false;
-                        Globals.GalaxyContainerShowing = true;
-                        if ($.isFunction(callback)) {
-                            callback();
+                if (!Globals.GalaxyContainerShowing && !Globals.GalaxyContainerTransiting) {
+                    Globals.GalaxyContainerTransiting = true;
+                    t.killTweensOf($Objects.GalaxyContainer);
+                    t.fromTo($Objects.GalaxyContainer, duration, {
+                        display: 'block',
+                        opacity: 0,
+                        scale: 0.5,
+                        transformOrigin: '50% 50% 0'
+                    }, {
+                        opacity: 1,
+                        scale: 1,
+                        transformOrigin: '50% 50% 0',
+                        ease: Power4.easeOut,
+                        onComplete: function () {
+                            Globals.GalaxyContainerTransiting = false;
+                            Globals.GalaxyContainerShowing = true;
+                            if ($.isFunction(callback)) {
+                                callback();
+                            }
                         }
-                    }
-                });
+                    });
+                }
             },
             /**
              * Hides the #GalaxyContainer element in the given duration and calls the given callback function
              * on transition completion.
-             * @param [duration]
-             * @param [callback]
+             * @param {Number} [duration]
+             * @param {Function} [callback]
              */
             HideGalaxyContainer: function (duration, callback) {
                 duration = duration || 2;
                 callback = callback || undefined;
-                Globals.GalaxyContainerTransiting = true;
-                t.fromTo($Objects.GalaxyContainer, duration, {
-                    display: 'block',
-                    opacity: 1,
-                    scale: 1,
-                    transformOrigin: '50% 50% 0'
-                }, {
-                    opacity: 0,
-                    scale: 0.5,
-                    transformOrigin: '50% 50% 0',
-                    ease: Power4.easeOut,
-                    onComplete: function () {
-                        Globals.GalaxyContainerTransiting = false;
-                        $Objects.GalaxyContainer.css('display', 'none');
-                        Globals.GalaxyContainerShowing = false;
-                        if ($.isFunction(callback)) {
-                            callback();
+                if (Globals.GalaxyContainerShowing && !Globals.GalaxyContainerTransiting) {
+                    Globals.GalaxyContainerTransiting = true;
+                    t.killTweensOf($Objects.GalaxyContainer);
+                    t.fromTo($Objects.GalaxyContainer, duration, {
+                        display: 'block',
+                        opacity: 1,
+                        scale: 1,
+                        transformOrigin: '50% 50% 0'
+                    }, {
+                        opacity: 0,
+                        scale: 0.5,
+                        transformOrigin: '50% 50% 0',
+                        ease: Power4.easeOut,
+                        onComplete: function () {
+                            Globals.GalaxyContainerTransiting = false;
+                            $Objects.GalaxyContainer.css('display', 'none');
+                            Globals.GalaxyContainerShowing = false;
+                            if ($.isFunction(callback)) {
+                                callback();
+                            }
                         }
-                    }
-                });
+                    });
+                }
             },
             /**
              * Shows the #EventSection element in the given duration and calls the given callback function
              * on transition completion.
-             * @param [duration]
-             * @param [callback]
+             * @param {Number} [duration]
+             * @param {Function} [callback]
              */
             ShowEventSection: function (duration, callback) {
                 duration = duration || 2;
                 callback = callback || undefined;
-                var halfDuration = duration / 2;
-                $Objects.EventSVGStarShells.css('display', 'none');
-                t.fromTo($Objects.EventSection, duration, {
-                    display: 'block',
-                    opacity: 0,
-                    top: '100vh'
-                }, {
-                    opacity: 1,
-                    top: 0,
-                    ease: Power4.easeOut,
-                    onComplete: function () {
-                        $Objects.EventSVGStarShells.css('display', 'block');
-                    }
-                });
-                t.fromTo($Objects.EventContentContainer, halfDuration, {
-                    opacity: 0
-                }, {
-                    opacity: 1,
-                    ease: Power4.easeOut,
-                    delay: halfDuration,
-                    onComplete: callback
-                });
-                t.staggerFromTo($Objects.EventContentContainerElements, halfDuration, {
-                    opacity: 0,
-                    top: 50
-                }, {
-                    opacity: 1,
-                    top: 0,
-                    ease: Power4.easeOut,
-                    delay: halfDuration
-                }, 0.2);
+                if (!Globals.EventSectionShowing && !Globals.EventSectionTransiting) {
+                    var halfDuration = duration / 2;
+                    Globals.EventSectionTransiting = true;
+                    $Objects.EventSVGStarShells.css('display', 'none');
+                    Functions.HideLogo();
+                    Functions.ShowHeaderCloseButton();
+                    t.killTweensOf($Objects.EventSection);
+                    t.fromTo($Objects.EventSection, duration, {
+                        display: 'block',
+                        opacity: 0,
+                        top: '100vh'
+                    }, {
+                        opacity: 1,
+                        top: 0,
+                        ease: Power4.easeOut,
+                        onComplete: function () {
+                            $Objects.EventSVGStarShells.css('display', 'block');
+                        }
+                    });
+                    t.killTweensOf($Objects.EventContentContainer);
+                    t.fromTo($Objects.EventContentContainer, halfDuration, {
+                        opacity: 0
+                    }, {
+                        opacity: 1,
+                        ease: Power4.easeOut,
+                        delay: halfDuration,
+                        onComplete: function () {
+                            Globals.EventSectionTransiting = false;
+                            Globals.EventSectionShowing = true;
+                            if ($.isFunction(callback)) {
+                                callback();
+                            }
+                        }
+                    });
+                    t.killTweensOf($Objects.EventContentContainerElements);
+                    t.staggerFromTo($Objects.EventContentContainerElements, halfDuration, {
+                        opacity: 0,
+                        top: 50
+                    }, {
+                        opacity: 1,
+                        top: 0,
+                        ease: Power4.easeOut,
+                        delay: halfDuration
+                    }, 0.2);
+                }
             },
             /**
              * Hides the #EventSection element in the given duration and calls the given callback function
              * on transition completion.
-             * @param [duration]
-             * @param [callback]
+             * @param {Number} [duration]
+             * @param {Function} [callback]
              */
             HideEventSection: function (duration, callback) {
                 duration = duration || 2;
                 callback = callback || undefined;
-                t.fromTo($Objects.EventSection, duration, {
-                    display: 'block',
-                    opacity: 1
-                }, {
-                    opacity: 0,
-                    ease: Power4.easeOut,
-                    onComplete: function () {
-                        $Objects.EventSVGStarShells.css('display', 'none');
-                        $Objects.EventSection.css('display', 'none');
-                        if ($.isFunction(callback)) {
-                            callback();
+                if (Globals.EventSectionShowing && !Globals.EventSectionTransiting) {
+                    Functions.ShowLogo();
+                    Functions.HideHeaderCloseButton();
+                    t.killTweensOf($Objects.EventSection);
+                    t.fromTo($Objects.EventSection, duration, {
+                        display: 'block',
+                        opacity: 1
+                    }, {
+                        opacity: 0,
+                        ease: Power4.easeOut,
+                        onComplete: function () {
+                            Globals.EventSectionTransiting = false;
+                            $Objects.EventSVGStarShells.css('display', 'none');
+                            $Objects.EventSection.css('display', 'none');
+                            Globals.EventSectionShowing = false;
+                            if ($.isFunction(callback)) {
+                                callback();
+                            }
                         }
-                    }
-                });
-            },
-            EventCloseOnClick: function () {
-                Functions.HideEventSection();
-                Functions.ShowGalaxyContainer();
+                    });
+                }
             },
             /**
              * Extends the response object of the Site's API call so as to maintain consistency.
@@ -762,8 +904,8 @@
                                                 description: event.Description,
                                                 image: event.Image,
                                                 venue: event.Venue,
-                                                startTime: event.Start,
-                                                endTime: event.End,
+                                                startTime: new Date(event.Start),
+                                                endTime: new Date(event.End),
                                                 currentRound: event.CurrentRound,
                                                 totalRounds: event.TotalRounds,
                                                 maxParticipants: event.MaxContestants,
@@ -789,6 +931,7 @@
                                                 title: category.Name.toLowerCase().capitalize()
                                             }, categoryEventMap[category.Id]));
                                         }
+                                        $(d).trigger('initialized');
                                     }
                                 },
                                 complete: function () {
@@ -818,16 +961,26 @@
              */
             GetEventFromID: function (categoryID, eventID) {
                 return Functions.GetCategoryFromID(categoryID).events[Globals.EventIDToIndexMap[eventID]];
+            },
+            LogoOnClick: function () {
+                if (!Globals.GalaxyContainerShowing) {
+                    Functions.HideEventSection();
+                    Functions.ShowGalaxyContainer();
+                }
+            },
+            HeaderCloseButtonOnClick: function () {
+                if (Globals.MenuSectionShowing) {
+                    Functions.HideMenuSection();
+                } else if (Globals.EventSectionShowing) {
+                    Functions.HideEventSection();
+                    Functions.ShowGalaxyContainer();
+                }
             }
         };
 
-    // Give global (outside the scope of this anonymous function) reference to the public methods.
-    w.GetCategoryFromID = Functions.GetCategoryFromID;
-    w.GetEventFromID = Functions.GetEventFromID;
-
-    // Give global reference to the public variables and properties.
-    w.APIAddress = Globals.APIAddress;
-    w.Categories = Globals.Categories;
+    // Give truly global references to Globals and Functions.
+    w.Globals = Globals;
+    w.Functions = Functions;
 
     /**
      * Category entity.
@@ -1043,6 +1196,9 @@
 
     $(function () {
 
+        $Objects.LoadingFrame = $('#LoadingFrame', d);
+        $Objects.Logo = $('#Logo', d).on('click', Functions.LogoOnClick);
+        $Objects.HeaderCloseButton = $('#HeaderCloseButton', d).on('click', Functions.HeaderCloseButtonOnClick);
         $Objects.GalaxySVG = $('#GalaxySVG', d);
         $Objects.GalaxyContainer = $('#GalaxyContainer', $Objects.GalaxySVG);
         // Cache .Event element and remove the original.
@@ -1064,7 +1220,7 @@
         $Objects.EventContentRules = $('#EventContentRules', $Objects.EventContentContainer);
 
         Functions.WindowOnResize();
-        Globals.GalaxyMovementAnimationFrameID = RequestAnimationFrame(Functions.GalaxyMovementAnimationLoop);
+        Functions.RequestGalaxyMovementAnimationLoop();
         /*
          Due to a bug with Chrome (possibly other browsers too :p), the transformation does not apply
          correctly to the #EventSVGStar in the Functions.UpdateEventSVGStarPosition(). This is also mentioned
@@ -1078,96 +1234,84 @@
 
     $(d)
         .on('click', '.Event', Functions.EventOnClick)
-        .on('click', '#EventClose', Functions.EventCloseOnClick);
+        .on('initialized', Functions.HideLoading);
 
     $(w)
         .on('resize', Functions.WindowOnResize)
         .on('mouseout', Functions.WindowOnMouseOut)
-        .on('mousemove', Functions.WindowOnMouseMove);
+        .on('mousemove', Functions.WindowOnMouseMove)
+        .on('keydown', Functions.WindowOnKeyDown);
 
 })(jQuery, window, document, TweenMax);
 
 /**
- * Created by Kaushik on 11/2/2016.
+ * @preserve
+ *
+ * Menu.js
+ * Includes important functioning of the Menu component of the website.
+ *
+ * @licence MIT
+ * @author Kaushik Sarma <kausyap10@gmail.com>
+ * @author Divya Mamgai <divyamamgai21@gmail.com>
+ *
  */
 
-(function ($, d, w, t) {
-    var Globals = {
-            // Public variables and properties inherited from Main.js
-            /** @type Category[] */
-            Categories: w.Categories,
-            APIAddress: w.APIAddress,
-            //Variables
-            isCollapsed: true,
-            isCollapsing: false,
-            isCategoriesDisplayed: false,
-            primaryMenuData: [],
-            searchResult: []
+(function ($, w, d, t, undefined) {
+
+    /** @property {jQuery} */
+    var $Cache = {
+            NoSearchResults: $("<div id=\"NoSearchResults\">\n    <h3>No Events Found, Please Try Another Query.</h3>\n</div>")
         },
-        //JQuery objects
-        $Objects = {
-            SearchSVG: null,
-            MainMenuButton: null,
-            MainMenuButtonOverlay: null
-        },
-        Functions = {
-            toMonth: function (mon) {
-                switch (mon) {
-                    case '01':
-                        return 'Jan';
-                    case '02':
-                        return 'Feb';
-                    case '03':
-                        return 'Mar';
-                    case '04':
-                        return 'Apr';
-                    case '05':
-                        return 'May';
-                    case '06':
-                        return 'Jun';
-                    case '07':
-                        return 'Jul';
-                    case '08':
-                        return 'Aug';
-                    case '09':
-                        return 'Sep';
-                    case '10':
-                        return 'Oct';
-                    case '11':
-                        return 'Nov';
-                    case '12':
-                        return 'Dec';
-                }
-            },
-            OpenMenu: function () {
-                if (Globals.isCollapsed) {
-                    t.fromTo($Objects.MainMenuButton, 0.5, {
-                        scale: 0.5
+        $Objects = {};
+
+    // Take in references from the Main.js so as to access them here.
+    var Globals = $.extend(w.Globals, {
+            MenuSectionShowing: false,
+            MenuSectionTransiting: false,
+            SearchBarShowing: false,
+            SearchBarTransiting: false
+        }),
+        Functions = $.extend(w.Functions, {
+            ShowSearchBar: function (duration, callback) {
+                duration = duration || 1.5;
+                callback = callback || undefined;
+                if (!Globals.SearchBarShowing && !Globals.SearchBarTransiting) {
+                    Globals.SearchBarTransiting = true;
+                    var oneThirdDuration = duration / 3,
+                        twoThirdDuration = duration * 2 / 3;
+                    t.killTweensOf($Objects.MenuIcon);
+                    t.fromTo($Objects.MenuIcon, oneThirdDuration, {
+                        scale: 0.5,
+                        transformOrigin: '50% 50% 0'
                     }, {
                         scale: 0.88,
+                        transformOrigin: '50% 50% 0',
                         ease: Power4.easeOut
                     });
-                    t.to($Objects.MainMenu, 1, {
-                        top: 0,
-                        opacity: 1,
-                        ease: Power4.easeOut
-                    });
-                    t.to($Objects.Logo, 1, {
-                        top: '-6.4rem',
-                        ease: Power4.easeOut
-                    });
-                    Globals.TrailSearchBoxBorders = $Objects.SearchBox.Borders
-                        .css('display', 'block')
-                        .Trail({
+                    $Objects.SearchBarBorder.css('display', 'block');
+                    if (Globals.TrailSearchBarBorder === undefined) {
+                        Globals.TrailSearchBarBorder = $Objects.SearchBarBorder.Trail({
                             stagger: true,
-                            staggerDelay: 0,
-                            delay: 0.4,
-                            duration: 1,
+                            staggerDelay: 0.1,
+                            duration: twoThirdDuration,
                             ease: Power4.easeOut
                         }, {
                             paused: true
-                        }).GetTrail().play();
-                    t.fromTo($Objects.SearchBox.GlassHandle, 0.5, {
+                        }).GetTrail();
+                    }
+                    Globals.TrailSearchBarBorder.timeLine
+                        .eventCallback('onComplete', function () {
+                            Globals.SearchBarTransiting = false;
+                            Globals.SearchBarShowing = true;
+                            if ($.isFunction(callback)) {
+                                callback();
+                            }
+                        });
+                    setTimeout(function () {
+                        Globals.TrailSearchBarBorder.play();
+                    }, (oneThirdDuration / 2) * 1000);
+                    t.killTweensOf($Objects.MenuIconMiddle);
+                    t.fromTo($Objects.MenuIconMiddle, oneThirdDuration, {
                         attr: {
                             d: 'm 3.4532481,1031.6817 48.8640159,0'
                         }
@@ -1177,22 +1321,20 @@
                         },
                         ease: Power4.easeOut,
                         onComplete: function () {
-                            Globals.TrailSearchBoxGlass = $Objects.SearchBox.Glass
-                                .css('opacity', '1')
-                                .Trail({
-                                    duration: 1,
+                            $Objects.SearchGlass.css('display', 'block');
+                            if (Globals.TrailSearchGlass === undefined) {
+                                Globals.TrailSearchGlass = $Objects.SearchGlass.Trail({
+                                    duration: twoThirdDuration,
                                     ease: Power4.easeOut
                                 }, {
                                     paused: true
-                                })
-                                .GetTrail().play();
-                            t.set($Objects.MenuButton.TopLine, {
-                                opacity: 0
-                            });
-                            t.set($Objects.MenuButton.BottomLine, {
-                                opacity: 0
-                            });
-                            t.fromTo($Objects.SearchInput, 1, {
+                                }).GetTrail();
+                            }
+                            Globals.TrailSearchGlass.play();
+                            $Objects.MenuIconTop.css('display', 'none');
+                            $Objects.MenuIconBottom.css('display', 'none');
+                            t.killTweensOf($Objects.SearchBarInput);
+                            t.fromTo($Objects.SearchBarInput, twoThirdDuration, {
                                 display: 'block',
                                 opacity: 0,
                                 x: 48
@@ -1201,45 +1343,55 @@
                                 x: 0,
                                 ease: Power4.easeOut
                             });
-                            Globals.isCollapsed = false;
-                            $Objects.SearchInput.focus();
-                            Functions.DisplayPrimaryOption();
                         }
                     });
                 }
             },
-            CloseMenu: function () {
-                if (Globals.isCollapsed === false) {
-                    Globals.isCollapsing = true;
-                    Globals.TrailSearchBoxGlass.timeLine.eventCallback("onReverseComplete", function () {
-                        t.fromTo($Objects.SearchBox.GlassHandle, 0.5, {
-                            attr: {
-                                d: 'm 10.555653,1043.6641 9.469718,-8.7922'
-                            }
-                        }, {
-                            attr: {
-                                d: 'm 3.4532481,1031.6817 48.8640159,0'
-                            },
-                            ease: Power4.easeOut,
-                            onComplete: function () {
-                                t.fromTo($Objects.MainMenuButton, 0.5, {
-                                    scale: 0.88
-                                }, {
-                                    scale: 0.5,
-                                    ease: Power4.easeOut,
-                                    onComplete: function () {
-                                        Globals.isCollapsed = true;
-                                        Globals.isCollapsing = false;
-                                    }
-                                });
-                            }
-                        });
-                    });
-                    Globals.TrailSearchBoxGlass.reverse();
-                    Globals.TrailSearchBoxBorders.reverse();
-                    $Objects.MenuButton.TopLine.css('opacity', 1);
-                    $Objects.MenuButton.BottomLine.css('opacity', 1);
-                    t.fromTo($Objects.SearchInput, 1, {
+            HideSearchBar: function (duration, callback) {
+                duration = duration || 1.5;
+                callback = callback || undefined;
+                if (Globals.SearchBarShowing && !Globals.SearchBarTransiting) {
+                    var oneThirdDuration = duration / 3,
+                        twoThirdDuration = duration * 2 / 3;
+                    Globals.SearchBarTransiting = true;
+                    Globals.TrailSearchGlass.timeLine
+                        .eventCallback('onReverseComplete', function () {
+                            t.killTweensOf($Objects.MenuIconMiddle);
+                            t.fromTo($Objects.MenuIconMiddle, oneThirdDuration, {
+                                attr: {
+                                    d: 'm 10.555653,1043.6641 9.469718,-8.7922'
+                                }
+                            }, {
+                                attr: {
+                                    d: 'm 3.4532481,1031.6817 48.8640159,0'
+                                },
+                                ease: Power4.easeOut,
+                                onComplete: function () {
+                                    t.killTweensOf($Objects.MenuIcon);
+                                    t.fromTo($Objects.MenuIcon, oneThirdDuration, {
+                                        scale: 0.88,
+                                        transformOrigin: '50% 50% 0'
+                                    }, {
+                                        scale: 0.5,
+                                        transformOrigin: '50% 50% 0',
+                                        ease: Power4.easeOut,
+                                        onComplete: function () {
+                                            Globals.SearchBarTransiting = false;
+                                            Globals.SearchBarShowing = false;
+                                            if ($.isFunction(callback)) {
+                                                callback();
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        })
+                        .reverse();
+                    Globals.TrailSearchBarBorder.reverse();
+                    $Objects.MenuIconTop.css('display', 'block');
+                    $Objects.MenuIconBottom.css('display', 'block');
+                    t.killTweensOf($Objects.SearchBarInput);
+                    t.fromTo($Objects.SearchBarInput, twoThirdDuration, {
                         opacity: 1,
                         x: 0
                     }, {
@@ -1247,174 +1399,401 @@
                         x: 48,
                         ease: Power4.easeOut,
                         onComplete: function () {
-                            $Objects.SearchInput.css('display', 'none');
+                            $Objects.SearchBarInput.css('display', 'none');
                         }
                     });
-                    t.to($Objects.MainMenu, 1, {
-                        top: '100vh',
+                }
+            },
+            /**
+             * Shows the #MenuSection element in the given duration and calls the given callback function
+             * on transition completion.
+             * @param {Number} [duration]
+             * @param {Function} [callback]
+             */
+            ShowMenuSection: function (duration, callback) {
+                duration = duration || 1;
+                callback = callback || undefined;
+                if (!Globals.MenuSectionShowing && !Globals.MenuSectionTransiting) {
+                    Globals.MenuSectionTransiting = true;
+                    Functions.HideLogo();
+                    Functions.ShowHeaderCloseButton();
+                    Functions.ShowSearchBar();
+                    t.killTweensOf($Objects.MenuSection);
+                    t.fromTo($Objects.MenuSection, duration, {
+                        display: 'block',
                         opacity: 0,
+                        top: '100vh'
+                    }, {
+                        opacity: 1,
+                        top: 0,
                         ease: Power4.easeOut,
                         onComplete: function () {
-                            $Objects.PrimaryMenuContainer.html('');
+                            Globals.MenuSectionTransiting = false;
+                            Globals.MenuSectionShowing = true;
+                            Functions.CancelGalaxyMovementAnimationLoop();
+                            if ($.isFunction(callback)) {
+                                callback();
+                            }
                         }
                     });
-                    t.to($Objects.Logo, 1, {
-                        top: 0,
+                }
+            },
+            /**
+             * Hides the #MenuSection element in the given duration and calls the given callback function
+             * on transition completion.
+             * @param {Number} [duration]
+             * @param {Function} [callback]
+             */
+            HideMenuSection: function (duration, callback) {
+                duration = duration || 1;
+                callback = callback || undefined;
+                if (Globals.MenuSectionShowing && !Globals.MenuSectionTransiting) {
+                    Globals.MenuSectionTransiting = true;
+                    if (!Globals.EventSectionShowing) {
+                        Functions.ShowLogo();
+                        Functions.HideHeaderCloseButton();
+                    }
+                    Functions.HideSearchBar();
+                    t.killTweensOf($Objects.MenuSection);
+                    t.fromTo($Objects.MenuSection, duration, {
+                        opacity: 1,
+                        top: 0
+                    }, {
+                        opacity: 0,
+                        top: '100vh',
+                        ease: Power4.easeOut,
+                        onComplete: function () {
+                            Globals.MenuSectionTransiting = false;
+                            $Objects.MenuSection.css('display', 'none');
+                            Globals.MenuSectionShowing = false;
+                            if (!Globals.EventSectionShowing) {
+                                Functions.RequestGalaxyMovementAnimationLoop();
+                            }
+                            if ($.isFunction(callback)) {
+                                callback();
+                            }
+                        }
+                    });
+                }
+            },
+            /**
+             * Shows the Menu Heading defined by the given headingID and hides the currently active Menu Heading.
+             * @param {String} headingID - ID of the Menu Heading to show.
+             * @param {Number} [duration]
+             * @param {Function} [callback]
+             */
+            ShowMenuHeading: function (headingID, duration, callback) {
+                duration = duration || 1;
+                callback = callback || undefined;
+                var $MenuHeading = $('#' + headingID, $Objects.MenuHeadingFrame),
+                    $ActiveMenuHeading = $('.MenuHeading.Active:not(#' + headingID + ')', $Objects.MenuHeadingFrame);
+                t.killTweensOf($MenuHeading);
+                t.fromTo($MenuHeading, duration, {
+                    left: '-24rem',
+                    opacity: 0
+                }, {
+                    left: '1rem',
+                    opacity: 1,
+                    ease: Power4.easeOut,
+                    clearProps: 'all',
+                    onComplete: function () {
+                        $MenuHeading.addClass('Active');
+                        if ($.isFunction(callback)) {
+                            callback();
+                        }
+                    }
+                });
+                t.killTweensOf($ActiveMenuHeading);
+                t.fromTo($ActiveMenuHeading, duration, {
+                    left: '1rem',
+                    opacity: 1
+                }, {
+                    left: '24rem',
+                    opacity: 0,
+                    ease: Power4.easeOut,
+                    clearProps: 'all',
+                    onComplete: function () {
+                        $ActiveMenuHeading.removeClass('Active');
+                    }
+                });
+            },
+            /**
+             * Shows the Menu Frame given as the parameter and currently active one is automatically hidden.
+             * @param {jQuery} $menuFrame - jQuery object of the Menu Frame to be shown.
+             * @param {Number} [duration]
+             * @param {Function} [callback]
+             */
+            ShowMenuFrame: function ($menuFrame, duration, callback) {
+                duration = duration || 1;
+                callback = callback || undefined;
+                var $ActiveMenuFrame = $('.MenuFrame.Active:not(' + $menuFrame.prop('id') + ')', $Objects.MenuSection);
+                $Objects.MenuSection.css('overflow-y', 'hidden');
+                t.killTweensOf($menuFrame);
+                t.fromTo($menuFrame, duration, {
+                    display: 'block',
+                    opacity: 0,
+                    top: '30rem'
+                }, {
+                    opacity: 1,
+                    top: 0,
+                    ease: Power4.easeOut,
+                    clearProps: 'all',
+                    onComplete: function () {
+                        $menuFrame.addClass('Active');
+                        $Objects.MenuSection.css('overflow-y', 'auto');
+                        if ($.isFunction(callback)) {
+                            callback();
+                        }
+                    }
+                });
+                t.killTweensOf($ActiveMenuFrame);
+                t.fromTo($ActiveMenuFrame, duration, {
+                    display: 'block',
+                    opacity: 1,
+                    top: 0
+                }, {
+                    opacity: 0,
+                    top: '30rem',
+                    ease: Power4.easeOut,
+                    clearProps: 'all',
+                    onComplete: function () {
+                        $ActiveMenuFrame.removeClass('Active');
+                    }
+                });
+            },
+            /**
+             * Shows the #MenuBackButton element in the given duration and calls the given callback function
+             * on transition completion.
+             * @param {Number} [duration]
+             * @param {Function} [callback]
+             */
+            ShowMenuBackButton: function (duration, callback) {
+                duration = duration || 1;
+                callback = callback || undefined;
+                var $ActiveMenuHeading = $('.MenuHeading.Active', $Objects.MenuHeadingFrame);
+                t.killTweensOf($Objects.MenuBackButton);
+                t.fromTo($Objects.MenuBackButton, duration, {
+                    left: '-4.2rem',
+                    opacity: 0
+                }, {
+                    left: '1rem',
+                    opacity: 1,
+                    ease: Power4.easeOut,
+                    clearProps: 'all',
+                    onComplete: function () {
+                        $Objects.MenuBackButton.addClass('Show');
+                        if ($.isFunction(callback)) {
+                            callback();
+                        }
+                    }
+                });
+                t.killTweensOf($ActiveMenuHeading);
+                t.fromTo($ActiveMenuHeading, duration, {
+                    left: '1rem'
+                }, {
+                    left: '5.2rem',
+                    ease: Power4.easeOut
+                });
+            },
+            /**
+             * Hides the #MenuBackButton element in the given duration and calls the given callback function
+             * on transition completion.
+             * @param {Number} [duration]
+             * @param {Function} [callback]
+             * @param {Boolean} [disableActiveMenuHeadingAnimation]
+             */
+            HideMenuBackButton: function (duration, callback, disableActiveMenuHeadingAnimation) {
+                duration = duration || 1;
+                callback = callback || undefined;
+                disableActiveMenuHeadingAnimation = disableActiveMenuHeadingAnimation || true;
+                t.killTweensOf($Objects.MenuBackButton);
+                t.fromTo($Objects.MenuBackButton, duration, {
+                    left: '1rem',
+                    opacity: 1
+                }, {
+                    left: '-4.2rem',
+                    opacity: 0,
+                    ease: Power4.easeOut,
+                    clearProps: 'all',
+                    onComplete: function () {
+                        $Objects.MenuBackButton.removeClass('Show');
+                        if ($.isFunction(callback)) {
+                            callback();
+                        }
+                    }
+                });
+                if (disableActiveMenuHeadingAnimation === false) {
+                    var $ActiveMenuHeading = $('.MenuHeading.Active', $Objects.MenuHeadingFrame);
+                    t.killTweensOf($ActiveMenuHeading);
+                    t.fromTo($ActiveMenuHeading, duration, {
+                        left: '5.2rem'
+                    }, {
+                        left: '1rem',
                         ease: Power4.easeOut
                     });
                 }
             },
-            DisplayPrimaryOption: function () {
-                $Objects.CategoryTab.addClass('activeTab');
-                $Objects.SearchTab.removeClass('activeTab');
-                Globals.isCategoriesDisplayed = true;
-                // Why use a div, when you can use a pseudo element, this again degrades the performance since the
-                // changing HTML is same as append.
-                $Objects.CategoryTab.html('Categories<div class="tabLine"></div>');
-                $Objects.PrimaryMenuContainer.html('');
-                for (var i = 0; i < Globals.Categories.length; i++) {
-                    $Objects.PrimaryMenuContainer
-                        .append($("<div data-index=\"" + i + "\" class=\"menuOption\">" + Globals.Categories[i].properties.title + "</div>")
-                            .on('click', Functions.DisplayEvents));
-                }
-                Functions.RevealMenuOptions();
+            MenuIconOverlayOnClick: function (event) {
+                event.stopPropagation();
+                Functions.ShowMenuSection();
             },
-            DisplayEvents: function () {
-                Globals.isCategoriesDisplayed = false;
-                var CategoryIndex = $(this).attr('data-index'),
-                    CategoryObject = Globals.Categories[CategoryIndex],
-                    CategoryId = CategoryObject.properties.id;
-                $Objects.PrimaryMenuContainer.html('');
-                $Objects.CategoryTab.html('<span class="glyphicon glyphicon-chevron-left"></span>' + CategoryObject.properties.title + '<div class="tabLine"></div>');
-                for (var i = 0; i < CategoryObject.events.length; i++) {
-                    var Event = $("<div data-catid=\"" + CategoryId + "\" data-eventid=\"" + CategoryObject.events[i].properties.id + "\" class=\"menuEventOption\">\n    " + CategoryObject.events[i].properties.title + "<span class=\"eventCorner\"></span>\n</div>")
-                        .on('click', Functions.MenuEventClicked);
-                    $Objects.PrimaryMenuContainer.append(Event);
+            GenerateCategoryListFrame: function () {
+                var $CategoryListFrame = $Objects.CategoryListFrame.detach().empty(),
+                    categories = Globals.Categories,
+                    categoryCount = categories.length,
+                    $CategoryButtonCache = $Cache.CategoryButton,
+                    $CategoryButton,
+                    category;
+                for (var categoryIndex = 0; categoryIndex < categoryCount; categoryIndex++) {
+                    category = categories[categoryIndex];
+                    $.data(($CategoryButton = $CategoryButtonCache.clone()).get(0), 'Category', category);
+                    $CategoryButton.find('text').text(category.properties.title);
+                    $CategoryListFrame.append($CategoryButton);
                 }
-                if (CategoryObject.events.length === 0) {
-                    $Objects.PrimaryMenuContainer.append('<h3>Events Coming Soon!</h3>');
-                }
-                Functions.RevealMenuOptions();
+                $Objects.EventListFrame.before($CategoryListFrame);
             },
-            MenuEventClicked: function () {
-                var $this = $(this);
-                Functions.CloseMenu();
-                Functions.GetEventFromID($this.attr('data-catid'), $this.attr('data-eventid')).showDetails();
-            },
-            GetSearchResults: function (searchString) {
-                $Objects.PrimaryMenuContainer.html('');
-                $Objects.SearchTab.addClass('activeTab');
-                $Objects.CategoryTab.removeClass('activeTab');
-                if (searchString.length === 0) {
-                    Globals.searchResult = [];
-                    Functions.RenderSearchResults(Globals.searchResult);
+            /**
+             * Generates the Events list in the #EventListFrame for the given Category object.
+             * @param {Category} category
+             */
+            GenerateEventListFrame: function (category) {
+                var $EventListFrame = $Objects.EventListFrame.detach().empty(),
+                    $EventButtonCache = $Cache.EventButton,
+                    events = category.events,
+                    eventCount = events.length,
+                    event,
+                    $EventButton;
+                for (var eventIndex = 0; eventIndex < eventCount; eventIndex++) {
+                    event = events[eventIndex];
+                    $.data(($EventButton = $EventButtonCache.clone()).get(0), 'Event', event);
+                    $EventButton.find('.EventButtonTitle').text(event.properties.title);
+                    $EventListFrame.append($EventButton);
                 }
-                else {
-                    $.ajax({
-                        url: Globals.APIAddress + '/events?query=' + searchString,
-                        type: 'GET',
-                        success: function (data) {
-                            Globals.searchResult = data.data;
-                            Functions.RenderSearchResults();
-                        }
-                    });
-                }
+                $Objects.CategoryListFrame.after($EventListFrame);
             },
-            RenderSearchResults: function () {
-                $Objects.CategoryTab.html('Categories<div class="tabLine"></div>');
-                Globals.isCategoriesDisplayed = false;
-                if (Globals.searchResult.length === 0) {
-                    $Objects.PrimaryMenuContainer.append('<h3>No Results to Display</h3>');
-                } else {
-                    for (var i = 0; i < Globals.searchResult.length; i++) {
-                        /*
-                         substr() is very costly. Just think about the complexity for a bit. You are calling substr()
-                         on the same string, lets say of N length, for at least 4 times which means 4N time for each
-                         of the M search results that's 4NM which might be a lot if the N > 10 (Which it is :|).
-                         */
-                        var currentEvent = Globals.searchResult[i],
-                            hour = parseInt(currentEvent.Start.substr(11, 2));
-                        var date = {
-                            day: currentEvent.Start.substr(8, 2),
-                            month: currentEvent.Start.substr(5, 2),
-                            hour: hour > 12 ? (hour - 12) : hour,
-                            min: currentEvent.Start.substr(14, 2) + ' ' + (hour >= 12 ? 'pm' : 'am')
-                        };
-                        var id = parseInt(currentEvent.Id),
-                            categoryID = parseInt(currentEvent.CategoryId);
-                        // Why so many data-catid and data-eventid?
-                        var searchResult = $("<div data-catid=\"" + categoryID + "\" data-eventid=\"" + id + "\" class=\"searchOption\">\n    <div data-catid=\"" + categoryID + "\" data-eventid=\"" + id + "\" class=\"row\">\n        <div data-catid=\"" + categoryID + "\" data-eventid=\"" + id + "\"  class=\"searchNameInfo\">\n            <div data-catid=\"" + categoryID + "\" data-eventid=\"" + id + "\" class=\"searchName\">" + currentEvent.Name + "<span data-catid=\"" + categoryID + "\" data-eventid=\"" + id + "\" class=\"searchDate\"><span>" + date.day + '</span> ' + Functions.toMonth(date.month) + ", <span>" + date.hour + ':' + date.min + "</span></span></div>\n        </div>\n        <div data-catid=\"" + categoryID + "\" data-eventid=\"" + id + "\" class=\"searchDesc\">" + currentEvent.Description + "</div>\n     </div>\n</div>")
-                            .on('click', Functions.MenuEventClicked);
-                        $Objects.PrimaryMenuContainer.append(searchResult);
+            GenerateSearchResults: function (resultArray) {
+                var $SearchListFrame = $Objects.SearchListFrame.detach().empty(),
+                    $EventButtonCache = $Cache.EventButton,
+                    resultCount = resultArray.length,
+                    result,
+                    event,
+                    $EventButton;
+                if (resultCount > 0) {
+                    for (var resultIndex = 0; resultIndex < resultCount; resultIndex++) {
+                        result = resultArray[resultIndex];
+                        event = Functions.GetEventFromID(result.CategoryId, result.Id);
+                        $.data(($EventButton = $EventButtonCache.clone()).get(0), 'Event', event);
+                        $EventButton.find('.EventButtonTitle').text(event.properties.title);
+                        $SearchListFrame.append($EventButton);
                     }
-                    Functions.RevealMenuOptions();
+                } else {
+                    $SearchListFrame.append($Cache.NoSearchResults.clone());
                 }
+                $Objects.EventListFrame.after($SearchListFrame);
             },
-            RevealMenuOptions: function () {
-                t.fromTo($Objects.PrimaryMenuContainer.children(), 1, {
-                    top: '-48px',
-                    opacity: 0
-                }, {
-                    top: 0,
-                    opacity: 1,
-                    ease: Power4.easeOut
-                });
+            CategoryListFrameCategoryButtonOnClick: function (event) {
+                event.stopPropagation();
+                /** @type Category */
+                var category = $.data(this, 'Category');
+                $Objects.CategoryHeading.text(category.properties.title);
+                Functions.GenerateEventListFrame(category);
+                Functions.ShowMenuHeading('CategoryHeading', 1, Functions.ShowMenuBackButton);
+                Functions.ShowMenuFrame($Objects.EventListFrame);
             },
-            // Public methods inherited from the Main.js
-            GetCategoryFromID: w.GetCategoryFromID,
-            GetEventFromID: w.GetEventFromID
-        };
-    $(function () {
-        $Objects.Logo = $('#Logo');
-        $Objects.SearchSVG = $('#searchBarSVG');
-        $Objects.MainMenu = $('#searchMenu');
-        $Objects.MainMenuButton = $('#MenuIcon');
-        $Objects.MenuButton = {
-            TopLine: $('#menuTopLine'),
-            BottomLine: $('#menuBottomLine')
-        };
-        $Objects.SearchBox = {
-            Borders: $('#searchBoxBorder'),
-            Glass: $('#magnifying'),
-            GlassHandle: $('#searchHandle')
-        };
-        $Objects.MainMenuButtonOverlay = $('#menuButtonOverlay')
-            .on('click', function () {
-                if (Globals.isCollapsed && !Globals.isCollapsing)
-                    Functions.OpenMenu();
-            });
-        $Objects.MainMenuCloseButton = $('#MenuClose')
-            .on('click', function () {
-                if (!Globals.isCollapsed && !Globals.isCollapsing) {
-                    Functions.CloseMenu();
-                }
-            });
-        $Objects.PrimaryMenuContainer = $('div#primaryMenuOptions');
-        $Objects.SearchInput = $('#searchBox')
-            .on('keyup', function (event) {
+            EventListFrameEventButtonOnClick: function (e) {
+                e.stopPropagation();
+                /** @type Event */
+                var event = $.data(this, 'Event');
+                Functions.HideMenuSection();
+                event.showDetails();
+            },
+            MenuBackButtonOnClick: function (event) {
+                event.stopPropagation();
+                Functions.HideMenuBackButton();
+                Functions.ShowMenuFrame($Objects.CategoryListFrame);
+                Functions.ShowMenuHeading('CategoriesHeading');
+            },
+            SearchBarInputOnKeyDown: function (event) {
                 if (event.keyCode === 13) {
-                    Functions.GetSearchResults($Objects.SearchInput.val());
+                    event.stopPropagation();
+                    event.preventDefault();
+                    var searchQuery = $Objects.SearchBarInput.val();
+                    if (searchQuery.length > 0) {
+                        $.ajax({
+                            url: Globals.APIAddress + '/events?query=' + encodeURI(searchQuery),
+                            type: 'GET',
+                            beforeSend: function () {
+                                Functions.ShowLoading();
+                            },
+                            success: function (response) {
+                                response = Functions.ExtendResponse(response);
+                                if (response.status.code === 200) {
+                                    Functions.GenerateSearchResults(response.data);
+                                    Functions.ShowMenuHeading('SearchResultsHeading', 1, Functions.ShowMenuBackButton);
+                                    Functions.ShowMenuFrame($Objects.SearchListFrame);
+                                }
+                            },
+                            complete: function () {
+                                Functions.HideLoading();
+                            }
+                        });
+                    }
                 }
-            });
-        $Objects.CategoryTab = $('#categoryTabButton')
-            .on('click', function () {
-                if (!Globals.isCategoriesDisplayed) {
-                    Functions.DisplayPrimaryOption();
-                }
-            });
-        $Objects.SearchTab = $('#resultTabButton')
-            .on('click', function () {
-                Functions.GetSearchResults($Objects.SearchInput.val());
-            });
-        t.set($Objects.MainMenuButton, {
-            transformOrigin: '50% 50% 0',
-            scale: 0.5
-        });
-    });
-    $(d)
-        .on("keyup", function (event) {
-            if ((event.keyCode === 27) && !Globals.isCollapsed && !Globals.isCollapsing) {
-                Functions.CloseMenu();
+            },
+            OnInitialized: function () {
+                Functions.GenerateCategoryListFrame();
             }
         });
-})(jQuery, document, window, TweenMax);
+
+    $(function () {
+        $Objects.SearchBar = $('#SearchBar', d);
+        if ($Objects.SearchBar.length > 0) {
+            $Objects.SearchBarSVG = $('#SearchBarSVG', $Objects.SearchBar);
+            if ($Objects.SearchBarSVG.length > 0) {
+                $Objects.SearchBarBorder = $('#SearchBarBorder', $Objects.SearchBarSVG);
+                $Objects.SearchGlass = $('#SearchGlass', $Objects.SearchBarSVG);
+                t.set($Objects.MenuIcon = $('#MenuIcon', $Objects.SearchBarSVG), {
+                    scale: 0.5,
+                    transformOrigin: '50% 50% 0'
+                });
+                if ($Objects.MenuIcon.length > 0) {
+                    $Objects.MenuIconTop = $('#MenuIconTop', $Objects.MenuIcon);
+                    $Objects.MenuIconMiddle = $('#MenuIconMiddle', $Objects.MenuIcon);
+                    $Objects.MenuIconBottom = $('#MenuIconBottom', $Objects.MenuIcon);
+                }
+            }
+            $Objects.SearchBarInput = $('#SearchBarInput', $Objects.SearchBar)
+                .on('keydown', Functions.SearchBarInputOnKeyDown);
+        }
+        $Objects.MenuSection = $('#MenuSection', d);
+        if ($Objects.MenuSection.length > 0) {
+            $Objects.MenuHeadingFrame = $('#MenuHeadingFrame', $Objects.MenuSection);
+            if ($Objects.MenuHeadingFrame.length > 0) {
+                $Objects.MenuBackButton = $('#MenuBackButton', $Objects.MenuHeadingFrame)
+                    .on('click', Functions.MenuBackButtonOnClick);
+                $Objects.CategoryHeading = $('#CategoryHeading', $Objects.MenuHeadingFrame);
+            }
+            $Objects.CategoryListFrame = $('#CategoryListFrame', $Objects.MenuSection);
+            if ($Objects.CategoryListFrame.length > 0) {
+                var $CategoryButton = $('.CategoryButton', $Objects.CategoryListFrame);
+                $Cache.CategoryButton = $CategoryButton.clone();
+                $CategoryButton.remove();
+            }
+            $Objects.EventListFrame = $('#EventListFrame', $Objects.MenuSection);
+            if ($Objects.EventListFrame.length > 0) {
+                var $EventButton = $('.EventButton', $Objects.EventListFrame);
+                $Cache.EventButton = $EventButton.clone();
+                $EventButton.remove();
+            }
+            $Objects.SearchListFrame = $('#SearchListFrame', $Objects.MenuSection);
+        }
+        $Objects.HeaderCloseButton = $('#HeaderCloseButton', d).on('click', Functions.HeaderCloseButtonOnClick);
+    });
+
+    $(d)
+        .on('click', '#MenuIconOverlay', Functions.MenuIconOverlayOnClick)
+        .on('mouseup', '#CategoryListFrame .CategoryButton', Functions.CategoryListFrameCategoryButtonOnClick)
+        .on('mouseup', '.EventButton', Functions.EventListFrameEventButtonOnClick)
+        .on('initialized', Functions.OnInitialized);
+
+})(jQuery, window, document, TweenMax);

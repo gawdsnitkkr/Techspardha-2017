@@ -28,13 +28,13 @@ h2 {
   font-family: "Roboto Light", sans-serif;
   font-size: 2.4rem;
   font-weight: 300;
-  color: #f4f4f4;
+  color: #e84a5f;
   margin: 0.5rem 1rem;
   cursor: default;
   text-transform: capitalize;
 }
 h3 {
-  font-family: "Roboto", sans-serif;
+  font-family: "Roboto Condensed", "Roboto Light", sans-serif;
   font-size: 2rem;
   font-weight: 400;
   color: #547980;
@@ -43,7 +43,7 @@ h3 {
   text-transform: capitalize;
 }
 p {
-  font-family: "Roboto", sans-serif;
+  font-family: "Lato", "Roboto", sans-serif;
   font-size: 1.6rem;
   font-weight: 400;
   padding: 0.5rem 1rem 0.5rem 1rem;
@@ -51,63 +51,6 @@ p {
   color: #f4f4f4;
   text-align: justify;
   cursor: default;
-}
-#Logo {
-  z-index: 4;
-  width: 25.6rem;
-  height: 6.4rem;
-  margin: 1rem 0 0 0;
-  position: fixed;
-  top: 0;
-  right: 1.6rem;
-}
-.CloseButton {
-  cursor: pointer;
-}
-.CloseButton svg {
-  width: 3.2rem;
-  height: 3.2rem;
-  fill: #e84a5f;
-  margin-top: -3rem;
-  -webkit-transition: fill 0.3s ease-in-out;
-  -moz-transition: fill 0.3s ease-in-out;
-  -o-transition: fill 0.3s ease-in-out;
-  -ms-transition: fill 0.3s ease-in-out;
-  transition: fill 0.3s ease-in-out;
-}
-.CloseButton svg path {
-  -webkit-transition: -webkit-transform 0.3s ease-in-out;
-  -moz-transition: -moz-transform 0.3s ease-in-out;
-  -o-transition: -o-transform 0.3s ease-in-out;
-  -ms-transition: -ms-transform 0.3s ease-in-out;
-  transition: transform 0.3s ease-in-out;
-  -webkit-transform: rotate(0deg) scale(1);
-  -moz-transform: rotate(0deg) scale(1);
-  -o-transform: rotate(0deg) scale(1);
-  -ms-transform: rotate(0deg) scale(1);
-  transform: rotate(0deg) scale(1);
-  -webkit-transform-origin: 50% 50% 0;
-  -moz-transform-origin: 50% 50% 0;
-  -o-transform-origin: 50% 50% 0;
-  -ms-transform-origin: 50% 50% 0;
-  transform-origin: 50% 50% 0;
-}
-.CloseButton:hover svg {
-  fill: #ff4f64;
-}
-.CloseButton:hover svg path.InnerCross {
-  -webkit-transform: rotate(90deg) scale(0.8);
-  -moz-transform: rotate(90deg) scale(0.8);
-  -o-transform: rotate(90deg) scale(0.8);
-  -ms-transform: rotate(90deg) scale(0.8);
-  transform: rotate(90deg) scale(0.8);
-}
-.CloseButton:active svg path.OuterCircle {
-  -webkit-transform: scale(0.8);
-  -moz-transform: scale(0.8);
-  -o-transform: scale(0.8);
-  -ms-transform: scale(0.8);
-  transform: scale(0.8);
 }
 #LoadingFrame {
   margin: 0;
@@ -117,11 +60,33 @@ p {
   position: fixed;
   top: 0;
   left: 0;
-  background-color: rgba(0,0,0,0.7);
+  background-color: rgba(0,0,0,0.8);
+  z-index: 9;
+  -webkit-animation-duration: 0.5s;
+  -moz-animation-duration: 0.5s;
+  -o-animation-duration: 0.5s;
+  -ms-animation-duration: 0.5s;
+  animation-duration: 0.5s;
+  -webkit-animation-name: LoadingFrameShowAnimation;
+  -moz-animation-name: LoadingFrameShowAnimation;
+  -o-animation-name: LoadingFrameShowAnimation;
+  -ms-animation-name: LoadingFrameShowAnimation;
+  animation-name: LoadingFrameShowAnimation;
+  -webkit-animation-direction: normal;
+  -moz-animation-direction: normal;
+  -o-animation-direction: normal;
+  -ms-animation-direction: normal;
+  animation-direction: normal;
+  -webkit-animation-timing-function: ease-in-out;
+  -moz-animation-timing-function: ease-in-out;
+  -o-animation-timing-function: ease-in-out;
+  -ms-animation-timing-function: ease-in-out;
+  animation-timing-function: ease-in-out;
+  display: none;
 }
 #LoadingSVG {
-  width: 12.8rem;
-  height: 12.8rem;
+  width: 25.6rem;
+  height: 25.6rem;
   position: relative;
   top: 50%;
   left: 50%;
@@ -157,6 +122,9 @@ p {
   animation-timing-function: ease-in-out;
   display: none;
 }
+#LoadingFrame.Show {
+  display: block;
+}
 #LoadingFrame.Show #LoadingSVG {
   display: block;
   -webkit-transform: translate(-50%, -50%) scale(1);
@@ -167,6 +135,7 @@ p {
 }
 #LoadingSVG .InnerCircle {
   fill: #2a363b;
+  transform-box: fill-box;
   -webkit-transform-origin: 50% 50% 0;
   -moz-transform-origin: 50% 50% 0;
   -o-transform-origin: 50% 50% 0;
@@ -205,6 +174,12 @@ p {
 }
 #LoadingSVG .MiddleCircle {
   fill: #e7ab3b;
+  transform-box: fill-box;
+  -webkit-transform: scale(0.7);
+  -moz-transform: scale(0.7);
+  -o-transform: scale(0.7);
+  -ms-transform: scale(0.7);
+  transform: scale(0.7);
   -webkit-transform-origin: 50% 50% 0;
   -moz-transform-origin: 50% 50% 0;
   -o-transform-origin: 50% 50% 0;
@@ -240,14 +215,10 @@ p {
   -o-animation-delay: 2s;
   -ms-animation-delay: 2s;
   animation-delay: 2s;
-  -webkit-transform: scale(0.7);
-  -moz-transform: scale(0.7);
-  -o-transform: scale(0.7);
-  -ms-transform: scale(0.7);
-  transform: scale(0.7);
 }
 #LoadingSVG .MiddleLoop {
   stroke: #547980;
+  transform-box: fill-box;
   -webkit-transform-origin: 50% 50% 0;
   -moz-transform-origin: 50% 50% 0;
   -o-transform-origin: 50% 50% 0;
@@ -281,6 +252,7 @@ p {
 }
 #LoadingSVG .OuterArcs {
   fill: #2a363b;
+  transform-box: fill-box;
   -webkit-transform-origin: 50% 50% 0;
   -moz-transform-origin: 50% 50% 0;
   -o-transform-origin: 50% 50% 0;
@@ -314,6 +286,7 @@ p {
 }
 #LoadingSVG .InnerArcs {
   fill: #547980;
+  transform-box: fill-box;
   -webkit-transform-origin: 50% 50% 0;
   -moz-transform-origin: 50% 50% 0;
   -o-transform-origin: 50% 50% 0;
@@ -345,6 +318,54 @@ p {
   -ms-animation-iteration-count: infinite;
   animation-iteration-count: infinite;
 }
+@-moz-keyframes LoadingFrameShowAnimation {
+  0% {
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+  }
+  100% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+}
+@-webkit-keyframes LoadingFrameShowAnimation {
+  0% {
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+  }
+  100% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+}
+@-o-keyframes LoadingFrameShowAnimation {
+  0% {
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+  }
+  100% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+}
+@keyframes LoadingFrameShowAnimation {
+  0% {
+    opacity: 0;
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    filter: alpha(opacity=0);
+  }
+  100% {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+}
 @-moz-keyframes LoadingSVGShowAnimation {
   0% {
     -webkit-transform: translate(-50%, -50%) scale(0.7);
@@ -352,9 +373,6 @@ p {
     -o-transform: translate(-50%, -50%) scale(0.7);
     -ms-transform: translate(-50%, -50%) scale(0.7);
     transform: translate(-50%, -50%) scale(0.7);
-    opacity: 0;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-    filter: alpha(opacity=0);
   }
   100% {
     -webkit-transform: translate(-50%, -50%) scale(1);
@@ -362,9 +380,6 @@ p {
     -o-transform: translate(-50%, -50%) scale(1);
     -ms-transform: translate(-50%, -50%) scale(1);
     transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
   }
 }
 @-webkit-keyframes LoadingSVGShowAnimation {
@@ -374,9 +389,6 @@ p {
     -o-transform: translate(-50%, -50%) scale(0.7);
     -ms-transform: translate(-50%, -50%) scale(0.7);
     transform: translate(-50%, -50%) scale(0.7);
-    opacity: 0;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-    filter: alpha(opacity=0);
   }
   100% {
     -webkit-transform: translate(-50%, -50%) scale(1);
@@ -384,9 +396,6 @@ p {
     -o-transform: translate(-50%, -50%) scale(1);
     -ms-transform: translate(-50%, -50%) scale(1);
     transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
   }
 }
 @-o-keyframes LoadingSVGShowAnimation {
@@ -396,9 +405,6 @@ p {
     -o-transform: translate(-50%, -50%) scale(0.7);
     -ms-transform: translate(-50%, -50%) scale(0.7);
     transform: translate(-50%, -50%) scale(0.7);
-    opacity: 0;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-    filter: alpha(opacity=0);
   }
   100% {
     -webkit-transform: translate(-50%, -50%) scale(1);
@@ -406,9 +412,6 @@ p {
     -o-transform: translate(-50%, -50%) scale(1);
     -ms-transform: translate(-50%, -50%) scale(1);
     transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
   }
 }
 @keyframes LoadingSVGShowAnimation {
@@ -418,9 +421,6 @@ p {
     -o-transform: translate(-50%, -50%) scale(0.7);
     -ms-transform: translate(-50%, -50%) scale(0.7);
     transform: translate(-50%, -50%) scale(0.7);
-    opacity: 0;
-    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-    filter: alpha(opacity=0);
   }
   100% {
     -webkit-transform: translate(-50%, -50%) scale(1);
@@ -428,9 +428,6 @@ p {
     -o-transform: translate(-50%, -50%) scale(1);
     -ms-transform: translate(-50%, -50%) scale(1);
     transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-    -ms-filter: none;
-    filter: none;
   }
 }
 @-moz-keyframes LoadingSVGOuterArcsAnimation {
@@ -917,6 +914,153 @@ p {
     transform: scale(1.6);
   }
 }
+#Header {
+  background-color: rgba(3,3,11,0.9);
+  width: 100vw;
+  height: 8.8rem;
+  padding: 0;
+  margin: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  overflow: hidden;
+}
+#Header #Logo {
+  width: 25.6rem;
+  height: 6.4rem;
+  position: absolute;
+  top: 1.2rem;
+  right: 1.6rem;
+  cursor: pointer;
+}
+#Header #HeaderCloseButton {
+  position: absolute;
+  top: 12.4rem;
+  right: 2.4rem;
+}
+.CloseButton {
+  cursor: pointer;
+}
+.CloseButton svg {
+  width: 3.2rem;
+  height: 3.2rem;
+  fill: #e84a5f;
+  margin-top: -3rem;
+  -webkit-transition: fill 0.3s ease-in-out;
+  -moz-transition: fill 0.3s ease-in-out;
+  -o-transition: fill 0.3s ease-in-out;
+  -ms-transition: fill 0.3s ease-in-out;
+  transition: fill 0.3s ease-in-out;
+}
+.CloseButton svg path {
+  -webkit-transition: -webkit-transform 0.3s ease-in-out;
+  -moz-transition: -moz-transform 0.3s ease-in-out;
+  -o-transition: -o-transform 0.3s ease-in-out;
+  -ms-transition: -ms-transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+  -webkit-transform: rotate(0deg) scale(1);
+  -moz-transform: rotate(0deg) scale(1);
+  -o-transform: rotate(0deg) scale(1);
+  -ms-transform: rotate(0deg) scale(1);
+  transform: rotate(0deg) scale(1);
+  -webkit-transform-origin: 50% 50% 0;
+  -moz-transform-origin: 50% 50% 0;
+  -o-transform-origin: 50% 50% 0;
+  -ms-transform-origin: 50% 50% 0;
+  transform-origin: 50% 50% 0;
+}
+.CloseButton:hover svg {
+  fill: #ff4f64;
+}
+.CloseButton:hover svg path.InnerCross {
+  -webkit-transform: rotate(90deg) scale(0.8);
+  -moz-transform: rotate(90deg) scale(0.8);
+  -o-transform: rotate(90deg) scale(0.8);
+  -ms-transform: rotate(90deg) scale(0.8);
+  transform: rotate(90deg) scale(0.8);
+}
+.CloseButton:active svg path.OuterCircle {
+  -webkit-transform: scale(0.8);
+  -moz-transform: scale(0.8);
+  -o-transform: scale(0.8);
+  -ms-transform: scale(0.8);
+  transform: scale(0.8);
+}
+@media screen and (max-width: 320px) {
+  #Header #Logo {
+    -webkit-transform: scale(0.8);
+    -moz-transform: scale(0.8);
+    -o-transform: scale(0.8);
+    -ms-transform: scale(0.8);
+    transform: scale(0.8);
+    -webkit-transform-origin: 100% 50%;
+    -moz-transform-origin: 100% 50%;
+    -o-transform-origin: 100% 50%;
+    -ms-transform-origin: 100% 50%;
+    transform-origin: 100% 50%;
+  }
+}
+#SearchBar {
+  position: absolute;
+  top: 2.4rem;
+  left: 1.4rem;
+}
+#SearchBar #SearchBarSVG * {
+  stroke: #45ada8;
+  fill: none;
+}
+#SearchBar #SearchBarSVG #MenuIconOverlay {
+  fill: #45ada8;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+  stroke: none;
+  stroke-width: 0;
+  cursor: pointer;
+}
+#SearchBar #SearchBarSVG #SearchBarBorder,
+#SearchBar #SearchBarSVG #SearchGlass {
+  display: none;
+}
+#SearchBar #SearchBarSVG #SearchGlass,
+#SearchBar #SearchBarSVG #MenuIconMiddle {
+  stroke: #e7ab3b;
+}
+#SearchBar #SearchBarInput {
+  position: absolute;
+  top: 0.8rem;
+  left: 4.2rem;
+  width: 20rem;
+  outline: none;
+  border: none;
+  background: none;
+  font-family: "Lato", "Roboto", sans-serif;
+  font-weight: 400;
+  font-size: 1.6rem;
+  color: rgba(244,244,244,0.5);
+  display: none;
+  -webkit-transition: color 0.3s ease-in-out;
+  -moz-transition: color 0.3s ease-in-out;
+  -o-transition: color 0.3s ease-in-out;
+  -ms-transition: color 0.3s ease-in-out;
+  transition: color 0.3s ease-in-out;
+}
+#SearchBar #SearchBarInput::-webkit-input-placeholder {
+  color: #547980;
+}
+#SearchBar #SearchBarInput::-moz-placeholder {
+  color: #547980;
+}
+#SearchBar #SearchBarInput:-ms-input-placeholder {
+  color: #547980;
+}
+#SearchBar #SearchBarInput:-moz-placeholder {
+  color: #547980;
+}
+#SearchBar #SearchBarInput:focus {
+  color: #f4f4f4;
+}
 #GalaxySection {
   width: 100vw;
   height: 100vh;
@@ -938,7 +1082,7 @@ p {
   filter: alpha(opacity=0);
 }
 #GalaxySVG .Category > text {
-  font-family: "Roboto Light", sans-serif;
+  font-family: "Roboto Condensed", "Roboto Light", sans-serif;
   font-size: 2.4rem;
   font-weight: 300;
   fill: #547980;
@@ -1205,7 +1349,7 @@ p {
   animation-delay: 0.6s;
 }
 #EventContentContainer {
-  padding-top: 10rem;
+  padding-top: 9.2rem;
   z-index: 2;
   overflow: auto;
   position: absolute;
@@ -1218,9 +1362,6 @@ p {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-}
-#EventClose {
-  float: right;
 }
 @-moz-keyframes EventSVGStarShellAnimation {
   0% {
@@ -1350,273 +1491,335 @@ p {
     transform: scale(2.5);
   }
 }
-#mainMenuWrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 5;
-}
-#searchMenu {
-  position: absolute;
-  top: 100vh;
+#MenuSection {
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
-  padding: 0;
-  color: #f4f4f4;
-  font-family: "Roboto", sans-serif;
-  background-color: rgba(3,3,11,0.9);
+  position: fixed;
+  top: 100vh;
+  left: 0;
+  z-index: 2;
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
-}
-#searchBarSVG {
-  position: fixed;
-  margin-left: 20px;
-  margin-top: 20px;
-}
-#searchBarSVG * {
-  stroke: #45ada8;
-}
-#menuButtonOverlay {
-  cursor: pointer;
-}
-#searchBox {
-  display: none;
-  position: fixed;
-  margin-top: 19px;
-  margin-left: 60px;
-  color: rgba(244,244,244,0.7);
-  background: none;
-  border: none;
-  font-size: 1.6rem;
-  font-family: "Roboto", sans-serif;
-  height: 40px;
-  width: 200px;
-  -webkit-transition: color 0.2s ease-in-out;
-  -moz-transition: color 0.2s ease-in-out;
-  -o-transition: color 0.2s ease-in-out;
-  -ms-transition: color 0.2s ease-in-out;
-  transition: color 0.2s ease-in-out;
-}
-#searchBox:focus {
   color: #f4f4f4;
-  outline: none;
-}
-#primaryMenuContainer {
-  position: relative;
-  top: 70px;
-}
-#primaryMenuTabs {
-  position: absolute;
-  border-bottom: 1px solid #547980;
-  height: 54px;
-  width: 100%;
-  margin-top: -54px;
-}
-#primaryMenuTabs > div.tab {
-  margin-top: 1px;
-  display: inline-block;
-  width: 50%;
-  margin-left: -9px;
-  text-align: center;
-  padding: 10px;
-  padding-top: 15px;
-  padding-bottom: 12px;
-  font-size: 15px;
-  text-transform: capitalize;
-  opacity: 0.3;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
-  filter: alpha(opacity=30);
-  cursor: pointer;
-  -webkit-transition: all 0.2s ease-in-out;
-  -moz-transition: all 0.2s ease-in-out;
-  -o-transition: all 0.2s ease-in-out;
-  -ms-transition: all 0.2s ease-in-out;
-  transition: all 0.2s ease-in-out;
-}
-#primaryMenuTabs > div.tab > div.tabLine {
-  position: absolute;
-  bottom: -4px;
-  height: 4px;
-  width: 0;
-  background-color: #547980;
-  -webkit-transition: all 0.2s ease-in-out;
-  -moz-transition: all 0.2s ease-in-out;
-  -o-transition: all 0.2s ease-in-out;
-  -ms-transition: all 0.2s ease-in-out;
-  transition: all 0.2s ease-in-out;
-}
-#primaryMenuTabs > div.tab:hover {
-  opacity: 1;
-  -ms-filter: none;
-  filter: none;
-}
-#primaryMenuTabs > div.tab:hover > span {
-  margin-left: 10px;
-  -webkit-transition: all 0.2s ease-in-out;
-  -moz-transition: all 0.2s ease-in-out;
-  -o-transition: all 0.2s ease-in-out;
-  -ms-transition: all 0.2s ease-in-out;
-  transition: all 0.2s ease-in-out;
-}
-#primaryMenuTabs > div.activeTab {
-  opacity: 1;
-  -ms-filter: none;
-  filter: none;
-}
-#primaryMenuTabs > div.activeTab > div.tabLine {
-  width: 100%;
-  -webkit-transition: all 0.2s ease-in-out;
-  -moz-transition: all 0.2s ease-in-out;
-  -o-transition: all 0.2s ease-in-out;
-  -ms-transition: all 0.2s ease-in-out;
-  transition: all 0.2s ease-in-out;
-}
-#primaryMenuTabs > div > span {
-  position: absolute;
-  opacity: 0.5;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-  filter: alpha(opacity=50);
-  left: 15px;
-  top: 18px;
-}
-#primaryOptionWrapper {
-  margin-top: 54px;
-}
-#primaryMenuOptions {
-  padding-top: 20px;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-bottom: 20px;
-  position: relative;
-  text-align: center;
-  height: auto;
-}
-#primaryMenuOptions > h3 {
-  opacity: 0.5;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-  filter: alpha(opacity=50);
-  font-size: 20px;
-}
-#primaryMenuOptions > div.menuOption {
-  position: relative;
-  margin: 20px;
-  display: inline-block;
-  width: 250px;
-  opacity: 0;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-  filter: alpha(opacity=0);
-  padding: 20px;
-  font-size: 20px;
-  border-radius: 5px;
-  cursor: pointer;
+  background-color: rgba(3,3,11,0.93);
+  overflow-y: auto;
   overflow-x: hidden;
-  -webkit-transition: -webkit-transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
-  -moz-transition: -moz-transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
-  -o-transition: -o-transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
-  -ms-transition: -ms-transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
-  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
 }
-#primaryMenuOptions > div.menuOption:hover {
-  background: #2a363b;
-  -webkit-transform: scale(0.9);
-  -moz-transform: scale(0.9);
-  -o-transform: scale(0.9);
-  -ms-transform: scale(0.9);
-  transform: scale(0.9);
+#MenuContainer {
+  padding-top: 8.8rem;
+  font-size: 1.6rem;
 }
-.menuEventOption {
-  position: relative;
-  margin: 20px;
-  display: inline-block;
-  width: 250px;
-  opacity: 0;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-  filter: alpha(opacity=0);
-  padding: 20px;
-  font-size: 15px;
-  border-radius: 2px;
-  border: 1px solid rgba(255,255,255,0.5);
+#MenuItemRow {
+  background-color: #e7ab3b;
+}
+#MenuItemRow .MenuItem {
+  display: block;
+  font-size: 1.8rem;
+  font-family: "Roboto Condensed", "Roboto Light", sans-serif;
+  font-weight: 600;
+  text-decoration: none;
+  color: #03030b;
   cursor: pointer;
-  overflow: hidden;
-}
-.menuEventOption:hover {
-  background: #2a363b;
-  -webkit-transition: all 0.2s ease-in-out;
-  -moz-transition: all 0.2s ease-in-out;
-  -o-transition: all 0.2s ease-in-out;
-  -ms-transition: all 0.2s ease-in-out;
-  transition: all 0.2s ease-in-out;
-}
-.menuEventOption > span.eventCorner {
-  width: 10px;
-  height: 10px;
-  background-color: rgba(255,255,255,0.5);
-  position: absolute;
-  bottom: -5px;
-  right: -5px;
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  transform: rotate(45deg);
-}
-.searchOption {
-  position: relative;
-  display: inline-block;
-  width: 300px;
-  margin: 20px;
-  margin-top: 10px;
-  opacity: 0;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-  filter: alpha(opacity=0);
-  background-color: rgba(3,3,11,0.5);
-  font-size: 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  height: 82px;
-  overflow: hidden;
-}
-.searchOption > div {
+  -webkit-transition: color 0.3s ease-in-out;
+  -moz-transition: color 0.3s ease-in-out;
+  -o-transition: color 0.3s ease-in-out;
+  -ms-transition: color 0.3s ease-in-out;
+  transition: color 0.3s ease-in-out;
+  padding-top: 1.2rem;
+  padding-bottom: 1rem;
   text-align: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
-.searchOption > div > div.searchNameInfo {
-  padding: 5px;
-  background-color: rgba(42,54,59,0.2);
+#MenuItemRow .MenuItem:hover {
+  color: #2a363b;
 }
-.searchOption > div > div.searchDesc {
-  border-top: 1px solid rgba(153,184,152,0.4);
-  padding-left: 24px;
-  padding-right: 24px;
-  height: 40px;
-  padding-top: 5px;
-  opacity: 0.6;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
-  filter: alpha(opacity=60);
-  font-size: 12px;
-  overflow-y: hidden;
+#MenuHeadingFrame {
+  height: 9.6rem;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
-.searchOption > div > div > div > span.searchDate {
-  padding-left: 10px;
-  color: #e5fcc2;
-  opacity: 0.5;
-  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
-  filter: alpha(opacity=50);
-}
-.searchOption:hover {
-  background: #2a363b;
-  text-shadow: 0 1px 2px rgba(3,3,11,0.5);
-  -webkit-transition: all 0.2s ease-in-out;
-  -moz-transition: all 0.2s ease-in-out;
-  -o-transition: all 0.2s ease-in-out;
-  -ms-transition: all 0.2s ease-in-out;
-  transition: all 0.2s ease-in-out;
-}
-#MenuClose {
+#MenuHeadingFrame .MenuHeading {
   position: absolute;
-  top: 4.8rem;
-  right: 2.4rem;
+  top: 2rem;
+  left: -24rem;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}
+#MenuHeadingFrame .MenuHeading.Active {
+  left: 1rem;
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+#MenuHeadingFrame #MenuBackButton {
+  cursor: pointer;
+  position: absolute;
+  top: 3rem;
+  left: -4.2rem;
+  padding: 0;
+  margin: 0;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}
+#MenuHeadingFrame #MenuBackButton svg {
+  fill: #e84a5f;
+  width: 3.2rem;
+  height: 3.2rem;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transform-origin: 50% 50% 0;
+  -moz-transform-origin: 50% 50% 0;
+  -o-transform-origin: 50% 50% 0;
+  -ms-transform-origin: 50% 50% 0;
+  transform-origin: 50% 50% 0;
+  -webkit-transition: fill 0.3s ease-in-out, -webkit-transform 0.3s ease-in-out;
+  -moz-transition: fill 0.3s ease-in-out, -moz-transform 0.3s ease-in-out;
+  -o-transition: fill 0.3s ease-in-out, -o-transform 0.3s ease-in-out;
+  -ms-transition: fill 0.3s ease-in-out, -ms-transform 0.3s ease-in-out;
+  transition: fill 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+#MenuHeadingFrame #MenuBackButton svg g {
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -o-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+  -webkit-transition: -webkit-transform 0.3s ease-in-out;
+  -moz-transition: -moz-transform 0.3s ease-in-out;
+  -o-transition: -o-transform 0.3s ease-in-out;
+  -ms-transition: -ms-transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+  -webkit-transform-origin: 50% 50% 0;
+  -moz-transform-origin: 50% 50% 0;
+  -o-transform-origin: 50% 50% 0;
+  -ms-transform-origin: 50% 50% 0;
+  transform-origin: 50% 50% 0;
+}
+#MenuHeadingFrame #MenuBackButton svg:hover {
+  fill: #ff847c;
+  -webkit-transform: rotate(120deg);
+  -moz-transform: rotate(120deg);
+  -o-transform: rotate(120deg);
+  -ms-transform: rotate(120deg);
+  transform: rotate(120deg);
+}
+#MenuHeadingFrame #MenuBackButton svg:active g {
+  -webkit-transform: scale(0.8);
+  -moz-transform: scale(0.8);
+  -o-transform: scale(0.8);
+  -ms-transform: scale(0.8);
+  transform: scale(0.8);
+}
+#MenuHeadingFrame #MenuBackButton.Show {
+  left: 1rem;
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+.MenuFrame {
+  position: absolute;
+  top: 30rem;
+  left: 0;
+  width: 100vw;
+  height: auto;
+  padding: 0.5rem 1.5rem 1.5rem 1.5rem;
+  display: none;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
+}
+.MenuFrame.Active {
+  display: block;
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+  top: 0;
+}
+#CategoryListFrame .CategoryButton {
+  padding-bottom: 1rem;
+}
+#CategoryListFrame .CategoryButton .CategoryButtonSVG {
+  width: 100%;
+  max-width: 30rem;
+  height: auto;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+#CategoryListFrame .CategoryButton .CategoryButtonSVG text {
+  font-family: "Roboto Condensed", "Roboto Light", sans-serif;
+  font-weight: 300;
+  font-size: 4.8rem;
+  fill: rgba(244,244,244,0.7);
+  -webkit-transform: translateX(0);
+  -moz-transform: translateX(0);
+  -o-transform: translateX(0);
+  -ms-transform: translateX(0);
+  transform: translateX(0);
+  -webkit-transition: -webkit-transform 0.3s ease-out, fill 0.3s ease-out;
+  -moz-transition: -moz-transform 0.3s ease-out, fill 0.3s ease-out;
+  -o-transition: -o-transform 0.3s ease-out, fill 0.3s ease-out;
+  -ms-transition: -ms-transform 0.3s ease-out, fill 0.3s ease-out;
+  transition: transform 0.3s ease-out, fill 0.3s ease-out;
+}
+#CategoryListFrame .CategoryButton .CategoryButtonSVG path {
+  stroke: #547980;
+  fill: #547980;
+  stroke-width: 2.4;
+  -webkit-transform: scaleX(0.8);
+  -moz-transform: scaleX(0.8);
+  -o-transform: scaleX(0.8);
+  -ms-transform: scaleX(0.8);
+  transform: scaleX(0.8);
+  -webkit-transition: -webkit-transform 0.5s ease-out, stroke 0.5s ease-out, fill 0.5s ease-out;
+  -moz-transition: -moz-transform 0.5s ease-out, stroke 0.5s ease-out, fill 0.5s ease-out;
+  -o-transition: -o-transform 0.5s ease-out, stroke 0.5s ease-out, fill 0.5s ease-out;
+  -ms-transition: -ms-transform 0.5s ease-out, stroke 0.5s ease-out, fill 0.5s ease-out;
+  transition: transform 0.5s ease-out, stroke 0.5s ease-out, fill 0.5s ease-out;
+}
+#CategoryListFrame .CategoryButton .CategoryButtonSVG:hover text {
+  -webkit-transform: translateX(2rem);
+  -moz-transform: translateX(2rem);
+  -o-transform: translateX(2rem);
+  -ms-transform: translateX(2rem);
+  transform: translateX(2rem);
+  fill: #f4f4f4;
+}
+#CategoryListFrame .CategoryButton .CategoryButtonSVG:hover path {
+  -webkit-transform: scaleX(1);
+  -moz-transform: scaleX(1);
+  -o-transform: scaleX(1);
+  -ms-transform: scaleX(1);
+  transform: scaleX(1);
+  stroke: #45ada8;
+  fill: #45ada8;
+}
+#CategoryListFrame .CategoryButton .CategoryButtonSVG:active text {
+  -webkit-transform: translateX(1rem);
+  -moz-transform: translateX(1rem);
+  -o-transform: translateX(1rem);
+  -ms-transform: translateX(1rem);
+  transform: translateX(1rem);
+  fill: #45ada8;
+}
+#CategoryListFrame .CategoryButton .CategoryButtonSVG:active path {
+  -webkit-transform: scaleX(0.9);
+  -moz-transform: scaleX(0.9);
+  -o-transform: scaleX(0.9);
+  -ms-transform: scaleX(0.9);
+  transform: scaleX(0.9);
+  stroke: #e7ab3b;
+  fill: #e7ab3b;
+}
+.EventButton {
+  padding: 1rem;
+}
+.EventButton .EventButtonContainer {
+  border: solid 0.1rem #547980;
+  padding: 1rem;
+  margin: 0;
+  font-family: "Lato", "Roboto", sans-serif;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-transition: border 0.3s ease-in-out;
+  -moz-transition: border 0.3s ease-in-out;
+  -o-transition: border 0.3s ease-in-out;
+  -ms-transition: border 0.3s ease-in-out;
+  transition: border 0.3s ease-in-out;
+}
+.EventButton .EventButtonContainer span {
+  display: inline-block;
+  font-family: "Roboto Condensed", "Roboto Light", sans-serif;
+  font-size: 2rem;
+  font-weight: 400;
+  color: #45ada8;
+  padding: 0;
+  -webkit-transition: padding 0.3s ease-in-out;
+  -moz-transition: padding 0.3s ease-in-out;
+  -o-transition: padding 0.3s ease-in-out;
+  -ms-transition: padding 0.3s ease-in-out;
+  transition: padding 0.3s ease-in-out;
+}
+.EventButton .EventButtonContainer svg {
+  position: absolute;
+  bottom: 0.2rem;
+  right: 0.2rem;
+  fill: #547980;
+  width: 1.6rem;
+  height: 1.6rem;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -o-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+  -webkit-transform-origin: 100% 100% 0;
+  -moz-transform-origin: 100% 100% 0;
+  -o-transform-origin: 100% 100% 0;
+  -ms-transform-origin: 100% 100% 0;
+  transform-origin: 100% 100% 0;
+  -webkit-transition: -webkit-transform 0.3s ease-in-out, fill 0.3s ease-in-out;
+  -moz-transition: -moz-transform 0.3s ease-in-out, fill 0.3s ease-in-out;
+  -o-transition: -o-transform 0.3s ease-in-out, fill 0.3s ease-in-out;
+  -ms-transition: -ms-transform 0.3s ease-in-out, fill 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out, fill 0.3s ease-in-out;
+}
+.EventButton .EventButtonContainer:hover {
+  border-color: #45ada8;
+}
+.EventButton .EventButtonContainer:hover span {
+  padding-left: 1rem;
+}
+.EventButton .EventButtonContainer:hover svg {
+  fill: #e7ab3b;
+  -webkit-transform: scale(1.2);
+  -moz-transform: scale(1.2);
+  -o-transform: scale(1.2);
+  -ms-transform: scale(1.2);
+  transform: scale(1.2);
+}
+.EventButton .EventButtonContainer:active span {
+  padding-left: 0.5rem;
+}
+.EventButton .EventButtonContainer:active svg {
+  fill: #e84a5f;
+  -webkit-transform: scale(0.8);
+  -moz-transform: scale(0.8);
+  -o-transform: scale(0.8);
+  -ms-transform: scale(0.8);
+  transform: scale(0.8);
+}
+#SearchListFrame #NoSearchResults {
+  margin: auto;
+}
+#SearchListFrame #NoSearchResults h3 {
+  color: #e84a5f;
+}
+@media screen and (max-width: 480px) {
+  #MenuItemRow .MenuItem {
+    font-size: 1.6rem;
+  }
+  #MenuItemRow .col-xs-3 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }
 ::-webkit-scrollbar {
   width: 8px;

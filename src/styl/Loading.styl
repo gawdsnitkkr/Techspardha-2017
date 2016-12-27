@@ -6,12 +6,18 @@
   position: fixed;
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 9;
+  animation-duration: 0.5s;
+  animation-name: LoadingFrameShowAnimation;
+  animation-direction: normal;
+  animation-timing-function: ease-in-out;
+  display: none;
 }
 
 #LoadingSVG {
-  width: 12.8rem;
-  height: 12.8rem;
+  width: 25.6rem;
+  height: 25.6rem;
   position: relative;
   top: 50%;
   left: 50%;
@@ -24,6 +30,10 @@
   display: none;
 }
 
+#LoadingFrame.Show {
+  display: block;
+}
+
 #LoadingFrame.Show #LoadingSVG {
   display: block;
   transform: translate(-50%, -50%) scale(1);
@@ -31,6 +41,7 @@
 
 #LoadingSVG .InnerCircle {
   fill: $DarkBlue;
+  transform-box: fill-box;
   transform-origin: 50% 50% 0;
   animation-duration: 2s;
   animation-name: LoadingSVGInnerCircleAnimation;
@@ -42,6 +53,8 @@
 
 #LoadingSVG .MiddleCircle {
   fill: $Yellow;
+  transform-box: fill-box;
+  transform: scale(0.7);
   transform-origin: 50% 50% 0;
   animation-duration: 2s;
   animation-name: LoadingSVGMiddleCircleAnimation;
@@ -49,11 +62,11 @@
   animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
   animation-delay: 2s;
-  transform: scale(0.7);
 }
 
 #LoadingSVG .MiddleLoop {
   stroke: $DarkSkyBlue;
+  transform-box: fill-box;
   transform-origin: 50% 50% 0;
   animation-duration: 4s;
   animation-name: LoadingSVGMiddleLoopAnimation;
@@ -64,6 +77,7 @@
 
 #LoadingSVG .OuterArcs {
   fill: $DarkBlue;
+  transform-box: fill-box;
   transform-origin: 50% 50% 0;
   animation-duration: 4s;
   animation-name: LoadingSVGOuterArcsAnimation;
@@ -74,6 +88,7 @@
 
 #LoadingSVG .InnerArcs {
   fill: $DarkSkyBlue;
+  transform-box: fill-box;
   transform-origin: 50% 50% 0;
   animation-duration: 4s;
   animation-name: LoadingSVGInnerArcsAnimation;
@@ -82,14 +97,21 @@
   animation-iteration-count: infinite;
 }
 
-@keyframes LoadingSVGShowAnimation {
+@keyframes LoadingFrameShowAnimation {
   0% {
-    transform: translate(-50%, -50%) scale(0.7);
     opacity: 0;
   }
   100% {
-    transform: translate(-50%, -50%) scale(1);
     opacity: 1;
+  }
+}
+
+@keyframes LoadingSVGShowAnimation {
+  0% {
+    transform: translate(-50%, -50%) scale(0.7);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
   }
 }
 
