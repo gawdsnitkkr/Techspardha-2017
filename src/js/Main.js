@@ -51,6 +51,14 @@
     var $Cache = {},
         $Objects = {};
 
+    var floor = Math.floor,
+        sin = Math.sin,
+        cos = Math.cos,
+        PI = Math.PI,
+        HalfPI = PI / 2,
+        TwoPI = PI * 2,
+        TwoByThreePI = TwoPI + PI;
+
     var Globals = {
             APIAddress: 'http://techspardha.org/api',
             WindowWidth: w.innerWidth,
@@ -258,6 +266,36 @@
                 $clone.find('text').html(title);
                 t.set($clone, attributes);
                 return $clone;
+            },
+            /**
+             * Set's the ticking arc of the clock to given time (now) based on the total time it can show.
+             * @param {Number} now - Time passed since the clock was started.
+             * @param {Number} total - The total amount of time that the clock can show.
+             */
+            UpdateEventClock: function (now, total) {
+                var Minutes = floor(now / 60),
+                    Seconds = floor(now % 60),
+                    Ratio = ((total - now) / total),
+                    Degree = (Ratio * TwoPI) - HalfPI,
+                    X = 100 + cos(Degree) * 90,
+                    Y = 100 + sin(Degree) * 90;
+                $Objects.EventClockMinute.html(Minutes);
+                $Objects.EventClockSecond.html(Seconds > 9 ? Seconds : '0' + Seconds);
+                if (Degree >= -HalfPI && Degree < 0) {
+                    $Objects.EventClockTick.attr('d', 'M 100 10 A 90 90 0 0 1 ' + X + ' ' + Y);
+                } else if (Degree >= 0 && Degree < HalfPI) {
+                    $Objects.EventClockTick.attr('d', 'M 100 10 A 90 90 0 0 1 190 100 A 90 90 0 0 1 ' + X + ' ' + Y);
+                } else if (Degree >= HalfPI && Degree < PI) {
+                    $Objects.EventClockTick.attr('d', 'M 100 10 A 90 90 0 0 1 190 100 A 90 90 0 0 1 100 190 A 90 90 0 0 1 ' + X + ' ' + Y);
+                } else if (Degree > PI && Degree <= TwoByThreePI) {
+                    $Objects.EventClockTick.attr('d', 'M 100 10 A 90 90 0 0 1 190 100 A 90 90 0 0 1 100 190 A 90 90 0 0 1 10 100 A 90 90 0 0 1 ' + X + ' ' + Y);
+                }
+            },
+            /**
+             * Stops the Event Clock at complete.
+             */
+            StopEventClock: function () {
+                $Objects.EventClockTick.attr('d', 'M 100 10 A 90 90 0 0 1 190 100 A 90 90 0 0 1 100 190 A 90 90 0 0 1 10 100 A 90 90 0 0 1 100 10');
             },
             EventOnClick: function () {
                 /** @type Event */
@@ -832,11 +870,12 @@
          * @return {Event}
          */
         showDetails: function () {
-            $Objects.EventSVGStar.css('fill', this.properties.color);
-            $Objects.EventContentTitle.text(this.properties.title);
+            var properties = this.properties;
+            $Objects.EventSVGStar.css('fill', properties.color);
+            $Objects.EventContentTitle.text(properties.title);
             $Objects.EventContentCategory.text(this.category.properties.title);
-            $Objects.EventContentDescription.text(this.properties.description);
-            $Objects.EventContentRules.text(this.properties.rules);
+            $Objects.EventContentDescription.text(properties.description);
+            $Objects.EventContentRules.text(properties.rules);
             Functions.ShowEventSection();
             Functions.HideGalaxyContainer();
             return this;
@@ -848,30 +887,47 @@
     $(function () {
 
         $Objects.LoadingFrame = $('#LoadingFrame', d);
+
         $Objects.Logo = $('#Logo', d).on('click', Functions.LogoOnClick);
         $Objects.HeaderCloseButton = $('#HeaderCloseButton', d).on('click', Functions.HeaderCloseButtonOnClick);
+
         $Objects.GalaxySVG = $('#GalaxySVG', d);
         $Objects.GalaxyContainer = $('#GalaxyContainer', $Objects.GalaxySVG);
-        // Cache .Event element and remove the original.
-        $Cache.Event = $Objects.GalaxyContainer.find('.Event').clone();
-        $Objects.GalaxyContainer.find('.Event').remove();
-        // Cache .Category element and remove the original.
-        $Cache.Category = $Objects.GalaxyContainer.find('.Category').clone();
-        $Objects.GalaxyContainer.find('.Category').remove();
+        if ($Objects.GalaxyContainer.length > 0) {
+            $Cache.Event = $Objects.GalaxyContainer.find('.Event').clone();
+            $Objects.GalaxyContainer.find('.Event').remove();
+            $Cache.Category = $Objects.GalaxyContainer.find('.Category').clone();
+            $Objects.GalaxyContainer.find('.Category').remove();
+        }
 
         $Objects.EventSection = $('#EventSection', d);
-        $Objects.EventSVG = $('#EventSVG', $Objects.EventSection);
-        $Objects.EventSVGStar = $('.Star', $Objects.EventSVG);
-        $Objects.EventSVGStarShells = $('.Shell', $Objects.EventSVGStar);
-        $Objects.EventContentContainer = $('#EventContentContainer', $Objects.EventSection);
-        $Objects.EventContentContainerElements = $('> div > div', $Objects.EventContentContainer).children();
-        $Objects.EventContentTitle = $('#EventContentTitle', $Objects.EventContentContainer);
-        $Objects.EventContentCategory = $('#EventContentCategory', $Objects.EventContentContainer);
-        $Objects.EventContentDescription = $('#EventContentDescription', $Objects.EventContentContainer);
-        $Objects.EventContentRules = $('#EventContentRules', $Objects.EventContentContainer);
+        if ($Objects.EventSection.length > 0) {
+            $Objects.EventSVG = $('#EventSVG', $Objects.EventSection);
+            if ($Objects.EventSVG.length > 0) {
+                $Objects.EventSVGStar = $('.Star', $Objects.EventSVG);
+                $Objects.EventSVGStarShells = $('.Shell', $Objects.EventSVGStar);
+            }
+            $Objects.EventContentContainer = $('#EventContentContainer', $Objects.EventSection);
+            if ($Objects.EventContentContainer.length > 0) {
+                $Objects.EventContentContainerElements = $('> div > div', $Objects.EventContentContainer).children();
+                $Objects.EventContentTitle = $('#EventContentTitle', $Objects.EventContentContainer);
+                $Objects.EventContentCategory = $('#EventContentCategory', $Objects.EventContentContainer);
+                $Objects.EventContentDescription = $('#EventContentDescription', $Objects.EventContentContainer);
+                $Objects.EventContentRules = $('#EventContentRules', $Objects.EventContentContainer);
+                $Objects.EventClockSVG = $('#EventClockSVG', $Objects.EventContentContainer);
+                if ($Objects.EventClockSVG.length > 0) {
+                    $Objects.EventClockOuter = $('#EventClockOuter', $Objects.EventClockSVG);
+                    $Objects.EventClockTick = $('#EventClockTick', $Objects.EventClockSVG);
+                    $Objects.EventClockInner = $('#EventClockInner', $Objects.EventClockSVG);
+                    $Objects.EventClockMinute = $('#EventClockMinute', $Objects.EventClockSVG);
+                    $Objects.EventClockSecond = $('#EventClockSecond', $Objects.EventClockSVG);
+                }
+            }
+        }
 
         Functions.WindowOnResize();
         Functions.RequestGalaxyMovementAnimationLoop();
+
         /*
          Due to a bug with Chrome (possibly other browsers too :p), the transformation does not apply
          correctly to the #EventSVGStar in the Functions.UpdateEventSVGStarPosition(). This is also mentioned

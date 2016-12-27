@@ -21,142 +21,130 @@
     // Take in references from the Main.js so as to access them here.
     var Globals = $.extend(w.Globals, {
             MenuSectionShowing: false,
-            MenuSectionTransiting: false,
-            SearchBarShowing: false,
-            SearchBarTransiting: false
+            MenuSectionTransiting: false
         }),
         Functions = $.extend(w.Functions, {
             ShowSearchBar: function (duration, callback) {
                 duration = duration || 1.5;
                 callback = callback || undefined;
-                if (!Globals.SearchBarShowing && !Globals.SearchBarTransiting) {
-                    Globals.SearchBarTransiting = true;
-                    var oneThirdDuration = duration / 3,
-                        twoThirdDuration = duration * 2 / 3;
-                    t.killTweensOf($Objects.MenuIcon);
-                    t.fromTo($Objects.MenuIcon, oneThirdDuration, {
-                        scale: 0.5,
-                        transformOrigin: '50% 50% 0'
-                    }, {
-                        scale: 0.88,
-                        transformOrigin: '50% 50% 0',
+                var oneThirdDuration = duration / 3,
+                    twoThirdDuration = duration * 2 / 3;
+                t.killTweensOf($Objects.MenuIcon);
+                t.fromTo($Objects.MenuIcon, oneThirdDuration, {
+                    scale: 0.5,
+                    transformOrigin: '50% 50% 0'
+                }, {
+                    scale: 0.88,
+                    transformOrigin: '50% 50% 0',
+                    ease: Power4.easeOut
+                });
+                $Objects.SearchBarBorder.css('display', 'block');
+                if (Globals.TrailSearchBarBorder === undefined) {
+                    Globals.TrailSearchBarBorder = $Objects.SearchBarBorder.Trail({
+                        stagger: true,
+                        staggerDelay: 0.1,
+                        duration: twoThirdDuration,
                         ease: Power4.easeOut
-                    });
-                    $Objects.SearchBarBorder.css('display', 'block');
-                    if (Globals.TrailSearchBarBorder === undefined) {
-                        Globals.TrailSearchBarBorder = $Objects.SearchBarBorder.Trail({
-                            stagger: true,
-                            staggerDelay: 0.1,
-                            duration: twoThirdDuration,
-                            ease: Power4.easeOut
-                        }, {
-                            paused: true
-                        }).GetTrail();
-                    }
-                    Globals.TrailSearchBarBorder.timeLine
-                        .eventCallback('onComplete', function () {
-                            Globals.SearchBarTransiting = false;
-                            Globals.SearchBarShowing = true;
-                            if ($.isFunction(callback)) {
-                                callback();
-                            }
-                        });
-                    setTimeout(function () {
-                        Globals.TrailSearchBarBorder.play();
-                    }, (oneThirdDuration / 2) * 1000);
-                    t.killTweensOf($Objects.MenuIconMiddle);
-                    t.fromTo($Objects.MenuIconMiddle, oneThirdDuration, {
-                        attr: {
-                            d: 'm 3.4532481,1031.6817 48.8640159,0'
-                        }
                     }, {
-                        attr: {
-                            d: 'm 10.555653,1043.6641 9.469718,-8.7922'
-                        },
-                        ease: Power4.easeOut,
-                        onComplete: function () {
-                            $Objects.SearchGlass.css('display', 'block');
-                            if (Globals.TrailSearchGlass === undefined) {
-                                Globals.TrailSearchGlass = $Objects.SearchGlass.Trail({
-                                    duration: twoThirdDuration,
-                                    ease: Power4.easeOut
-                                }, {
-                                    paused: true
-                                }).GetTrail();
-                            }
-                            Globals.TrailSearchGlass.play();
-                            $Objects.MenuIconTop.css('display', 'none');
-                            $Objects.MenuIconBottom.css('display', 'none');
-                            t.killTweensOf($Objects.SearchBarInput);
-                            t.fromTo($Objects.SearchBarInput, twoThirdDuration, {
-                                display: 'block',
-                                opacity: 0,
-                                x: 48
-                            }, {
-                                opacity: 1,
-                                x: 0,
-                                ease: Power4.easeOut
-                            });
+                        paused: true
+                    }).GetTrail();
+                }
+                Globals.TrailSearchBarBorder.timeLine
+                    .eventCallback('onComplete', function () {
+                        if ($.isFunction(callback)) {
+                            callback();
                         }
                     });
-                }
+                setTimeout(function () {
+                    Globals.TrailSearchBarBorder.play();
+                }, (oneThirdDuration / 2) * 1000);
+                t.killTweensOf($Objects.MenuIconMiddle);
+                t.fromTo($Objects.MenuIconMiddle, oneThirdDuration, {
+                    attr: {
+                        d: 'm 3.4532481,1031.6817 48.8640159,0'
+                    }
+                }, {
+                    attr: {
+                        d: 'm 10.555653,1043.6641 9.469718,-8.7922'
+                    },
+                    ease: Power4.easeOut,
+                    onComplete: function () {
+                        $Objects.SearchGlass.css('display', 'block');
+                        if (Globals.TrailSearchGlass === undefined) {
+                            Globals.TrailSearchGlass = $Objects.SearchGlass.Trail({
+                                duration: twoThirdDuration,
+                                ease: Power4.easeOut
+                            }, {
+                                paused: true
+                            }).GetTrail();
+                        }
+                        Globals.TrailSearchGlass.play();
+                        $Objects.MenuIconTop.css('display', 'none');
+                        $Objects.MenuIconBottom.css('display', 'none');
+                        t.killTweensOf($Objects.SearchBarInput);
+                        t.fromTo($Objects.SearchBarInput, twoThirdDuration, {
+                            display: 'block',
+                            opacity: 0,
+                            x: 48
+                        }, {
+                            opacity: 1,
+                            x: 0,
+                            ease: Power4.easeOut
+                        });
+                    }
+                });
             },
             HideSearchBar: function (duration, callback) {
                 duration = duration || 1.5;
                 callback = callback || undefined;
-                if (Globals.SearchBarShowing && !Globals.SearchBarTransiting) {
-                    var oneThirdDuration = duration / 3,
-                        twoThirdDuration = duration * 2 / 3;
-                    Globals.SearchBarTransiting = true;
-                    Globals.TrailSearchGlass.timeLine
-                        .eventCallback('onReverseComplete', function () {
-                            t.killTweensOf($Objects.MenuIconMiddle);
-                            t.fromTo($Objects.MenuIconMiddle, oneThirdDuration, {
-                                attr: {
-                                    d: 'm 10.555653,1043.6641 9.469718,-8.7922'
-                                }
-                            }, {
-                                attr: {
-                                    d: 'm 3.4532481,1031.6817 48.8640159,0'
-                                },
-                                ease: Power4.easeOut,
-                                onComplete: function () {
-                                    t.killTweensOf($Objects.MenuIcon);
-                                    t.fromTo($Objects.MenuIcon, oneThirdDuration, {
-                                        scale: 0.88,
-                                        transformOrigin: '50% 50% 0'
-                                    }, {
-                                        scale: 0.5,
-                                        transformOrigin: '50% 50% 0',
-                                        ease: Power4.easeOut,
-                                        onComplete: function () {
-                                            Globals.SearchBarTransiting = false;
-                                            Globals.SearchBarShowing = false;
-                                            if ($.isFunction(callback)) {
-                                                callback();
-                                            }
+                var oneThirdDuration = duration / 3,
+                    twoThirdDuration = duration * 2 / 3;
+                Globals.TrailSearchGlass.timeLine
+                    .eventCallback('onReverseComplete', function () {
+                        t.killTweensOf($Objects.MenuIconMiddle);
+                        t.fromTo($Objects.MenuIconMiddle, oneThirdDuration, {
+                            attr: {
+                                d: 'm 10.555653,1043.6641 9.469718,-8.7922'
+                            }
+                        }, {
+                            attr: {
+                                d: 'm 3.4532481,1031.6817 48.8640159,0'
+                            },
+                            ease: Power4.easeOut,
+                            onComplete: function () {
+                                t.killTweensOf($Objects.MenuIcon);
+                                t.fromTo($Objects.MenuIcon, oneThirdDuration, {
+                                    scale: 0.88,
+                                    transformOrigin: '50% 50% 0'
+                                }, {
+                                    scale: 0.5,
+                                    transformOrigin: '50% 50% 0',
+                                    ease: Power4.easeOut,
+                                    onComplete: function () {
+                                        if ($.isFunction(callback)) {
+                                            callback();
                                         }
-                                    });
-                                }
-                            });
-                        })
-                        .reverse();
-                    Globals.TrailSearchBarBorder.reverse();
-                    $Objects.MenuIconTop.css('display', 'block');
-                    $Objects.MenuIconBottom.css('display', 'block');
-                    t.killTweensOf($Objects.SearchBarInput);
-                    t.fromTo($Objects.SearchBarInput, twoThirdDuration, {
-                        opacity: 1,
-                        x: 0
-                    }, {
-                        opacity: 0,
-                        x: 48,
-                        ease: Power4.easeOut,
-                        onComplete: function () {
-                            $Objects.SearchBarInput.css('display', 'none');
-                        }
-                    });
-                }
+                                    }
+                                });
+                            }
+                        });
+                    })
+                    .reverse();
+                Globals.TrailSearchBarBorder.reverse();
+                $Objects.MenuIconTop.css('display', 'block');
+                $Objects.MenuIconBottom.css('display', 'block');
+                t.killTweensOf($Objects.SearchBarInput);
+                t.fromTo($Objects.SearchBarInput, twoThirdDuration, {
+                    opacity: 1,
+                    x: 0
+                }, {
+                    opacity: 0,
+                    x: 48,
+                    ease: Power4.easeOut,
+                    onComplete: function () {
+                        $Objects.SearchBarInput.css('display', 'none');
+                    }
+                });
             },
             /**
              * Shows the #MenuSection element in the given duration and calls the given callback function
@@ -365,7 +353,7 @@
                 t.fromTo($ActiveMenuHeading, duration, {
                     left: '1rem'
                 }, {
-                    left: '5.2rem',
+                    left: '5.6rem',
                     ease: Power4.easeOut
                 });
             },
@@ -400,7 +388,7 @@
                     var $ActiveMenuHeading = $('.MenuHeading.Active', $Objects.MenuHeadingFrame);
                     t.killTweensOf($ActiveMenuHeading);
                     t.fromTo($ActiveMenuHeading, duration, {
-                        left: '5.2rem'
+                        left: '5.6rem'
                     }, {
                         left: '1rem',
                         ease: Power4.easeOut
@@ -503,6 +491,7 @@
                                 response = Functions.ExtendResponse(response);
                                 if (response.status.code === 200) {
                                     Functions.GenerateSearchResults(response.data);
+                                    Functions.HideMenuBackButton(0.5);
                                     Functions.ShowMenuHeading('SearchResultsHeading', 1, Functions.ShowMenuBackButton);
                                     Functions.ShowMenuFrame($Objects.SearchListFrame);
                                 }

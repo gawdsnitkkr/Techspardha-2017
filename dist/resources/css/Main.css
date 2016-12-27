@@ -1363,6 +1363,43 @@ p {
   -ms-user-select: none;
   user-select: none;
 }
+#EventContentContainer > .row > div:nth-of-type(2) {
+  text-align: right;
+}
+#EventContentContainer #EventClockSVG {
+  width: 16rem;
+  height: 16rem;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  margin: 1rem auto;
+  display: none;
+}
+#EventContentContainer #EventClockInner {
+  fill: #9de0ad;
+  fill-opacity: 0.1;
+}
+#EventContentContainer #EventClockTick {
+  fill: #2a363b;
+  stroke: #e7ab3b;
+  stroke-width: 20;
+}
+#EventContentContainer #EventClockOuter {
+  fill: #2a363b;
+}
+#EventContentContainer #EventClockMinute {
+  font-family: "Roboto Condensed", "Roboto Light", sans-serif;
+  font-weight: 300;
+  font-size: 96px;
+  fill: #45ada8;
+}
+#EventContentContainer #EventClockSecond {
+  font-family: "Roboto Condensed", "Roboto Light", sans-serif;
+  font-weight: 200;
+  font-size: 54px;
+  fill: #547980;
+}
 @-moz-keyframes EventSVGStarShellAnimation {
   0% {
     opacity: 0;
@@ -1664,6 +1701,9 @@ p {
   -ms-filter: none;
   filter: none;
   left: 0;
+}
+.MenuFrame p {
+  padding-left: 0;
 }
 #CategoryListFrame .CategoryButton {
   padding-bottom: 1rem;
