@@ -18,7 +18,7 @@
                 });
             },
             upDown: function () {
-                TweenMax.to('#rocket', 2, {
+                TweenMax.to($Objects.rocket, 2, {
                     y: -30,
                     repeat: -1,
                     yoyo: true,
@@ -50,14 +50,14 @@
     };
 
     window.StopAboutUsRocket = function () {
-        t.killTweensOf($Objects.fire1);
-        t.killTweensOf($Objects.fire2);
-        t.killTweensOf($Objects.fire3);
-        t.killTweensOf($Objects.fire4);
-        t.killTweensOf($Objects.fire5);
-        t.killTweensOf($Objects.fire6);
-        t.killTweensOf($Objects.fire7);
-        t.killTweensOf($Objects.rocket);
+        TweenMax.killTweensOf($Objects.fire1);
+        TweenMax.killTweensOf($Objects.fire2);
+        TweenMax.killTweensOf($Objects.fire3);
+        TweenMax.killTweensOf($Objects.fire4);
+        TweenMax.killTweensOf($Objects.fire5);
+        TweenMax.killTweensOf($Objects.fire6);
+        TweenMax.killTweensOf($Objects.fire7);
+        TweenMax.killTweensOf($Objects.rocket);
     };
 
 })(document, jQuery(document), jQuery);

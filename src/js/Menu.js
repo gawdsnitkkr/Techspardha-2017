@@ -299,14 +299,14 @@
                     ease: Power4.easeOut,
                     clearProps: 'all',
                     onComplete: function () {
-                        var onActive = w[$menuFrame.attr('data-onActive')];
                         $menuFrame.addClass('Active');
-                        if ($.isFunction(onActive)) {
-                            onActive();
-                        }
                         $Objects.MenuSection.css('overflow-y', 'auto');
                         if ($.isFunction(callback)) {
                             callback();
+                        }
+                        var onShow = w[$menuFrame.attr('data-onShow')];
+                        if ($.isFunction(onShow)) {
+                            onShow();
                         }
                     }
                 });
@@ -328,6 +328,10 @@
                     clearProps: 'all',
                     onComplete: function () {
                         $ActiveMenuFrame.removeClass('Active');
+                        var onHide = w[$ActiveMenuFrame.attr('data-onHide')];
+                        if ($.isFunction(onHide)) {
+                            onHide();
+                        }
                     }
                 });
             },
@@ -512,9 +516,13 @@
             },
             MenuButtonOnClick: function (event) {
                 event.stopPropagation();
-                var component = $(this).attr('data-for');
-                Functions.ShowMenuHeading(component + 'Heading', 1, Functions.ShowMenuBackButton);
-                Functions.ShowMenuFrame($('#' + component + 'Frame', $Objects.MenuSection));
+                var component = $(this).attr('data-for'),
+                    $menuFrame = $('#' + component + 'Frame', $Objects.MenuSection);
+                if (!$menuFrame.hasClass('Active')) {
+                    Functions.HideMenuBackButton(0.5);
+                    Functions.ShowMenuHeading(component + 'Heading', 1, Functions.ShowMenuBackButton);
+                    Functions.ShowMenuFrame($('#' + component + 'Frame', $Objects.MenuSection));
+                }
             },
             OnInitialized: function () {
                 Functions.GenerateCategoryListFrame();

@@ -1545,14 +1545,14 @@
                     ease: Power4.easeOut,
                     clearProps: 'all',
                     onComplete: function () {
-                        var onActive = w[$menuFrame.attr('data-onActive')];
                         $menuFrame.addClass('Active');
-                        if ($.isFunction(onActive)) {
-                            onActive();
-                        }
                         $Objects.MenuSection.css('overflow-y', 'auto');
                         if ($.isFunction(callback)) {
                             callback();
+                        }
+                        var onShow = w[$menuFrame.attr('data-onShow')];
+                        if ($.isFunction(onShow)) {
+                            onShow();
                         }
                     }
                 });
@@ -1574,6 +1574,10 @@
                     clearProps: 'all',
                     onComplete: function () {
                         $ActiveMenuFrame.removeClass('Active');
+                        var onHide = w[$ActiveMenuFrame.attr('data-onHide')];
+                        if ($.isFunction(onHide)) {
+                            onHide();
+                        }
                     }
                 });
             },
@@ -1758,9 +1762,13 @@
             },
             MenuButtonOnClick: function (event) {
                 event.stopPropagation();
-                var component = $(this).attr('data-for');
-                Functions.ShowMenuHeading(component + 'Heading', 1, Functions.ShowMenuBackButton);
-                Functions.ShowMenuFrame($('#' + component + 'Frame', $Objects.MenuSection));
+                var component = $(this).attr('data-for'),
+                    $menuFrame = $('#' + component + 'Frame', $Objects.MenuSection);
+                if (!$menuFrame.hasClass('Active')) {
+                    Functions.HideMenuBackButton(0.5);
+                    Functions.ShowMenuHeading(component + 'Heading', 1, Functions.ShowMenuBackButton);
+                    Functions.ShowMenuFrame($('#' + component + 'Frame', $Objects.MenuSection));
+                }
             },
             OnInitialized: function () {
                 Functions.GenerateCategoryListFrame();
@@ -1842,7 +1850,7 @@
                 });
             },
             upDown: function () {
-                TweenMax.to('#rocket', 2, {
+                TweenMax.to($Objects.rocket, 2, {
                     y: -30,
                     repeat: -1,
                     yoyo: true,
@@ -1874,14 +1882,14 @@
     };
 
     window.StopAboutUsRocket = function () {
-        t.killTweensOf($Objects.fire1);
-        t.killTweensOf($Objects.fire2);
-        t.killTweensOf($Objects.fire3);
-        t.killTweensOf($Objects.fire4);
-        t.killTweensOf($Objects.fire5);
-        t.killTweensOf($Objects.fire6);
-        t.killTweensOf($Objects.fire7);
-        t.killTweensOf($Objects.rocket);
+        TweenMax.killTweensOf($Objects.fire1);
+        TweenMax.killTweensOf($Objects.fire2);
+        TweenMax.killTweensOf($Objects.fire3);
+        TweenMax.killTweensOf($Objects.fire4);
+        TweenMax.killTweensOf($Objects.fire5);
+        TweenMax.killTweensOf($Objects.fire6);
+        TweenMax.killTweensOf($Objects.fire7);
+        TweenMax.killTweensOf($Objects.rocket);
     };
 
 })(document, jQuery(document), jQuery);
