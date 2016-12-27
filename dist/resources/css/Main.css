@@ -1510,10 +1510,10 @@ p {
   padding-top: 8.8rem;
   font-size: 1.6rem;
 }
-#MenuItemRow {
+#MenuButtonFrame {
   background-color: #e7ab3b;
 }
-#MenuItemRow .MenuItem {
+#MenuButtonFrame .MenuButton {
   display: block;
   font-size: 1.8rem;
   font-family: "Roboto Condensed", "Roboto Light", sans-serif;
@@ -1534,7 +1534,7 @@ p {
   -ms-user-select: none;
   user-select: none;
 }
-#MenuItemRow .MenuItem:hover {
+#MenuButtonFrame .MenuButton:hover {
   color: #2a363b;
 }
 #MenuHeadingFrame {
@@ -1631,8 +1631,8 @@ p {
 }
 .MenuFrame {
   position: absolute;
-  top: 30rem;
-  left: 0;
+  top: 0;
+  left: -100vw;
   width: 100vw;
   height: auto;
   padding: 0.5rem 1.5rem 1.5rem 1.5rem;
@@ -1646,7 +1646,7 @@ p {
   opacity: 1;
   -ms-filter: none;
   filter: none;
-  top: 0;
+  left: 0;
 }
 #CategoryListFrame .CategoryButton {
   padding-bottom: 1rem;
@@ -1813,13 +1813,21 @@ p {
   color: #e84a5f;
 }
 @media screen and (max-width: 480px) {
-  #MenuItemRow .MenuItem {
+  #MenuItemRow .MenuButton {
     font-size: 1.6rem;
   }
   #MenuItemRow .col-xs-3 {
     padding-left: 1rem;
     padding-right: 1rem;
   }
+}
+#rocket {
+  display: block;
+  width: 42vw;
+  max-width: 20rem;
+  height: auto;
+  float: right;
+  margin: 2rem;
 }
 ::-webkit-scrollbar {
   width: 8px;

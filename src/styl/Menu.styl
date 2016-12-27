@@ -19,9 +19,9 @@
   font-size: 1.6rem;
 }
 
-#MenuItemRow {
+#MenuButtonFrame {
   background-color: $Yellow;
-  .MenuItem {
+  .MenuButton {
 
     display: block;
     font-size: 1.8rem;
@@ -116,8 +116,8 @@
 .MenuFrame {
 
   position: absolute;
-  top: 30rem;
-  left: 0;
+  top: 0;
+  left: -100vw;
   width: 100vw;
   height: auto;
   padding: 0.5rem 1.5rem 1.5rem 1.5rem;
@@ -127,7 +127,7 @@
   &.Active {
     display: block;
     opacity: 1;
-    top: 0;
+    left: 0;
   }
 
 }
@@ -267,7 +267,7 @@
 
 @media screen and (max-width: 480px) {
   #MenuItemRow {
-    .MenuItem {
+    .MenuButton {
       font-size: 1.6rem;
     }
     .col-xs-3 {

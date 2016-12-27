@@ -286,14 +286,24 @@
                 t.fromTo($menuFrame, duration, {
                     display: 'block',
                     opacity: 0,
-                    top: '30rem'
+                    left: '-100vw',
+                    rotationY: '-22.5deg',
+                    transformOrigin: '50% 50% 0',
+                    transformPerspective: Globals.WindowWidth
                 }, {
                     opacity: 1,
-                    top: 0,
+                    left: 0,
+                    rotationY: '0deg',
+                    transformOrigin: '50% 50% 0',
+                    transformPerspective: Globals.WindowWidth,
                     ease: Power4.easeOut,
                     clearProps: 'all',
                     onComplete: function () {
+                        var onActive = w[$menuFrame.attr('data-onActive')];
                         $menuFrame.addClass('Active');
+                        if ($.isFunction(onActive)) {
+                            onActive();
+                        }
                         $Objects.MenuSection.css('overflow-y', 'auto');
                         if ($.isFunction(callback)) {
                             callback();
@@ -304,10 +314,16 @@
                 t.fromTo($ActiveMenuFrame, duration, {
                     display: 'block',
                     opacity: 1,
-                    top: 0
+                    left: 0,
+                    rotationY: '0deg',
+                    transformOrigin: '50% 50% 0',
+                    transformPerspective: Globals.WindowWidth
                 }, {
                     opacity: 0,
-                    top: '30rem',
+                    left: '100vw',
+                    rotationY: '22.5deg',
+                    transformOrigin: '50% 50% 0',
+                    transformPerspective: Globals.WindowWidth,
                     ease: Power4.easeOut,
                     clearProps: 'all',
                     onComplete: function () {
@@ -454,7 +470,7 @@
                 Functions.ShowMenuHeading('CategoryHeading', 1, Functions.ShowMenuBackButton);
                 Functions.ShowMenuFrame($Objects.EventListFrame);
             },
-            EventListFrameEventButtonOnClick: function (e) {
+            EventButtonOnClick: function (e) {
                 e.stopPropagation();
                 /** @type Event */
                 var event = $.data(this, 'Event');
@@ -463,7 +479,7 @@
             },
             MenuBackButtonOnClick: function (event) {
                 event.stopPropagation();
-                Functions.HideMenuBackButton();
+                Functions.HideMenuBackButton(0.5);
                 Functions.ShowMenuFrame($Objects.CategoryListFrame);
                 Functions.ShowMenuHeading('CategoriesHeading');
             },
@@ -493,6 +509,12 @@
                         });
                     }
                 }
+            },
+            MenuButtonOnClick: function (event) {
+                event.stopPropagation();
+                var component = $(this).attr('data-for');
+                Functions.ShowMenuHeading(component + 'Heading', 1, Functions.ShowMenuBackButton);
+                Functions.ShowMenuFrame($('#' + component + 'Frame', $Objects.MenuSection));
             },
             OnInitialized: function () {
                 Functions.GenerateCategoryListFrame();
@@ -547,7 +569,8 @@
     $(d)
         .on('click', '#MenuIconOverlay', Functions.MenuIconOverlayOnClick)
         .on('mouseup', '#CategoryListFrame .CategoryButton', Functions.CategoryListFrameCategoryButtonOnClick)
-        .on('mouseup', '.EventButton', Functions.EventListFrameEventButtonOnClick)
+        .on('mouseup', '.EventButton', Functions.EventButtonOnClick)
+        .on('mouseup', '.MenuButton', Functions.MenuButtonOnClick)
         .on('initialized', Functions.OnInitialized);
 
 })(jQuery, window, document, TweenMax);

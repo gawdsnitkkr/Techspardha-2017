@@ -896,3 +896,5 @@
 })(jQuery, window, document, TweenMax);
 
 // @include ./Menu.js
+
+// @include ./AboutUs.js

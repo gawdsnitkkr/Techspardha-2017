@@ -132,18 +132,18 @@
 
 <section id="MenuSection">
     <div id="MenuContainer" class="container-fluid">
-        <div id="MenuItemRow" class="row">
+        <div id="MenuButtonFrame" class="row">
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                <a class="MenuItem">About Us</a>
+                <a data-for="AboutUs" class="MenuButton">About Us</a>
             </div>
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                <a class="MenuItem">Sponsors</a>
+                <a data-for="Sponsors" class="MenuButton">Sponsors</a>
             </div>
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                <a class="MenuItem">FAQ</a>
+                <a data-for="FAQ" class="MenuButton">FAQ</a>
             </div>
             <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                <a class="MenuItem">Contact Us</a>
+                <a data-for="ContactUs" class="MenuButton">Contact Us</a>
             </div>
         </div>
         <div class="row">
@@ -153,6 +153,10 @@
                         <h1 id="CategoriesHeading" class="MenuHeading Active">Categories</h1>
                         <h1 id="CategoryHeading" data-for="" class="MenuHeading">Category</h1>
                         <h1 id="SearchResultsHeading" class="MenuHeading">Search Results</h1>
+                        <h1 id="AboutUsHeading" class="MenuHeading">About Us</h1>
+                        <h1 id="SponsorsHeading" class="MenuHeading">Sponsors</h1>
+                        <h1 id="FAQHeading" class="MenuHeading">FAQ</h1>
+                        <h1 id="ContactUsHeading" class="MenuHeading">Contact Us</h1>
                         <a id="MenuBackButton">
                             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
                                  viewBox="0 0 52 52" style="enable-background:new 0 0 52 52;">
@@ -180,7 +184,7 @@
                                 <div class="EventButton col-xs-12 col-sm-6 col-md-4 col-lg-3">
                                     <div class="EventButtonContainer">
                                         <span class="EventButtonTitle">Event</span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" height="32" width="32" version="1.1"
+                                        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" height="32" width="32"
                                              viewBox="0 0 32 32">
                                             <g transform="translate(0 -1020.4)">
                                                 <path d="m32 1020.4v32h-32z"></path>
@@ -192,6 +196,51 @@
                             <div id="SearchListFrame" class="MenuFrame row">
                                 <div id="NoSearchResults">
                                     <h3>No Events Found, Please Try Another Query.</h3>
+                                </div>
+                            </div>
+                            <div id="AboutUsFrame" class="MenuFrame row" data-onActive="FireAboutUsRocket">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+                                            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" id="rocket"
+                                                 viewBox="0 0 300.16461 470.97433" enable-background="new 0 0 512 512"
+                                                 y="0px" x="0px">
+                                                <path id="path9" fill="#eee"
+                                                      d="m98.677 54.72c14.143-20.472 29.343-41.613 50.963-54.72 21.323 12.782 36.366 33.547 50.311 53.656 32.847 49.754 52.929 109.52 48.878 169.58 10.615 8.898 21.537 17.441 31.994 26.521 15.011 13.797 22.02 35.319 18.406 55.327-5.036 25.275-9.876 50.607-15.206 75.813-2.963 12.968-20.508 18.905-30.823 10.62-17.121-14.291-33.816-29.108-50.932-43.417-12.95 12.462-30.153 20.772-48.214 21.773-20.791 1.466-41.375-7.156-56.448-21.242-12.28 9.401-23.666 20.686-35.664 30.755-5.799 4.66-10.621 10.784-17.484 13.966-10.64 4.565-24.342-2.248-26.747-13.685-5.479-24.642-11.203-49.24-16.52-73.92-4.321-20.878 3.332-43.61 19.419-57.607 9.313-7.822 18.756-15.487 28.243-23.096 2.643-1.39 1.315-4.596 1.465-6.951-2.84-57.95 16.96-115.23 48.35-163.37zm16.813 76.34c-12.424 15.994-10.921 40.768 3.488 55.052 15.255 16.809 44.15 17.422 60.106 1.29 12.317-11.253 16.482-30.146 10.603-45.671-5.387-14.967-19.809-26.195-35.671-27.591-14.66-1.69-29.82 5.05-38.53 16.92z"></path>
+                                                <g stroke-linejoin="round" stroke="#eee" stroke-linecap="round"
+                                                   fill="none">
+                                                    <path id="path4142" d="m105.95 371.48v52.616"
+                                                          stroke-width="5"></path>
+                                                    <path id="path4142-5" d="m119.95 372.96v83.398"
+                                                          stroke-width="6.2949"></path>
+                                                    <path id="path4142-2" d="m134.53 376.94v52.616"
+                                                          stroke-width="5"></path>
+                                                    <path id="path4142-0" d="m148.31 377.64v37.224"
+                                                          stroke-width="4.2056"></path>
+                                                    <path id="path4142-4" d="m162.2 380.15v52.616"
+                                                          stroke-width="5"></path>
+                                                    <path id="path4142-49" d="m179.13 379.39v88.295"
+                                                          stroke-width="6.4771"></path>
+                                                    <path id="path4142-44" d="m195.27 372.44v40.023"
+                                                          stroke-width="4.3608"></path>
+                                                </g>
+                                            </svg>
+
+                                            <p>
+                                                Lorem Ipsum is simply dummy text of the printing and typesetting
+                                                industry. Lorem Ipsum has been the industry's standard dummy text ever
+                                                since the 1500s, when an unknown printer took a galley of type and
+                                                scrambled it to make a type specimen book. It has survived not only five
+                                                centuries, but also the leap into electronic typesetting, remaining
+                                                essentially unchanged. It was popularised in the 1960s with the release
+                                                of Letraset sheets containing Lorem Ipsum passages, and more recently
+                                                with desktop publishing software like Aldus PageMaker including versions
+                                                of Lorem Ipsum.
+                                            </p>
+
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
