@@ -76,7 +76,7 @@
             GalaxyMovementAnimationFrameID: undefined,
             EventSectionShowing: false,
             EventSectionTransiting: false,
-            EventSVGStarScale: 100,
+            EventSVGStarScale: 72,
             EventDefaultProperties: {
                 /** @type Number */
                 id: 0,
