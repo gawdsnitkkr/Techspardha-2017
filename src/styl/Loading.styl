@@ -41,8 +41,8 @@
 
 #LoadingSVG .InnerCircle {
   fill: $DarkBlue;
-  transform-box: fill-box;
-  transform-origin: 50% 50% 0;
+  // Hardcoded values for Mozilla Bug Fix.
+  transform-origin: 128px 128px 0;
   animation-duration: 2s;
   animation-name: LoadingSVGInnerCircleAnimation;
   animation-direction: alternate;
@@ -53,9 +53,9 @@
 
 #LoadingSVG .MiddleCircle {
   fill: $Yellow;
-  transform-box: fill-box;
   transform: scale(0.7);
-  transform-origin: 50% 50% 0;
+  // Hardcoded values for Mozilla Bug Fix.
+  transform-origin: 128px 128px 0;
   animation-duration: 2s;
   animation-name: LoadingSVGMiddleCircleAnimation;
   animation-direction: alternate;
@@ -66,8 +66,8 @@
 
 #LoadingSVG .MiddleLoop {
   stroke: $DarkSkyBlue;
-  transform-box: fill-box;
-  transform-origin: 50% 50% 0;
+  // Hardcoded values for Mozilla Bug Fix.
+  transform-origin: 128px 128px 0;
   animation-duration: 4s;
   animation-name: LoadingSVGMiddleLoopAnimation;
   animation-direction: normal;
@@ -77,8 +77,8 @@
 
 #LoadingSVG .OuterArcs {
   fill: $DarkBlue;
-  transform-box: fill-box;
-  transform-origin: 50% 50% 0;
+  // Hardcoded values for Mozilla Bug Fix.
+  transform-origin: 128px 128px 0;
   animation-duration: 4s;
   animation-name: LoadingSVGOuterArcsAnimation;
   animation-direction: normal;
@@ -88,8 +88,8 @@
 
 #LoadingSVG .InnerArcs {
   fill: $DarkSkyBlue;
-  transform-box: fill-box;
-  transform-origin: 50% 50% 0;
+  // Hardcoded values for Mozilla Bug Fix.
+  transform-origin: 128px 128px 0;
   animation-duration: 4s;
   animation-name: LoadingSVGInnerArcsAnimation;
   animation-direction: normal;

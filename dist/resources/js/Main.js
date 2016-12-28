@@ -108,9 +108,9 @@
                 var properties = this.properties,
                     paths = this.paths,
                     divisions = properties.divisions,
-                    pathLengths = properties.pathLengths = new Float32Array(properties.pathLengths),
+                    pathLengths = properties.pathLengths = new Float32Array(properties.pathLengths === undefined ? [] : properties.pathLengths),
                     pathLength = 0,
-                    startOffsets = properties.startOffsets = new Float32Array(properties.startOffsets),
+                    startOffsets = properties.startOffsets = new Float32Array(properties.startOffsets === undefined ? [] : properties.startOffsets),
                     startOffset = 0,
                     strokeDashes = properties.strokeDashes = [],
                     pathCount = paths.length,
@@ -129,10 +129,10 @@
                 }
 
                 if (pathLengths.length !== pathCount) {
-                    pathLengths = new Uint32Array(pathCount);
+                    pathLengths = new Float32Array(pathCount);
                 }
                 if (startOffsets.length !== pathCount) {
-                    startOffsets = new Uint32Array(pathCount);
+                    startOffsets = new Float32Array(pathCount);
                 }
                 while (pathIndex < pathCount) {
                     pathLength = pathLengths[pathIndex];
@@ -316,10 +316,11 @@
      */
     $.fn.Trail = function (options, timeLineOptions) {
         return this.each(function () {
-            // Check if the plugin is already attached to this element and whether it is an instance of plugin or not.
-            if (!($.data(this, 'Trail') instanceof Trail)) {
-                $.data(this, 'Trail', new Trail(this, options, timeLineOptions));
-            }
+            /*
+             Overwrite the instance, since this deals with animations. Though it is not advised to instantiate again
+             but if you really are that lazy I don't want you complaining, so here you go.
+             */
+            $.data(this, 'Trail', new Trail(this, options, timeLineOptions));
         });
     };
     /**
@@ -426,7 +427,6 @@
             EventSectionShowing: false,
             EventSectionTransiting: false,
             EventSVGStarScale: 100,
-            EventSVGStarHalfSize: 400, // ActualSize * EventSVGStarScale
             EventDefaultProperties: {
                 /** @type Number */
                 id: 0,
@@ -496,9 +496,10 @@
             },
             UpdateEventSVGStarPosition: function () {
                 t.set($Objects.EventSVGStar, {
-                    x: Globals.WindowWidth - Globals.EventSVGStarHalfSize,
-                    y: Globals.WindowHeight - Globals.EventSVGStarHalfSize,
-                    scale: Globals.EventSVGStarScale
+                    x: Globals.WindowWidth,
+                    y: Globals.WindowHeight,
+                    scale: Globals.EventSVGStarScale,
+                    transformOrigin: '50% 50% 0'
                 });
             },
             /**
@@ -1041,7 +1042,8 @@
             var position = this.position,
                 $category = this.$category = Functions.$CreateCategory(this.properties.title, {
                     x: position.x,
-                    y: position.y
+                    y: position.y,
+                    transformOrigin: '50% 50% 0'
                 }).appendTo($Objects.GalaxyContainer);
             $.data($category.get(0), 'Category', this);
             this.$title = $category.find('text');
@@ -1181,6 +1183,7 @@
                     {
                         x: position.x,
                         y: position.y,
+                        transformOrigin: '50% 50% 0',
                         display: 'none'
                     });
             $.data($event.get(0), 'Event', this);

@@ -135,12 +135,11 @@ p {
 }
 #LoadingSVG .InnerCircle {
   fill: #2a363b;
-  transform-box: fill-box;
-  -webkit-transform-origin: 50% 50% 0;
-  -moz-transform-origin: 50% 50% 0;
-  -o-transform-origin: 50% 50% 0;
-  -ms-transform-origin: 50% 50% 0;
-  transform-origin: 50% 50% 0;
+  -webkit-transform-origin: 128px 128px 0;
+  -moz-transform-origin: 128px 128px 0;
+  -o-transform-origin: 128px 128px 0;
+  -ms-transform-origin: 128px 128px 0;
+  transform-origin: 128px 128px 0;
   -webkit-animation-duration: 2s;
   -moz-animation-duration: 2s;
   -o-animation-duration: 2s;
@@ -174,17 +173,16 @@ p {
 }
 #LoadingSVG .MiddleCircle {
   fill: #e7ab3b;
-  transform-box: fill-box;
   -webkit-transform: scale(0.7);
   -moz-transform: scale(0.7);
   -o-transform: scale(0.7);
   -ms-transform: scale(0.7);
   transform: scale(0.7);
-  -webkit-transform-origin: 50% 50% 0;
-  -moz-transform-origin: 50% 50% 0;
-  -o-transform-origin: 50% 50% 0;
-  -ms-transform-origin: 50% 50% 0;
-  transform-origin: 50% 50% 0;
+  -webkit-transform-origin: 128px 128px 0;
+  -moz-transform-origin: 128px 128px 0;
+  -o-transform-origin: 128px 128px 0;
+  -ms-transform-origin: 128px 128px 0;
+  transform-origin: 128px 128px 0;
   -webkit-animation-duration: 2s;
   -moz-animation-duration: 2s;
   -o-animation-duration: 2s;
@@ -218,12 +216,11 @@ p {
 }
 #LoadingSVG .MiddleLoop {
   stroke: #547980;
-  transform-box: fill-box;
-  -webkit-transform-origin: 50% 50% 0;
-  -moz-transform-origin: 50% 50% 0;
-  -o-transform-origin: 50% 50% 0;
-  -ms-transform-origin: 50% 50% 0;
-  transform-origin: 50% 50% 0;
+  -webkit-transform-origin: 128px 128px 0;
+  -moz-transform-origin: 128px 128px 0;
+  -o-transform-origin: 128px 128px 0;
+  -ms-transform-origin: 128px 128px 0;
+  transform-origin: 128px 128px 0;
   -webkit-animation-duration: 4s;
   -moz-animation-duration: 4s;
   -o-animation-duration: 4s;
@@ -252,12 +249,11 @@ p {
 }
 #LoadingSVG .OuterArcs {
   fill: #2a363b;
-  transform-box: fill-box;
-  -webkit-transform-origin: 50% 50% 0;
-  -moz-transform-origin: 50% 50% 0;
-  -o-transform-origin: 50% 50% 0;
-  -ms-transform-origin: 50% 50% 0;
-  transform-origin: 50% 50% 0;
+  -webkit-transform-origin: 128px 128px 0;
+  -moz-transform-origin: 128px 128px 0;
+  -o-transform-origin: 128px 128px 0;
+  -ms-transform-origin: 128px 128px 0;
+  transform-origin: 128px 128px 0;
   -webkit-animation-duration: 4s;
   -moz-animation-duration: 4s;
   -o-animation-duration: 4s;
@@ -286,12 +282,11 @@ p {
 }
 #LoadingSVG .InnerArcs {
   fill: #547980;
-  transform-box: fill-box;
-  -webkit-transform-origin: 50% 50% 0;
-  -moz-transform-origin: 50% 50% 0;
-  -o-transform-origin: 50% 50% 0;
-  -ms-transform-origin: 50% 50% 0;
-  transform-origin: 50% 50% 0;
+  -webkit-transform-origin: 128px 128px 0;
+  -moz-transform-origin: 128px 128px 0;
+  -o-transform-origin: 128px 128px 0;
+  -ms-transform-origin: 128px 128px 0;
+  transform-origin: 128px 128px 0;
   -webkit-animation-duration: 4s;
   -moz-animation-duration: 4s;
   -o-animation-duration: 4s;
@@ -1099,6 +1094,11 @@ p {
   fill: #fff;
 }
 .Star .Shell {
+  -webkit-transform-origin: 12px 12px 0;
+  -moz-transform-origin: 12px 12px 0;
+  -o-transform-origin: 12px 12px 0;
+  -ms-transform-origin: 12px 12px 0;
+  transform-origin: 12px 12px 0;
   -webkit-animation-direction: alternate;
   -moz-animation-direction: alternate;
   -o-animation-direction: alternate;
@@ -1124,11 +1124,6 @@ p {
   -o-animation-name: StarShellAnimation;
   -ms-animation-name: StarShellAnimation;
   animation-name: StarShellAnimation;
-  -webkit-transform-origin: 50% 50% 0;
-  -moz-transform-origin: 50% 50% 0;
-  -o-transform-origin: 50% 50% 0;
-  -ms-transform-origin: 50% 50% 0;
-  transform-origin: 50% 50% 0;
 }
 .Star .Shell:nth-child(1) {
   fill-opacity: 0.05;
@@ -1285,16 +1280,6 @@ p {
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
-  -webkit-transform: scale(0.5);
-  -moz-transform: scale(0.5);
-  -o-transform: scale(0.5);
-  -ms-transform: scale(0.5);
-  transform: scale(0.5);
-  -webkit-transform-origin: 50% 50% 0;
-  -moz-transform-origin: 50% 50% 0;
-  -o-transform-origin: 50% 50% 0;
-  -ms-transform-origin: 50% 50% 0;
-  transform-origin: 50% 50% 0;
   -webkit-animation-duration: 3s;
   -moz-animation-duration: 3s;
   -o-animation-duration: 3s;

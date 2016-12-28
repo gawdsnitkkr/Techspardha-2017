@@ -77,7 +77,6 @@
             EventSectionShowing: false,
             EventSectionTransiting: false,
             EventSVGStarScale: 100,
-            EventSVGStarHalfSize: 400, // ActualSize * EventSVGStarScale
             EventDefaultProperties: {
                 /** @type Number */
                 id: 0,
@@ -147,9 +146,10 @@
             },
             UpdateEventSVGStarPosition: function () {
                 t.set($Objects.EventSVGStar, {
-                    x: Globals.WindowWidth - Globals.EventSVGStarHalfSize,
-                    y: Globals.WindowHeight - Globals.EventSVGStarHalfSize,
-                    scale: Globals.EventSVGStarScale
+                    x: Globals.WindowWidth,
+                    y: Globals.WindowHeight,
+                    scale: Globals.EventSVGStarScale,
+                    transformOrigin: '50% 50% 0'
                 });
             },
             /**
@@ -692,7 +692,8 @@
             var position = this.position,
                 $category = this.$category = Functions.$CreateCategory(this.properties.title, {
                     x: position.x,
-                    y: position.y
+                    y: position.y,
+                    transformOrigin: '50% 50% 0'
                 }).appendTo($Objects.GalaxyContainer);
             $.data($category.get(0), 'Category', this);
             this.$title = $category.find('text');
@@ -832,6 +833,7 @@
                     {
                         x: position.x,
                         y: position.y,
+                        transformOrigin: '50% 50% 0',
                         display: 'none'
                     });
             $.data($event.get(0), 'Event', this);
