@@ -1897,8 +1897,8 @@ p {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background-color: #e84a5f;
+  background-color: #2a363b;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: #ff847c;
+  background-color: #e7ab3b;
 }

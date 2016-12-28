@@ -852,19 +852,28 @@
              * @param {Function} [callback]
              */
             HideEventSection: function (duration, callback) {
-                duration = duration || 2;
+                duration = duration || 0.5;
                 callback = callback || undefined;
                 if (Globals.EventSectionShowing && !Globals.EventSectionTransiting) {
                     Functions.ShowLogo();
                     Functions.HideHeaderCloseButton();
                     t.killTweensOf($Objects.EventSection);
                     t.fromTo($Objects.EventSection, duration, {
-                        opacity: 1
+                        opacity: 1,
+                        scale: 1,
+                        transformOrigin: '50% 50% 0'
                     }, {
                         opacity: 0,
-                        ease: Power4.easeOut,
+                        scale: 1.3,
+                        transformOrigin: '50% 50% 0',
+                        ease: Power4.easeIn,
+                        clearProps: 'all',
                         onComplete: function () {
                             Globals.EventSectionTransiting = false;
+                            $Objects.EventSection.css({
+                                opacity: 0,
+                                top: '100vh'
+                            });
                             $Objects.EventSVGStarShells.removeClass('Animate');
                             Globals.EventSectionShowing = false;
                             if ($.isFunction(callback)) {
