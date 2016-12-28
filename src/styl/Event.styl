@@ -6,6 +6,7 @@
   cursor: pointer;
   user-select: none;
   text-transform: capitalize;
+  opacity: 0;
 }
 
 #EventSection {
@@ -32,10 +33,15 @@
     .Shell {
       display: block;
       opacity: 0;
+      animation: none;
+    }
+
+    .Shell.Animate {
       animation-duration: 3s;
       animation-name: EventSVGStarShellAnimation;
       animation-direction: normal;
       animation-timing-function: linear;
+      animation-iteration-count: infinite;
     }
 
     for $shell in (1..4) {

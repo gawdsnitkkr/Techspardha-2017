@@ -1256,6 +1256,9 @@ p {
   -ms-user-select: none;
   user-select: none;
   text-transform: capitalize;
+  opacity: 0;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity=0);
 }
 #EventSection {
   width: 100vw;
@@ -1280,6 +1283,13 @@ p {
   opacity: 0;
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
+  -webkit-animation: none;
+  -moz-animation: none;
+  -o-animation: none;
+  -ms-animation: none;
+  animation: none;
+}
+#EventSVG .Star .Shell.Animate {
   -webkit-animation-duration: 3s;
   -moz-animation-duration: 3s;
   -o-animation-duration: 3s;
@@ -1300,6 +1310,11 @@ p {
   -o-animation-timing-function: linear;
   -ms-animation-timing-function: linear;
   animation-timing-function: linear;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -o-animation-iteration-count: infinite;
+  -ms-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
 }
 #EventSVG .Star .Shell:nth-child(1) {
   fill-opacity: 0.1;
@@ -1687,9 +1702,6 @@ p {
   filter: none;
   left: 0;
 }
-.MenuFrame p {
-  padding-left: 0;
-}
 #CategoryListFrame .CategoryButton {
   padding-bottom: 1rem;
 }
@@ -1781,6 +1793,11 @@ p {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  -webkit-transform-origin: 50% 50% 0;
+  -moz-transform-origin: 50% 50% 0;
+  -o-transform-origin: 50% 50% 0;
+  -ms-transform-origin: 50% 50% 0;
+  transform-origin: 50% 50% 0;
   -webkit-transition: border 0.3s ease-in-out;
   -moz-transition: border 0.3s ease-in-out;
   -o-transition: border 0.3s ease-in-out;
@@ -1854,7 +1871,7 @@ p {
 #SearchListFrame #NoSearchResults h3 {
   color: #e84a5f;
 }
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 768px) {
   #MenuItemRow .MenuButton {
     font-size: 1.6rem;
   }
@@ -1870,6 +1887,11 @@ p {
   height: auto;
   float: right;
   margin: 2rem;
+}
+@media all and (max-width: 768px) {
+  #rocket {
+    max-width: 15rem;
+  }
 }
 ::-webkit-scrollbar {
   width: 8px;

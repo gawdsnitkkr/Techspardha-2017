@@ -136,10 +136,6 @@
     left: 0;
   }
 
-  p {
-    padding-left: 0;
-  }
-
 }
 
 #CategoryListFrame {
@@ -211,6 +207,7 @@
     font-family: $ContentFontFamily;
     cursor: pointer;
     user-select: none;
+    transform-origin: 50% 50% 0;
     transition: border 0.3s ease-in-out;
 
     span {
@@ -275,7 +272,7 @@
   }
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (max-width: 768px) {
   #MenuItemRow {
     .MenuButton {
       font-size: 1.6rem;

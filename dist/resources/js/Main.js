@@ -740,8 +740,7 @@
                 if (!Globals.GalaxyContainerShowing && !Globals.GalaxyContainerTransiting) {
                     Globals.GalaxyContainerTransiting = true;
                     t.killTweensOf($Objects.GalaxyContainer);
-                    t.fromTo($Objects.GalaxyContainer, duration, {
-                        display: 'block',
+                    t.fromTo($Objects.GalaxyContainer.css('display', 'block'), duration, {
                         opacity: 0,
                         scale: 0.5,
                         transformOrigin: '50% 50% 0'
@@ -772,8 +771,7 @@
                 if (Globals.GalaxyContainerShowing && !Globals.GalaxyContainerTransiting) {
                     Globals.GalaxyContainerTransiting = true;
                     t.killTweensOf($Objects.GalaxyContainer);
-                    t.fromTo($Objects.GalaxyContainer, duration, {
-                        display: 'block',
+                    t.fromTo($Objects.GalaxyContainer.css('display', 'block'), duration, {
                         opacity: 1,
                         scale: 1,
                         transformOrigin: '50% 50% 0'
@@ -805,12 +803,11 @@
                 if (!Globals.EventSectionShowing && !Globals.EventSectionTransiting) {
                     var halfDuration = duration / 2;
                     Globals.EventSectionTransiting = true;
-                    $Objects.EventSVGStarShells.css('display', 'none');
+                    $Objects.EventSVGStarShells.removeClass('Animate');
                     Functions.HideLogo();
                     Functions.ShowHeaderCloseButton();
                     t.killTweensOf($Objects.EventSection);
                     t.fromTo($Objects.EventSection, duration, {
-                        display: 'block',
                         opacity: 0,
                         top: '100vh'
                     }, {
@@ -818,7 +815,7 @@
                         top: 0,
                         ease: Power4.easeOut,
                         onComplete: function () {
-                            $Objects.EventSVGStarShells.css('display', 'block');
+                            $Objects.EventSVGStarShells.addClass('Animate');
                         }
                     });
                     t.killTweensOf($Objects.EventContentContainer);
@@ -862,15 +859,13 @@
                     Functions.HideHeaderCloseButton();
                     t.killTweensOf($Objects.EventSection);
                     t.fromTo($Objects.EventSection, duration, {
-                        display: 'block',
                         opacity: 1
                     }, {
                         opacity: 0,
                         ease: Power4.easeOut,
                         onComplete: function () {
                             Globals.EventSectionTransiting = false;
-                            $Objects.EventSVGStarShells.css('display', 'none');
-                            $Objects.EventSection.css('display', 'none');
+                            $Objects.EventSVGStarShells.removeClass('Animate');
                             Globals.EventSectionShowing = false;
                             if ($.isFunction(callback)) {
                                 callback();
@@ -973,11 +968,19 @@
                                         $(d).trigger('initialized');
                                     }
                                 },
+                                error: function () {
+                                    console.log('Error Events [Retrying in 2 seconds...] :: ' + arguments);
+                                    setTimeout(Functions.Initialize, 2000);
+                                },
                                 complete: function () {
 
                                 }
                             });
                         }
+                    },
+                    error: function () {
+                        console.log('Error Categories [Retrying in 2 seconds...] :: ' + arguments);
+                        setTimeout(Functions.Initialize, 2000);
                     },
                     complete: function () {
 
@@ -1000,12 +1003,6 @@
              */
             GetEventFromID: function (categoryID, eventID) {
                 return Functions.GetCategoryFromID(categoryID).events[Globals.EventIDToIndexMap[eventID]];
-            },
-            LogoOnClick: function () {
-                if (!Globals.GalaxyContainerShowing) {
-                    Functions.HideEventSection();
-                    Functions.ShowGalaxyContainer();
-                }
             },
             HeaderCloseButtonOnClick: function () {
                 if (Globals.MenuSectionShowing) {
@@ -1195,8 +1192,8 @@
          * @return {Event}
          */
         show: function () {
-            t.fromTo(this.$event, 2, {
-                display: 'block',
+            var $title = this.$title;
+            t.fromTo(this.$event.css('display', 'block'), 2, {
                 opacity: 0,
                 scale: 0.5,
                 transformOrigin: '50% 50% 0'
@@ -1204,16 +1201,17 @@
                 opacity: 1,
                 scale: 1,
                 transformOrigin: '50% 50% 0',
-                ease: Power4.easeInOut
-            });
-            t.fromTo(this.$title, 1, {
-                opacity: 0,
-                y: -8
-            }, {
-                opacity: 1,
-                y: 0,
                 ease: Power4.easeInOut,
-                delay: 1.5
+                onComplete: function () {
+                    t.fromTo($title, 1, {
+                        opacity: 0,
+                        y: -8
+                    }, {
+                        opacity: 1,
+                        y: 0,
+                        ease: Power4.easeInOut
+                    });
+                }
             });
             return this;
         },
@@ -1240,7 +1238,7 @@
 
         $Objects.LoadingFrame = $('#LoadingFrame', d);
 
-        $Objects.Logo = $('#Logo', d).on('click', Functions.LogoOnClick);
+        $Objects.Logo = $('#Logo', d);
         $Objects.HeaderCloseButton = $('#HeaderCloseButton', d).on('click', Functions.HeaderCloseButtonOnClick);
 
         $Objects.GalaxySVG = $('#GalaxySVG', d);
@@ -1279,13 +1277,6 @@
 
         Functions.WindowOnResize();
         Functions.RequestGalaxyMovementAnimationLoop();
-
-        /*
-         Due to a bug with Chrome (possibly other browsers too :p), the transformation does not apply
-         correctly to the #EventSVGStar in the Functions.UpdateEventSVGStarPosition(). This is also mentioned
-         in the GreenSockJS documentation.
-         */
-        $Objects.EventSection.css('display', 'none');
 
         Functions.Initialize();
 
@@ -1387,8 +1378,7 @@
                         $Objects.MenuIconTop.css('display', 'none');
                         $Objects.MenuIconBottom.css('display', 'none');
                         t.killTweensOf($Objects.SearchBarInput);
-                        t.fromTo($Objects.SearchBarInput, twoThirdDuration, {
-                            display: 'block',
+                        t.fromTo($Objects.SearchBarInput.css('display', 'block'), twoThirdDuration, {
                             opacity: 0,
                             x: 48
                         }, {
@@ -1466,8 +1456,7 @@
                     Functions.ShowHeaderCloseButton();
                     Functions.ShowSearchBar();
                     t.killTweensOf($Objects.MenuSection);
-                    t.fromTo($Objects.MenuSection, duration, {
-                        display: 'block',
+                    t.fromTo($Objects.MenuSection.css('display', 'block'), duration, {
                         opacity: 0,
                         top: '100vh'
                     }, {
@@ -1532,37 +1521,41 @@
             ShowMenuHeading: function (headingID, duration, callback) {
                 duration = duration || 1;
                 callback = callback || undefined;
-                var $MenuHeading = $('#' + headingID, $Objects.MenuHeadingFrame),
-                    $ActiveMenuHeading = $('.MenuHeading.Active:not(#' + headingID + ')', $Objects.MenuHeadingFrame);
-                t.killTweensOf($MenuHeading);
-                t.fromTo($MenuHeading, duration, {
-                    left: '-24rem',
-                    opacity: 0
-                }, {
-                    left: '1rem',
-                    opacity: 1,
-                    ease: Power4.easeOut,
-                    clearProps: 'all',
-                    onComplete: function () {
-                        $MenuHeading.addClass('Active');
-                        if ($.isFunction(callback)) {
-                            callback();
+                var $MenuHeading = $('#' + headingID, $Objects.MenuHeadingFrame);
+                if (!$MenuHeading.hasClass('Active')) {
+                    var $ActiveMenuHeading = $('.MenuHeading.Active:not(#' + headingID + ')', $Objects.MenuHeadingFrame);
+                    t.killTweensOf($MenuHeading);
+                    t.fromTo($MenuHeading, duration, {
+                        left: '-24rem',
+                        opacity: 0
+                    }, {
+                        left: '1rem',
+                        opacity: 1,
+                        ease: Power4.easeOut,
+                        clearProps: 'all',
+                        onComplete: function () {
+                            $MenuHeading.addClass('Active');
+                            if ($.isFunction(callback)) {
+                                callback();
+                            }
                         }
-                    }
-                });
-                t.killTweensOf($ActiveMenuHeading);
-                t.fromTo($ActiveMenuHeading, duration, {
-                    left: '1rem',
-                    opacity: 1
-                }, {
-                    left: '24rem',
-                    opacity: 0,
-                    ease: Power4.easeOut,
-                    clearProps: 'all',
-                    onComplete: function () {
-                        $ActiveMenuHeading.removeClass('Active');
-                    }
-                });
+                    });
+                    t.killTweensOf($ActiveMenuHeading);
+                    t.fromTo($ActiveMenuHeading, duration, {
+                        left: '1rem',
+                        opacity: 1
+                    }, {
+                        left: '24rem',
+                        opacity: 0,
+                        ease: Power4.easeOut,
+                        clearProps: 'all',
+                        onComplete: function () {
+                            $ActiveMenuHeading.removeClass('Active');
+                        }
+                    });
+                } else if ($.isFunction(callback)) {
+                    callback();
+                }
             },
             /**
              * Shows the Menu Frame given as the parameter and currently active one is automatically hidden.
@@ -1573,60 +1566,62 @@
             ShowMenuFrame: function ($menuFrame, duration, callback) {
                 duration = duration || 1;
                 callback = callback || undefined;
-                var $ActiveMenuFrame = $('.MenuFrame.Active:not(' + $menuFrame.prop('id') + ')', $Objects.MenuSection);
-                $Objects.MenuSection.css('overflow-y', 'hidden');
-                t.killTweensOf($menuFrame);
-                t.fromTo($menuFrame, duration, {
-                    display: 'block',
-                    opacity: 0,
-                    left: '-100vw',
-                    rotationY: '-22.5deg',
-                    transformOrigin: '50% 50% 0',
-                    transformPerspective: Globals.WindowWidth
-                }, {
-                    opacity: 1,
-                    left: 0,
-                    rotationY: '0deg',
-                    transformOrigin: '50% 50% 0',
-                    transformPerspective: Globals.WindowWidth,
-                    ease: Power4.easeOut,
-                    clearProps: 'all',
-                    onComplete: function () {
-                        $menuFrame.addClass('Active');
-                        $Objects.MenuSection.css('overflow-y', 'auto');
-                        if ($.isFunction(callback)) {
-                            callback();
+                if (!$menuFrame.hasClass('Active')) {
+                    var $ActiveMenuFrame = $('.MenuFrame.Active:not(' + $menuFrame.prop('id') + ')', $Objects.MenuSection);
+                    $Objects.MenuSection.css('overflow-y', 'hidden');
+                    t.killTweensOf($menuFrame);
+                    t.fromTo($menuFrame.css('display', 'block'), duration, {
+                        opacity: 0,
+                        left: '-100vw',
+                        rotationY: '-22.5deg',
+                        transformOrigin: '50% 50% 0',
+                        transformPerspective: Globals.WindowWidth
+                    }, {
+                        opacity: 1,
+                        left: 0,
+                        rotationY: '0deg',
+                        transformOrigin: '50% 50% 0',
+                        transformPerspective: Globals.WindowWidth,
+                        ease: Power4.easeOut,
+                        clearProps: 'all',
+                        onComplete: function () {
+                            $menuFrame.addClass('Active');
+                            $Objects.MenuSection.css('overflow-y', 'auto');
+                            if ($.isFunction(callback)) {
+                                callback();
+                            }
+                            var onShow = w[$menuFrame.attr('data-onShow')];
+                            if ($.isFunction(onShow)) {
+                                onShow();
+                            }
                         }
-                        var onShow = w[$menuFrame.attr('data-onShow')];
-                        if ($.isFunction(onShow)) {
-                            onShow();
+                    });
+                    t.killTweensOf($ActiveMenuFrame);
+                    t.fromTo($ActiveMenuFrame.css('display', 'block'), duration, {
+                        opacity: 1,
+                        left: 0,
+                        rotationY: '0deg',
+                        transformOrigin: '50% 50% 0',
+                        transformPerspective: Globals.WindowWidth
+                    }, {
+                        opacity: 0,
+                        left: '100vw',
+                        rotationY: '22.5deg',
+                        transformOrigin: '50% 50% 0',
+                        transformPerspective: Globals.WindowWidth,
+                        ease: Power4.easeOut,
+                        clearProps: 'all',
+                        onComplete: function () {
+                            $ActiveMenuFrame.removeClass('Active');
+                            var onHide = w[$ActiveMenuFrame.attr('data-onHide')];
+                            if ($.isFunction(onHide)) {
+                                onHide();
+                            }
                         }
-                    }
-                });
-                t.killTweensOf($ActiveMenuFrame);
-                t.fromTo($ActiveMenuFrame, duration, {
-                    display: 'block',
-                    opacity: 1,
-                    left: 0,
-                    rotationY: '0deg',
-                    transformOrigin: '50% 50% 0',
-                    transformPerspective: Globals.WindowWidth
-                }, {
-                    opacity: 0,
-                    left: '100vw',
-                    rotationY: '22.5deg',
-                    transformOrigin: '50% 50% 0',
-                    transformPerspective: Globals.WindowWidth,
-                    ease: Power4.easeOut,
-                    clearProps: 'all',
-                    onComplete: function () {
-                        $ActiveMenuFrame.removeClass('Active');
-                        var onHide = w[$ActiveMenuFrame.attr('data-onHide')];
-                        if ($.isFunction(onHide)) {
-                            onHide();
-                        }
-                    }
-                });
+                    });
+                } else if ($.isFunction(callback)) {
+                    callback();
+                }
             },
             /**
              * Shows the #MenuBackButton element in the given duration and calls the given callback function
@@ -1757,6 +1752,20 @@
                     $SearchListFrame.append($Cache.NoSearchResults.clone());
                 }
                 $Objects.EventListFrame.after($SearchListFrame);
+                t.staggerFromTo($SearchListFrame.children(), 1, {
+                    opacity: 0,
+                    y: '100%',
+                    rotationX: '-22.5deg',
+                    transformOrigin: '50% 50% 0',
+                    transformPerspective: '200rem'
+                }, {
+                    opacity: 1,
+                    y: '0%',
+                    rotationX: '0deg',
+                    transformOrigin: '50% 50% 0',
+                    transformPerspective: '200rem',
+                    ease: Power4.easeOut
+                }, 0.1);
             },
             CategoryListFrameCategoryButtonOnClick: function (event) {
                 event.stopPropagation();
@@ -1784,7 +1793,7 @@
                 if (event.keyCode === 13) {
                     event.stopPropagation();
                     event.preventDefault();
-                    var searchQuery = $Objects.SearchBarInput.val();
+                    var searchQuery = $Objects.SearchBarInput.blur().val();
                     if (searchQuery.length > 0) {
                         $.ajax({
                             url: Globals.APIAddress + '/events?query=' + encodeURI(searchQuery),

@@ -390,8 +390,7 @@
                 if (!Globals.GalaxyContainerShowing && !Globals.GalaxyContainerTransiting) {
                     Globals.GalaxyContainerTransiting = true;
                     t.killTweensOf($Objects.GalaxyContainer);
-                    t.fromTo($Objects.GalaxyContainer, duration, {
-                        display: 'block',
+                    t.fromTo($Objects.GalaxyContainer.css('display', 'block'), duration, {
                         opacity: 0,
                         scale: 0.5,
                         transformOrigin: '50% 50% 0'
@@ -422,8 +421,7 @@
                 if (Globals.GalaxyContainerShowing && !Globals.GalaxyContainerTransiting) {
                     Globals.GalaxyContainerTransiting = true;
                     t.killTweensOf($Objects.GalaxyContainer);
-                    t.fromTo($Objects.GalaxyContainer, duration, {
-                        display: 'block',
+                    t.fromTo($Objects.GalaxyContainer.css('display', 'block'), duration, {
                         opacity: 1,
                         scale: 1,
                         transformOrigin: '50% 50% 0'
@@ -455,12 +453,11 @@
                 if (!Globals.EventSectionShowing && !Globals.EventSectionTransiting) {
                     var halfDuration = duration / 2;
                     Globals.EventSectionTransiting = true;
-                    $Objects.EventSVGStarShells.css('display', 'none');
+                    $Objects.EventSVGStarShells.removeClass('Animate');
                     Functions.HideLogo();
                     Functions.ShowHeaderCloseButton();
                     t.killTweensOf($Objects.EventSection);
                     t.fromTo($Objects.EventSection, duration, {
-                        display: 'block',
                         opacity: 0,
                         top: '100vh'
                     }, {
@@ -468,7 +465,7 @@
                         top: 0,
                         ease: Power4.easeOut,
                         onComplete: function () {
-                            $Objects.EventSVGStarShells.css('display', 'block');
+                            $Objects.EventSVGStarShells.addClass('Animate');
                         }
                     });
                     t.killTweensOf($Objects.EventContentContainer);
@@ -512,15 +509,13 @@
                     Functions.HideHeaderCloseButton();
                     t.killTweensOf($Objects.EventSection);
                     t.fromTo($Objects.EventSection, duration, {
-                        display: 'block',
                         opacity: 1
                     }, {
                         opacity: 0,
                         ease: Power4.easeOut,
                         onComplete: function () {
                             Globals.EventSectionTransiting = false;
-                            $Objects.EventSVGStarShells.css('display', 'none');
-                            $Objects.EventSection.css('display', 'none');
+                            $Objects.EventSVGStarShells.removeClass('Animate');
                             Globals.EventSectionShowing = false;
                             if ($.isFunction(callback)) {
                                 callback();
@@ -623,11 +618,19 @@
                                         $(d).trigger('initialized');
                                     }
                                 },
+                                error: function () {
+                                    console.log('Error Events [Retrying in 2 seconds...] :: ' + arguments);
+                                    setTimeout(Functions.Initialize, 2000);
+                                },
                                 complete: function () {
 
                                 }
                             });
                         }
+                    },
+                    error: function () {
+                        console.log('Error Categories [Retrying in 2 seconds...] :: ' + arguments);
+                        setTimeout(Functions.Initialize, 2000);
                     },
                     complete: function () {
 
@@ -650,12 +653,6 @@
              */
             GetEventFromID: function (categoryID, eventID) {
                 return Functions.GetCategoryFromID(categoryID).events[Globals.EventIDToIndexMap[eventID]];
-            },
-            LogoOnClick: function () {
-                if (!Globals.GalaxyContainerShowing) {
-                    Functions.HideEventSection();
-                    Functions.ShowGalaxyContainer();
-                }
             },
             HeaderCloseButtonOnClick: function () {
                 if (Globals.MenuSectionShowing) {
@@ -845,8 +842,8 @@
          * @return {Event}
          */
         show: function () {
-            t.fromTo(this.$event, 2, {
-                display: 'block',
+            var $title = this.$title;
+            t.fromTo(this.$event.css('display', 'block'), 2, {
                 opacity: 0,
                 scale: 0.5,
                 transformOrigin: '50% 50% 0'
@@ -854,16 +851,17 @@
                 opacity: 1,
                 scale: 1,
                 transformOrigin: '50% 50% 0',
-                ease: Power4.easeInOut
-            });
-            t.fromTo(this.$title, 1, {
-                opacity: 0,
-                y: -8
-            }, {
-                opacity: 1,
-                y: 0,
                 ease: Power4.easeInOut,
-                delay: 1.5
+                onComplete: function () {
+                    t.fromTo($title, 1, {
+                        opacity: 0,
+                        y: -8
+                    }, {
+                        opacity: 1,
+                        y: 0,
+                        ease: Power4.easeInOut
+                    });
+                }
             });
             return this;
         },
@@ -890,7 +888,7 @@
 
         $Objects.LoadingFrame = $('#LoadingFrame', d);
 
-        $Objects.Logo = $('#Logo', d).on('click', Functions.LogoOnClick);
+        $Objects.Logo = $('#Logo', d);
         $Objects.HeaderCloseButton = $('#HeaderCloseButton', d).on('click', Functions.HeaderCloseButtonOnClick);
 
         $Objects.GalaxySVG = $('#GalaxySVG', d);
@@ -929,13 +927,6 @@
 
         Functions.WindowOnResize();
         Functions.RequestGalaxyMovementAnimationLoop();
-
-        /*
-         Due to a bug with Chrome (possibly other browsers too :p), the transformation does not apply
-         correctly to the #EventSVGStar in the Functions.UpdateEventSVGStarPosition(). This is also mentioned
-         in the GreenSockJS documentation.
-         */
-        $Objects.EventSection.css('display', 'none');
 
         Functions.Initialize();
 
