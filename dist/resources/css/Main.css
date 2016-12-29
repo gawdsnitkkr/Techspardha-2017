@@ -1089,6 +1089,23 @@ p {
   user-select: none;
   cursor: default;
 }
+#GalaxyMapSVG {
+  width: 10rem;
+  height: 10rem;
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  background-color: rgba(42,54,59,0.33);
+  border: solid 0.2rem rgba(69,173,168,0.67);
+}
+#GalaxyMapSVG .CategoryMarker {
+  fill: rgba(69,173,168,0.7);
+}
+#GalaxyMapSVG #FieldOfView {
+  fill: rgba(69,173,168,0.33);
+  stroke: rgba(69,173,168,0.67);
+  stroke-width: 1;
+}
 .Star {
   cursor: pointer;
   fill: #fff;
@@ -1247,9 +1264,9 @@ p {
 }
 .Event text {
   font-family: "Roboto Light", sans-serif;
-  font-size: 1.6rem;
+  font-size: 1.2rem;
   font-weight: 300;
-  fill: #45ada8;
+  fill: rgba(69,173,168,0.63);
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -1273,8 +1290,20 @@ p {
   top: 0;
   left: 0;
   z-index: 1;
+  width: 100vw;
+  height: 100vh;
 }
 #EventSVG .Star {
+  -webkit-transform: matrix(72, 0, 0, 72, 428, -132);
+  -moz-transform: matrix(72, 0, 0, 72, 428, -132);
+  -o-transform: matrix(72, 0, 0, 72, 428, -132);
+  -ms-transform: matrix(72, 0, 0, 72, 428, -132);
+  transform: matrix(72, 0, 0, 72, 428, -132);
+  -webkit-transform-origin: 0 0 0;
+  -moz-transform-origin: 0 0 0;
+  -o-transform-origin: 0 0 0;
+  -ms-transform-origin: 0 0 0;
+  transform-origin: 0 0 0;
   cursor: default;
   fill: #e7ab3b;
 }

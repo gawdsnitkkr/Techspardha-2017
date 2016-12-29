@@ -102,27 +102,36 @@
 </div>
 
 <section id="GalaxySection">
-    <svg id="GalaxySVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
-        <g class="Category">
-            <text text-anchor="middle" x="0" y="0">Category</text>
-            <g class="Event">
-                <g class="Star">
-                    <circle class="Shell" cx="12" cy="12" r="10"></circle>
-                    <circle class="Shell" cx="12" cy="12" r="8"></circle>
-                    <circle class="Shell" cx="12" cy="12" r="6"></circle>
-                    <circle class="Shell" cx="12" cy="12" r="4"></circle>
-                    <circle class="Core" cx="12" cy="12" r="4"></circle>
+    <svg id="GalaxySVG" xmlns="http://www.w3.org/2000/svg" version="1.1"
+         viewBox="0 0 1280 720" preserveAspectRatio="xMinYMin slice">
+        <g id="GalaxyContainer">
+            <g class="Category">
+                <text text-anchor="middle" x="0" y="0">Category</text>
+                <g class="Event">
+                    <g class="Star">
+                        <circle class="Shell" cx="12" cy="12" r="10"></circle>
+                        <circle class="Shell" cx="12" cy="12" r="8"></circle>
+                        <circle class="Shell" cx="12" cy="12" r="6"></circle>
+                        <circle class="Shell" cx="12" cy="12" r="4"></circle>
+                        <circle class="Core" cx="12" cy="12" r="4"></circle>
+                    </g>
+                    <text text-anchor="middle" x="12" y="44">
+                        Event
+                    </text>
                 </g>
-                <text text-anchor="middle" x="12" y="44">
-                    Event
-                </text>
             </g>
         </g>
+    </svg>
+    <svg id="GalaxyMapSVG" xmlns="http://www.w3.org/2000/svg" version="1.1"
+         viewBox="0 0 108 108" preserveAspectRatio="xMinYMin meet">
+        <circle class="CategoryMarker" cx="50" cy="50" r="2"></circle>
+        <rect id="FieldOfView" x="4" y="4" width="60" height="35"></rect>
     </svg>
 </section>
 
 <section id="EventSection">
-    <svg id="EventSVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 720">
+    <svg id="EventSVG" xmlns="http://www.w3.org/2000/svg" version="1.1"
+         viewBox="0 0 1280 720" preserveAspectRatio="xMaxYMax slice">
         <g class="Star">
             <circle class="Shell" cx="12" cy="12" r="10"></circle>
             <circle class="Shell" cx="12" cy="12" r="8"></circle>

@@ -383,9 +383,9 @@
     };
 
     /**
-     * A point having X and Y coordinates.
-     * @param {Number} x - X coordinate of the point.
-     * @param {Number} y - Y coordinate of the point.
+     * A point having x and y coordinates.
+     * @param {Number} x - x coordinate of the point.
+     * @param {Number} y - y coordinate of the point.
      * @constructor
      */
     var Point = function (x, y) {
@@ -409,10 +409,7 @@
         TwoPI = PI * 2,
         TwoByThreePI = TwoPI + PI;
 
-    var GalaxyPosition = {
-            X: 0,
-            Y: 0
-        },
+    var GalaxyPosition = new Point(0, 0),
         Globals = {
             APIAddress: 'http://techspardha.org/api',
             WindowWidth: w.innerWidth,
@@ -421,14 +418,23 @@
             WindowHalfHeight: w.innerHeight / 2,
             MouseDeltaX: 0,
             MouseDeltaY: 0,
-            MouseDeltaThreshold: 1,
+            MouseDeltaThreshold: 2.5,
+            GalaxyDiameter: 2048,
+            GalaxyRadius: 1024,
+            CategoryDiameterMultiplier: 42,
+            CategoryDiameterMin: 128,
+            CategoryDiameterMax: 640,
+            // Calculated in the function $(function(){...}) using GalaxyDiameter and CategoryDiameterMax.
+            GalaxyMinX: 0,
+            GalaxyMinY: 0,
+            GalaxyMaxX: 0,
+            GalaxyMaxY: 0,
             GalaxySVGShowing: true,
             GalaxySVGTransiting: false,
             GalaxyMovementSpeed: 10,
             GalaxyMovementAnimationFrameID: undefined,
             EventSectionShowing: false,
             EventSectionTransiting: false,
-            EventSVGStarScale: 72,
             EventDefaultProperties: {
                 /** @type Number */
                 id: 0,
@@ -459,7 +465,6 @@
                 /** @type String */
                 title: 'Category'
             },
-            CategoryDiameter: 512,
             /** @type Point[] */
             CategoriesPosition: [],
             /** @type Category[] */
@@ -489,20 +494,10 @@
                 });
             },
             /**
-             * Sets the viewBox attribute of the #GalaxySVG and the #EventSVG to '0 0 WINDOW_WIDTH WINDOW_HEIGHT'.
+             * Sets the viewBox attribute of the #GalaxySVG to 'GalaxyPosition.x GalaxyPosition.y 1280 720'.
              */
-            UpdateViewBox: function () {
-                var viewBoxSize = Globals.WindowWidth + ' ' + Globals.WindowHeight;
-                $Objects.GalaxySVG.attr('viewBox', GalaxyPosition.X + ' ' + GalaxyPosition.Y + ' ' + viewBoxSize);
-                $Objects.EventSVG.attr('viewBox', '0 0 ' + viewBoxSize);
-            },
-            UpdateEventSVGStarPosition: function () {
-                t.set($Objects.EventSVGStar, {
-                    x: Globals.WindowWidth,
-                    y: Globals.WindowHeight,
-                    scale: Globals.EventSVGStarScale,
-                    transformOrigin: '50% 50% 0'
-                });
+            UpdateGalaxyViewBox: function () {
+                $Objects.GalaxySVG.attr('viewBox', GalaxyPosition.x + ' ' + GalaxyPosition.y + ' 1280 720');
             },
             /**
              * Moves the #GalaxySVG by the desired delta in both dX and dY direction.
@@ -510,10 +505,25 @@
              * @param {Number} dY
              */
             MoveGalaxyBy: function (dX, dY) {
+                var x = GalaxyPosition.x - (Math.abs(dX) < Globals.MouseDeltaThreshold ? 0 : dX),
+                    y = GalaxyPosition.y - (Math.abs(dY) < Globals.MouseDeltaThreshold ? 0 : dY);
+                if ((x <= Globals.GalaxyMinX) || (x >= Globals.GalaxyMaxX)) {
+                    x = GalaxyPosition.x;
+                }
+                if ((y <= Globals.GalaxyMinY) || (y >= Globals.GalaxyMaxY)) {
+                    y = GalaxyPosition.y;
+                }
                 t.to(GalaxyPosition, 2, {
-                    X: ('-=' + (Math.abs(dX) < Globals.MouseDeltaThreshold ? 0 : dX)),
-                    Y: ('-=' + (Math.abs(dY) < Globals.MouseDeltaThreshold ? 0 : dY)),
-                    onUpdate: Functions.UpdateViewBox,
+                    x: x,
+                    y: y,
+                    onUpdate: Functions.UpdateGalaxyViewBox,
+                    ease: Power4.easeOut
+                });
+                t.to($Objects.FieldOfView, 2, {
+                    attr: {
+                        x: 4 + (((x - 640) / Globals.GalaxyRadius) * 50 + 50),
+                        y: 4 + (((y - 360) / Globals.GalaxyRadius) * 50 + 50)
+                    },
                     ease: Power4.easeOut
                 });
             },
@@ -546,8 +556,7 @@
             WindowOnResize: function () {
                 Globals.WindowHalfWidth = (Globals.WindowWidth = w.innerWidth) / 2;
                 Globals.WindowHalfHeight = (Globals.WindowHeight = w.innerHeight) / 2;
-                Functions.UpdateViewBox();
-                Functions.UpdateEventSVGStarPosition();
+                Functions.UpdateGalaxyViewBox();
             },
             WindowOnMouseMove: function (event) {
                 Globals.MouseDeltaX = ((Globals.WindowHalfWidth - event.pageX) / Globals.WindowHalfWidth) * Globals.GalaxyMovementSpeed;
@@ -742,13 +751,9 @@
                     Globals.GalaxySVGTransiting = true;
                     t.killTweensOf($Objects.GalaxySVG);
                     t.fromTo($Objects.GalaxySVG, duration, {
-                        opacity: 0,
-                        scale: 0.5,
-                        transformOrigin: '50% 50% 0'
+                        opacity: 0
                     }, {
                         opacity: 1,
-                        scale: 1,
-                        transformOrigin: '50% 50% 0',
                         ease: Power4.easeOut,
                         onComplete: function () {
                             Globals.GalaxySVGTransiting = false;
@@ -757,6 +762,15 @@
                                 callback();
                             }
                         }
+                    });
+                    t.killTweensOf($Objects.GalaxyContainer);
+                    t.fromTo($Objects.GalaxyContainer, duration, {
+                        scale: 0.5,
+                        transformOrigin: '50% 50% 0'
+                    }, {
+                        scale: 1,
+                        transformOrigin: '50% 50% 0',
+                        ease: Power4.easeOut
                     });
                 }
             },
@@ -773,13 +787,9 @@
                     Globals.GalaxySVGTransiting = true;
                     t.killTweensOf($Objects.GalaxySVG);
                     t.fromTo($Objects.GalaxySVG, duration, {
-                        opacity: 1,
-                        scale: 1,
-                        transformOrigin: '50% 50% 0'
+                        opacity: 1
                     }, {
                         opacity: 0,
-                        scale: 0.5,
-                        transformOrigin: '50% 50% 0',
                         ease: Power4.easeOut,
                         onComplete: function () {
                             Globals.GalaxySVGTransiting = false;
@@ -788,6 +798,15 @@
                                 callback();
                             }
                         }
+                    });
+                    t.killTweensOf($Objects.GalaxyContainer);
+                    t.fromTo($Objects.GalaxyContainer, duration, {
+                        scale: 1,
+                        transformOrigin: '50% 50% 0'
+                    }, {
+                        scale: 0.5,
+                        transformOrigin: '50% 50% 0',
+                        ease: Power4.easeOut
                     });
                 }
             },
@@ -901,9 +920,6 @@
                 $.ajax({
                     url: Globals.APIAddress + '/categories',
                     type: 'GET',
-                    beforeSend: function () {
-
-                    },
                     success: function (response) {
                         response = Functions.ExtendResponse(response);
                         if (response.status.code === 200) {
@@ -912,9 +928,6 @@
                             $.ajax({
                                 url: Globals.APIAddress + '/events',
                                 type: 'GET',
-                                beforeSend: function () {
-
-                                },
                                 success: function (response) {
                                     response = Functions.ExtendResponse(response);
                                     if (response.status.code === 200) {
@@ -935,8 +948,8 @@
                                             // retrieved by the Site's API.
                                             CategoryIDToIndexMap[categoryID] = categoryIndex;
                                             CategoriesPosition.push(new Point(
-                                                (Math.random() - 0.5) * 2048 + Globals.WindowHalfWidth,
-                                                (Math.random() - 0.5) * 2048 + Globals.WindowHalfHeight));
+                                                (Math.random() - 0.5) * Globals.GalaxyDiameter + 640,
+                                                (Math.random() - 0.5) * Globals.GalaxyDiameter + 360));
                                         }
                                         // Populate the Category-Event Map.
                                         for (var eventIndex = 0; eventIndex < eventCount; eventIndex++) {
@@ -976,15 +989,13 @@
                                                 title: category.Name.toLowerCase().capitalize()
                                             }, categoryEventMap[category.Id]));
                                         }
+
                                         $(d).trigger('initialized');
                                     }
                                 },
                                 error: function () {
                                     console.log('Error Events [Retrying in 2 seconds...] :: ' + arguments);
                                     setTimeout(Functions.Initialize, 2000);
-                                },
-                                complete: function () {
-
                                 }
                             });
                         }
@@ -992,9 +1003,6 @@
                     error: function () {
                         console.log('Error Categories [Retrying in 2 seconds...] :: ' + arguments);
                         setTimeout(Functions.Initialize, 2000);
-                    },
-                    complete: function () {
-
                     }
                 });
             },
@@ -1037,7 +1045,6 @@
      * @constructor
      */
     var Category = function (index, properties, eventPropertiesArray) {
-        this.index = index;
         this.properties = $.extend({}, Globals.CategoryDefaultProperties, properties);
         this.position = Globals.CategoriesPosition[index];
         /** @type Event[] */
@@ -1052,11 +1059,14 @@
                     x: position.x,
                     y: position.y,
                     transformOrigin: '50% 50% 0'
-                }).appendTo($Objects.GalaxySVG);
+                }).appendTo($Objects.GalaxyContainer);
             $.data($category.get(0), 'Category', this);
             this.$title = $category.find('text');
             this.appendEvents(this.show);
-            // TODO: Add HTML element to the Menu bar.
+            $Cache.CategoryMarker.clone().attr({
+                cx: 4 + (((position.x - 640) / Globals.GalaxyRadius) * 50 + 50),
+                cy: 4 + (((position.y - 360) / Globals.GalaxyRadius) * 50 + 50)
+            }).appendTo($Objects.GalaxyMapSVG);
             return this;
         },
         clearEvents: function () {
@@ -1079,7 +1089,13 @@
             var events = this.events,
                 eventCount = eventPropertiesArray.length,
                 eventIndex = 0,
-                eventProperty;
+                eventProperty,
+                diameter = this.diameter = Globals.CategoryDiameterMultiplier * eventCount;
+            if (diameter < Globals.CategoryDiameterMin) {
+                this.diameter = Globals.CategoryDiameterMin;
+            } else if (diameter > Globals.CategoryDiameterMax) {
+                this.diameter = Globals.CategoryDiameterMax;
+            }
             for (; eventIndex < eventCount; eventIndex++) {
                 eventProperty = eventPropertiesArray[eventIndex];
                 // Will be need later to get Event object from EventID and CategoryID in O(1) time.
@@ -1172,16 +1188,16 @@
      */
     var Event = function (category, index, properties) {
         this.category = category;
-        this.index = index;
         this.properties = $.extend({}, Globals.EventDefaultProperties, properties);
         this.initialize();
     };
     Event.prototype = {
         initialize: function () {
             var properties = this.properties,
+                diameter = this.category.diameter,
                 position = this.position = new Point(
-                    Globals.CategoryDiameter * (Math.random() - 0.5),
-                    Globals.CategoryDiameter * (Math.random() - 0.5)),
+                    diameter * (Math.random() - 0.5),
+                    diameter * (Math.random() - 0.5)),
                 $event = this.$event = Functions.$CreateEvent(
                     properties.title,
                     (properties.color = Functions.GenerateRandomColor(
@@ -1247,6 +1263,15 @@
 
     $(function () {
 
+        /*
+         640 - Half of the View Box Width set in the index.html for the #GalaxySVG
+         360 - Half of the View Box Height set in the index.html for the #GalaxySVG
+         */
+        Globals.GalaxyMinX = 640 - ((Globals.GalaxyDiameter / 2) + Globals.CategoryDiameterMax);
+        Globals.GalaxyMinY = 360 - ((Globals.GalaxyDiameter / 2) + Globals.CategoryDiameterMax);
+        Globals.GalaxyMaxX = 640 + ((Globals.GalaxyDiameter / 2) + Globals.CategoryDiameterMax);
+        Globals.GalaxyMaxY = 360 + ((Globals.GalaxyDiameter / 2) + Globals.CategoryDiameterMax);
+
         $Objects.LoadingFrame = $('#LoadingFrame', d);
 
         $Objects.Logo = $('#Logo', d);
@@ -1254,10 +1279,22 @@
 
         $Objects.GalaxySVG = $('#GalaxySVG', d);
         if ($Objects.GalaxySVG.length > 0) {
-            $Cache.Event = $Objects.GalaxySVG.find('.Event').clone();
-            $Objects.GalaxySVG.find('.Event').remove();
-            $Cache.Category = $Objects.GalaxySVG.find('.Category').clone();
-            $Objects.GalaxySVG.find('.Category').remove();
+            $Objects.GalaxyContainer = $('#GalaxyContainer', $Objects.GalaxySVG);
+            if ($Objects.GalaxyContainer.length > 0) {
+                var $Event = $Objects.GalaxyContainer.find('.Event'),
+                    $Category = $Objects.GalaxyContainer.find('.Category');
+                $Cache.Event = $Event.clone();
+                $Event.remove();
+                $Cache.Category = $Category.clone();
+                $Category.remove();
+            }
+        }
+        $Objects.GalaxyMapSVG = $('#GalaxyMapSVG', d);
+        if ($Objects.GalaxyMapSVG.length > 0) {
+            var $CategoryMarker = $('.CategoryMarker', $Objects.GalaxyMapSVG);
+            $Cache.CategoryMarker = $CategoryMarker.clone();
+            $CategoryMarker.remove();
+            $Objects.FieldOfView = $('#FieldOfView', $Objects.GalaxyMapSVG);
         }
 
         $Objects.EventSection = $('#EventSection', d);
