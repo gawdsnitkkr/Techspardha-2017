@@ -19,7 +19,8 @@
         $Objects = {};
 
     // Take in references from the Main.js so as to access them here.
-    var Globals = $.extend(w.Globals, {
+    var Constants = $.extend(w.Constants, {}),
+        Globals = $.extend(w.Globals, {
             MenuSectionShowing: false,
             MenuSectionTransiting: false,
             MenuFrameTransiting: false
@@ -497,7 +498,7 @@
             },
             MenuBackButtonOnClick: function (event) {
                 event.stopPropagation();
-                if (!Globals.MenuFrameTransiting) {
+                if (Globals.MenuSectionShowing && !Globals.MenuSectionTransiting && !Globals.MenuFrameTransiting) {
                     Functions.HideMenuBackButton(0.5);
                     Functions.ShowMenuFrame($Objects.CategoryListFrame);
                     Functions.ShowMenuHeading('CategoriesHeading');
@@ -510,7 +511,7 @@
                     var searchQuery = $Objects.SearchBarInput.blur().val();
                     if (searchQuery.length > 0) {
                         $.ajax({
-                            url: Globals.APIAddress + '/events?query=' + encodeURI(searchQuery),
+                            url: Constants.API_ADDRESS + '/events?query=' + encodeURI(searchQuery),
                             type: 'GET',
                             beforeSend: function () {
                                 Functions.ShowLoading();

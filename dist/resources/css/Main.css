@@ -9,11 +9,13 @@
 body {
   background-color: #03030b;
   width: 100vw;
+  min-width: 340px;
   height: 100vh;
   font-family: "Roboto Light", sans-serif;
   font-size: 62.5%;
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 h1 {
   font-family: "Roboto Light", sans-serif;
@@ -1379,6 +1381,7 @@ p {
 }
 #EventContentContainer {
   padding-top: 9.2rem;
+  padding-bottom: 1rem;
   z-index: 2;
   position: absolute;
   top: 0;
