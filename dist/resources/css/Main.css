@@ -1351,7 +1351,6 @@ p {
 #EventContentContainer {
   padding-top: 9.2rem;
   z-index: 2;
-  overflow: auto;
   position: absolute;
   top: 0;
   left: 0;
@@ -1362,6 +1361,8 @@ p {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 #EventContentContainer > .row > div:nth-of-type(2) {
   text-align: right;
@@ -1872,10 +1873,10 @@ p {
   color: #e84a5f;
 }
 @media screen and (max-width: 768px) {
-  #MenuItemRow .MenuButton {
-    font-size: 1.6rem;
+  #MenuButtonFrame .MenuButton {
+    font-size: 1.4rem;
   }
-  #MenuItemRow .col-xs-3 {
+  #MenuButtonFrame .col-xs-3 {
     padding-left: 1rem;
     padding-right: 1rem;
   }

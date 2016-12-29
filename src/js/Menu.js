@@ -21,7 +21,8 @@
     // Take in references from the Main.js so as to access them here.
     var Globals = $.extend(w.Globals, {
             MenuSectionShowing: false,
-            MenuSectionTransiting: false
+            MenuSectionTransiting: false,
+            MenuFrameTransiting: false
         }),
         Functions = $.extend(w.Functions, {
             ShowSearchBar: function (duration, callback) {
@@ -270,61 +271,66 @@
             ShowMenuFrame: function ($menuFrame, duration, callback) {
                 duration = duration || 1;
                 callback = callback || undefined;
-                if (!$menuFrame.hasClass('Active')) {
-                    var $ActiveMenuFrame = $('.MenuFrame.Active:not(' + $menuFrame.prop('id') + ')', $Objects.MenuSection);
-                    $Objects.MenuSection.css('overflow-y', 'hidden');
-                    t.killTweensOf($menuFrame);
-                    t.fromTo($menuFrame.css('display', 'block'), duration, {
-                        opacity: 0,
-                        left: '-100vw',
-                        rotationY: '-22.5deg',
-                        transformOrigin: '50% 50% 0',
-                        transformPerspective: Globals.WindowWidth
-                    }, {
-                        opacity: 1,
-                        left: 0,
-                        rotationY: '0deg',
-                        transformOrigin: '50% 50% 0',
-                        transformPerspective: Globals.WindowWidth,
-                        ease: Power4.easeOut,
-                        clearProps: 'all',
-                        onComplete: function () {
-                            $menuFrame.addClass('Active');
-                            $Objects.MenuSection.css('overflow-y', 'auto');
-                            if ($.isFunction(callback)) {
-                                callback();
+                if (!Globals.MenuFrameTransiting) {
+                    Globals.MenuFrameTransiting = true;
+                    if (!$menuFrame.hasClass('Active')) {
+                        var $ActiveMenuFrame = $('.MenuFrame.Active:not(' + $menuFrame.prop('id') + ')', $Objects.MenuSection);
+                        $Objects.MenuSection.css('overflow-y', 'hidden');
+                        t.killTweensOf($menuFrame);
+                        t.fromTo($menuFrame.css('display', 'block'), duration, {
+                            opacity: 0,
+                            left: '-100vw',
+                            rotationY: '-22.5deg',
+                            transformOrigin: '50% 50% 0',
+                            transformPerspective: Globals.WindowWidth
+                        }, {
+                            opacity: 1,
+                            left: 0,
+                            rotationY: '0deg',
+                            transformOrigin: '50% 50% 0',
+                            transformPerspective: Globals.WindowWidth,
+                            ease: Power4.easeOut,
+                            clearProps: 'all',
+                            onComplete: function () {
+                                Globals.MenuFrameTransiting = false;
+                                $menuFrame.addClass('Active');
+                                $Objects.MenuSection.css('overflow-y', 'auto');
+                                if ($.isFunction(callback)) {
+                                    callback();
+                                }
+                                var onShow = w[$menuFrame.attr('data-onShow')];
+                                if ($.isFunction(onShow)) {
+                                    onShow();
+                                }
                             }
-                            var onShow = w[$menuFrame.attr('data-onShow')];
-                            if ($.isFunction(onShow)) {
-                                onShow();
+                        });
+                        t.killTweensOf($ActiveMenuFrame);
+                        t.fromTo($ActiveMenuFrame.css('display', 'block'), duration, {
+                            opacity: 1,
+                            left: 0,
+                            rotationY: '0deg',
+                            transformOrigin: '50% 50% 0',
+                            transformPerspective: Globals.WindowWidth
+                        }, {
+                            opacity: 0,
+                            left: '100vw',
+                            rotationY: '22.5deg',
+                            transformOrigin: '50% 50% 0',
+                            transformPerspective: Globals.WindowWidth,
+                            ease: Power4.easeOut,
+                            clearProps: 'all',
+                            onComplete: function () {
+                                $ActiveMenuFrame.removeClass('Active');
+                                var onHide = w[$ActiveMenuFrame.attr('data-onHide')];
+                                if ($.isFunction(onHide)) {
+                                    onHide();
+                                }
                             }
-                        }
-                    });
-                    t.killTweensOf($ActiveMenuFrame);
-                    t.fromTo($ActiveMenuFrame.css('display', 'block'), duration, {
-                        opacity: 1,
-                        left: 0,
-                        rotationY: '0deg',
-                        transformOrigin: '50% 50% 0',
-                        transformPerspective: Globals.WindowWidth
-                    }, {
-                        opacity: 0,
-                        left: '100vw',
-                        rotationY: '22.5deg',
-                        transformOrigin: '50% 50% 0',
-                        transformPerspective: Globals.WindowWidth,
-                        ease: Power4.easeOut,
-                        clearProps: 'all',
-                        onComplete: function () {
-                            $ActiveMenuFrame.removeClass('Active');
-                            var onHide = w[$ActiveMenuFrame.attr('data-onHide')];
-                            if ($.isFunction(onHide)) {
-                                onHide();
-                            }
-                        }
-                    });
-                } else if ($.isFunction(callback)) {
-                    callback();
+                        });
+                    } else if ($.isFunction(callback)) {
+                        Globals.MenuFrameTransiting = false;
+                        callback();
+                    }
                 }
             },
             /**
@@ -473,12 +479,14 @@
             },
             CategoryListFrameCategoryButtonOnClick: function (event) {
                 event.stopPropagation();
-                /** @type Category */
-                var category = $.data(this, 'Category');
-                $Objects.CategoryHeading.text(category.properties.title);
-                Functions.GenerateEventListFrame(category);
-                Functions.ShowMenuHeading('CategoryHeading', 1, Functions.ShowMenuBackButton);
-                Functions.ShowMenuFrame($Objects.EventListFrame);
+                if (!Globals.MenuFrameTransiting) {
+                    /** @type Category */
+                    var category = $.data(this, 'Category');
+                    $Objects.CategoryHeading.text(category.properties.title);
+                    Functions.GenerateEventListFrame(category);
+                    Functions.ShowMenuHeading('CategoryHeading', 1, Functions.ShowMenuBackButton);
+                    Functions.ShowMenuFrame($Objects.EventListFrame);
+                }
             },
             EventButtonOnClick: function (e) {
                 e.stopPropagation();
@@ -489,9 +497,11 @@
             },
             MenuBackButtonOnClick: function (event) {
                 event.stopPropagation();
-                Functions.HideMenuBackButton(0.5);
-                Functions.ShowMenuFrame($Objects.CategoryListFrame);
-                Functions.ShowMenuHeading('CategoriesHeading');
+                if (!Globals.MenuFrameTransiting) {
+                    Functions.HideMenuBackButton(0.5);
+                    Functions.ShowMenuFrame($Objects.CategoryListFrame);
+                    Functions.ShowMenuHeading('CategoriesHeading');
+                }
             },
             SearchBarInputOnKeyDown: function (event) {
                 if (event.keyCode === 13) {
@@ -523,12 +533,14 @@
             },
             MenuButtonOnClick: function (event) {
                 event.stopPropagation();
-                var component = $(this).attr('data-for'),
-                    $menuFrame = $('#' + component + 'Frame', $Objects.MenuSection);
-                if (!$menuFrame.hasClass('Active')) {
-                    Functions.HideMenuBackButton(0.5);
-                    Functions.ShowMenuHeading(component + 'Heading', 1, Functions.ShowMenuBackButton);
-                    Functions.ShowMenuFrame($('#' + component + 'Frame', $Objects.MenuSection));
+                if (!Globals.MenuFrameTransiting) {
+                    var component = $(this).attr('data-for'),
+                        $menuFrame = $('#' + component + 'Frame', $Objects.MenuSection);
+                    if (!$menuFrame.hasClass('Active')) {
+                        Functions.HideMenuBackButton(0.5);
+                        Functions.ShowMenuHeading(component + 'Heading', 1, Functions.ShowMenuBackButton);
+                        Functions.ShowMenuFrame($('#' + component + 'Frame', $Objects.MenuSection));
+                    }
                 }
             },
             OnInitialized: function () {

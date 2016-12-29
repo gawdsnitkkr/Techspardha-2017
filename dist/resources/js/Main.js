@@ -409,7 +409,11 @@
         TwoPI = PI * 2,
         TwoByThreePI = TwoPI + PI;
 
-    var Globals = {
+    var GalaxyPosition = {
+            X: 0,
+            Y: 0
+        },
+        Globals = {
             APIAddress: 'http://techspardha.org/api',
             WindowWidth: w.innerWidth,
             WindowHeight: w.innerHeight,
@@ -417,12 +421,10 @@
             WindowHalfHeight: w.innerHeight / 2,
             MouseDeltaX: 0,
             MouseDeltaY: 0,
-            MouseDeltaThreshold: 0.5,
-            GalaxyContainerShowing: true,
-            GalaxyContainerTransiting: false,
-            GalaxyContainerX: 0,
-            GalaxyContainerY: 0,
-            GalaxyMovementSpeed: 2,
+            MouseDeltaThreshold: 1,
+            GalaxySVGShowing: true,
+            GalaxySVGTransiting: false,
+            GalaxyMovementSpeed: 10,
             GalaxyMovementAnimationFrameID: undefined,
             EventSectionShowing: false,
             EventSectionTransiting: false,
@@ -489,10 +491,10 @@
             /**
              * Sets the viewBox attribute of the #GalaxySVG and the #EventSVG to '0 0 WINDOW_WIDTH WINDOW_HEIGHT'.
              */
-            UpdateViewBoxSize: function () {
-                var viewBox = '0 0 ' + Globals.WindowWidth + ' ' + Globals.WindowHeight;
-                $Objects.GalaxySVG.attr('viewBox', viewBox);
-                $Objects.EventSVG.attr('viewBox', viewBox);
+            UpdateViewBox: function () {
+                var viewBoxSize = Globals.WindowWidth + ' ' + Globals.WindowHeight;
+                $Objects.GalaxySVG.attr('viewBox', GalaxyPosition.X + ' ' + GalaxyPosition.Y + ' ' + viewBoxSize);
+                $Objects.EventSVG.attr('viewBox', '0 0 ' + viewBoxSize);
             },
             UpdateEventSVGStarPosition: function () {
                 t.set($Objects.EventSVGStar, {
@@ -503,16 +505,15 @@
                 });
             },
             /**
-             * Moves the #GalaxyContainer by the desired delta in both dX and dY direction.
+             * Moves the #GalaxySVG by the desired delta in both dX and dY direction.
              * @param {Number} dX
              * @param {Number} dY
              */
-            MoveGalaxyContainerBy: function (dX, dY) {
-                dX = Math.abs(dX) < Globals.MouseDeltaThreshold ? 0 : dX;
-                dY = Math.abs(dY) < Globals.MouseDeltaThreshold ? 0 : dY;
-                t.to($Objects.GalaxyContainer, 2, {
-                    x: (Globals.GalaxyContainerX += dX),
-                    y: (Globals.GalaxyContainerY += dY),
+            MoveGalaxyBy: function (dX, dY) {
+                t.to(GalaxyPosition, 2, {
+                    X: ('-=' + (Math.abs(dX) < Globals.MouseDeltaThreshold ? 0 : dX)),
+                    Y: ('-=' + (Math.abs(dY) < Globals.MouseDeltaThreshold ? 0 : dY)),
+                    onUpdate: Functions.UpdateViewBox,
                     ease: Power4.easeOut
                 });
             },
@@ -535,8 +536,8 @@
              * Galaxy movement animation loop.
              */
             GalaxyMovementAnimationLoop: function () {
-                if (Globals.GalaxyContainerShowing && !Globals.GalaxyContainerTransiting) {
-                    Functions.MoveGalaxyContainerBy(Globals.MouseDeltaX, Globals.MouseDeltaY);
+                if (Globals.GalaxySVGShowing && !Globals.GalaxySVGTransiting) {
+                    Functions.MoveGalaxyBy(Globals.MouseDeltaX, Globals.MouseDeltaY);
                     Functions.RequestGalaxyMovementAnimationLoop();
                 } else {
                     Functions.CancelGalaxyMovementAnimationLoop();
@@ -545,7 +546,7 @@
             WindowOnResize: function () {
                 Globals.WindowHalfWidth = (Globals.WindowWidth = w.innerWidth) / 2;
                 Globals.WindowHalfHeight = (Globals.WindowHeight = w.innerHeight) / 2;
-                Functions.UpdateViewBoxSize();
+                Functions.UpdateViewBox();
                 Functions.UpdateEventSVGStarPosition();
             },
             WindowOnMouseMove: function (event) {
@@ -729,18 +730,18 @@
                 });
             },
             /**
-             * Shows the #GalaxyContainer element in the given duration and calls the given callback function
+             * Shows the #GalaxySVG element in the given duration and calls the given callback function
              * on transition completion.
              * @param {Number} [duration]
              * @param {Function} [callback]
              */
-            ShowGalaxyContainer: function (duration, callback) {
+            ShowGalaxySVG: function (duration, callback) {
                 duration = duration || 2;
                 callback = callback || undefined;
-                if (!Globals.GalaxyContainerShowing && !Globals.GalaxyContainerTransiting) {
-                    Globals.GalaxyContainerTransiting = true;
-                    t.killTweensOf($Objects.GalaxyContainer);
-                    t.fromTo($Objects.GalaxyContainer.css('display', 'block'), duration, {
+                if (!Globals.GalaxySVGShowing && !Globals.GalaxySVGTransiting) {
+                    Globals.GalaxySVGTransiting = true;
+                    t.killTweensOf($Objects.GalaxySVG);
+                    t.fromTo($Objects.GalaxySVG, duration, {
                         opacity: 0,
                         scale: 0.5,
                         transformOrigin: '50% 50% 0'
@@ -750,8 +751,8 @@
                         transformOrigin: '50% 50% 0',
                         ease: Power4.easeOut,
                         onComplete: function () {
-                            Globals.GalaxyContainerTransiting = false;
-                            Globals.GalaxyContainerShowing = true;
+                            Globals.GalaxySVGTransiting = false;
+                            Globals.GalaxySVGShowing = true;
                             if ($.isFunction(callback)) {
                                 callback();
                             }
@@ -760,18 +761,18 @@
                 }
             },
             /**
-             * Hides the #GalaxyContainer element in the given duration and calls the given callback function
+             * Hides the #GalaxySVG element in the given duration and calls the given callback function
              * on transition completion.
              * @param {Number} [duration]
              * @param {Function} [callback]
              */
-            HideGalaxyContainer: function (duration, callback) {
+            HideGalaxySVG: function (duration, callback) {
                 duration = duration || 2;
                 callback = callback || undefined;
-                if (Globals.GalaxyContainerShowing && !Globals.GalaxyContainerTransiting) {
-                    Globals.GalaxyContainerTransiting = true;
-                    t.killTweensOf($Objects.GalaxyContainer);
-                    t.fromTo($Objects.GalaxyContainer.css('display', 'block'), duration, {
+                if (Globals.GalaxySVGShowing && !Globals.GalaxySVGTransiting) {
+                    Globals.GalaxySVGTransiting = true;
+                    t.killTweensOf($Objects.GalaxySVG);
+                    t.fromTo($Objects.GalaxySVG, duration, {
                         opacity: 1,
                         scale: 1,
                         transformOrigin: '50% 50% 0'
@@ -781,9 +782,8 @@
                         transformOrigin: '50% 50% 0',
                         ease: Power4.easeOut,
                         onComplete: function () {
-                            Globals.GalaxyContainerTransiting = false;
-                            $Objects.GalaxyContainer.css('display', 'none');
-                            Globals.GalaxyContainerShowing = false;
+                            Globals.GalaxySVGTransiting = false;
+                            Globals.GalaxySVGShowing = false;
                             if ($.isFunction(callback)) {
                                 callback();
                             }
@@ -819,7 +819,7 @@
                         }
                     });
                     t.killTweensOf($Objects.EventContentContainer);
-                    t.fromTo($Objects.EventContentContainer, halfDuration, {
+                    t.fromTo($Objects.EventContentContainer.css('overflow-y', 'hidden'), halfDuration, {
                         opacity: 0
                     }, {
                         opacity: 1,
@@ -828,6 +828,7 @@
                         onComplete: function () {
                             Globals.EventSectionTransiting = false;
                             Globals.EventSectionShowing = true;
+                            $Objects.EventContentContainer.css('overflow-y', 'auto');
                             if ($.isFunction(callback)) {
                                 callback();
                             }
@@ -836,13 +837,13 @@
                     t.killTweensOf($Objects.EventContentContainerElements);
                     t.staggerFromTo($Objects.EventContentContainerElements, halfDuration, {
                         opacity: 0,
-                        top: 50
+                        top: '5rem'
                     }, {
                         opacity: 1,
                         top: 0,
                         ease: Power4.easeOut,
                         delay: halfDuration
-                    }, 0.2);
+                    }, 0.1);
                 }
             },
             /**
@@ -923,17 +924,17 @@
                                             categoryEventMap = {},
                                             categoryIndex,
                                             category,
-                                            categoryID;
-                                        Globals.CategoriesPosition = [];
-                                        Globals.CategoryIDToIndexMap = {};
+                                            categoryID,
+                                            CategoriesPosition = Globals.CategoriesPosition = [],
+                                            CategoryIDToIndexMap = Globals.CategoryIDToIndexMap = {};
                                         // Initialize the Category-Event Map.
                                         for (categoryIndex = 0; categoryIndex < categoryCount; categoryIndex++) {
                                             categoryID = categories[categoryIndex].Id;
                                             categoryEventMap[categoryID] = [];
                                             // Will be needed later to get Category object from the Category ID
                                             // retrieved by the Site's API.
-                                            Globals.CategoryIDToIndexMap[categoryID] = categoryIndex;
-                                            Globals.CategoriesPosition.push(new Point(
+                                            CategoryIDToIndexMap[categoryID] = categoryIndex;
+                                            CategoriesPosition.push(new Point(
                                                 (Math.random() - 0.5) * 2048 + Globals.WindowHalfWidth,
                                                 (Math.random() - 0.5) * 2048 + Globals.WindowHalfHeight));
                                         }
@@ -964,12 +965,13 @@
                                          Well let's hope we do not have to call Initialize() more than once, :P.
                                          w.Categories = Globals.Categories = [];
                                          */
-                                        Globals.Categories.length = 0;
+                                        var Categories = Globals.Categories;
+                                        Categories.length = 0;
                                         // This will be populated by the constructor of the Category Object.
                                         Globals.EventIDToIndexMap = {};
                                         for (categoryIndex = 0; categoryIndex < categoryCount; categoryIndex++) {
                                             category = categories[categoryIndex];
-                                            Globals.Categories.push(new Category(categoryIndex, {
+                                            Categories.push(new Category(categoryIndex, {
                                                 id: category.Id,
                                                 title: category.Name.toLowerCase().capitalize()
                                             }, categoryEventMap[category.Id]));
@@ -1018,7 +1020,7 @@
                     Functions.HideMenuSection();
                 } else if (Globals.EventSectionShowing) {
                     Functions.HideEventSection();
-                    Functions.ShowGalaxyContainer();
+                    Functions.ShowGalaxySVG();
                 }
             }
         };
@@ -1050,7 +1052,7 @@
                     x: position.x,
                     y: position.y,
                     transformOrigin: '50% 50% 0'
-                }).appendTo($Objects.GalaxyContainer);
+                }).appendTo($Objects.GalaxySVG);
             $.data($category.get(0), 'Category', this);
             this.$title = $category.find('text');
             this.appendEvents(this.show);
@@ -1236,7 +1238,7 @@
             $Objects.EventContentDescription.text(properties.description);
             $Objects.EventContentRules.text(properties.rules);
             Functions.ShowEventSection();
-            Functions.HideGalaxyContainer();
+            Functions.HideGalaxySVG();
             return this;
         }
     };
@@ -1251,12 +1253,11 @@
         $Objects.HeaderCloseButton = $('#HeaderCloseButton', d).on('click', Functions.HeaderCloseButtonOnClick);
 
         $Objects.GalaxySVG = $('#GalaxySVG', d);
-        $Objects.GalaxyContainer = $('#GalaxyContainer', $Objects.GalaxySVG);
-        if ($Objects.GalaxyContainer.length > 0) {
-            $Cache.Event = $Objects.GalaxyContainer.find('.Event').clone();
-            $Objects.GalaxyContainer.find('.Event').remove();
-            $Cache.Category = $Objects.GalaxyContainer.find('.Category').clone();
-            $Objects.GalaxyContainer.find('.Category').remove();
+        if ($Objects.GalaxySVG.length > 0) {
+            $Cache.Event = $Objects.GalaxySVG.find('.Event').clone();
+            $Objects.GalaxySVG.find('.Event').remove();
+            $Cache.Category = $Objects.GalaxySVG.find('.Category').clone();
+            $Objects.GalaxySVG.find('.Category').remove();
         }
 
         $Objects.EventSection = $('#EventSection', d);
@@ -1326,7 +1327,8 @@
     // Take in references from the Main.js so as to access them here.
     var Globals = $.extend(w.Globals, {
             MenuSectionShowing: false,
-            MenuSectionTransiting: false
+            MenuSectionTransiting: false,
+            MenuFrameTransiting: false
         }),
         Functions = $.extend(w.Functions, {
             ShowSearchBar: function (duration, callback) {
@@ -1575,61 +1577,66 @@
             ShowMenuFrame: function ($menuFrame, duration, callback) {
                 duration = duration || 1;
                 callback = callback || undefined;
-                if (!$menuFrame.hasClass('Active')) {
-                    var $ActiveMenuFrame = $('.MenuFrame.Active:not(' + $menuFrame.prop('id') + ')', $Objects.MenuSection);
-                    $Objects.MenuSection.css('overflow-y', 'hidden');
-                    t.killTweensOf($menuFrame);
-                    t.fromTo($menuFrame.css('display', 'block'), duration, {
-                        opacity: 0,
-                        left: '-100vw',
-                        rotationY: '-22.5deg',
-                        transformOrigin: '50% 50% 0',
-                        transformPerspective: Globals.WindowWidth
-                    }, {
-                        opacity: 1,
-                        left: 0,
-                        rotationY: '0deg',
-                        transformOrigin: '50% 50% 0',
-                        transformPerspective: Globals.WindowWidth,
-                        ease: Power4.easeOut,
-                        clearProps: 'all',
-                        onComplete: function () {
-                            $menuFrame.addClass('Active');
-                            $Objects.MenuSection.css('overflow-y', 'auto');
-                            if ($.isFunction(callback)) {
-                                callback();
+                if (!Globals.MenuFrameTransiting) {
+                    Globals.MenuFrameTransiting = true;
+                    if (!$menuFrame.hasClass('Active')) {
+                        var $ActiveMenuFrame = $('.MenuFrame.Active:not(' + $menuFrame.prop('id') + ')', $Objects.MenuSection);
+                        $Objects.MenuSection.css('overflow-y', 'hidden');
+                        t.killTweensOf($menuFrame);
+                        t.fromTo($menuFrame.css('display', 'block'), duration, {
+                            opacity: 0,
+                            left: '-100vw',
+                            rotationY: '-22.5deg',
+                            transformOrigin: '50% 50% 0',
+                            transformPerspective: Globals.WindowWidth
+                        }, {
+                            opacity: 1,
+                            left: 0,
+                            rotationY: '0deg',
+                            transformOrigin: '50% 50% 0',
+                            transformPerspective: Globals.WindowWidth,
+                            ease: Power4.easeOut,
+                            clearProps: 'all',
+                            onComplete: function () {
+                                Globals.MenuFrameTransiting = false;
+                                $menuFrame.addClass('Active');
+                                $Objects.MenuSection.css('overflow-y', 'auto');
+                                if ($.isFunction(callback)) {
+                                    callback();
+                                }
+                                var onShow = w[$menuFrame.attr('data-onShow')];
+                                if ($.isFunction(onShow)) {
+                                    onShow();
+                                }
                             }
-                            var onShow = w[$menuFrame.attr('data-onShow')];
-                            if ($.isFunction(onShow)) {
-                                onShow();
+                        });
+                        t.killTweensOf($ActiveMenuFrame);
+                        t.fromTo($ActiveMenuFrame.css('display', 'block'), duration, {
+                            opacity: 1,
+                            left: 0,
+                            rotationY: '0deg',
+                            transformOrigin: '50% 50% 0',
+                            transformPerspective: Globals.WindowWidth
+                        }, {
+                            opacity: 0,
+                            left: '100vw',
+                            rotationY: '22.5deg',
+                            transformOrigin: '50% 50% 0',
+                            transformPerspective: Globals.WindowWidth,
+                            ease: Power4.easeOut,
+                            clearProps: 'all',
+                            onComplete: function () {
+                                $ActiveMenuFrame.removeClass('Active');
+                                var onHide = w[$ActiveMenuFrame.attr('data-onHide')];
+                                if ($.isFunction(onHide)) {
+                                    onHide();
+                                }
                             }
-                        }
-                    });
-                    t.killTweensOf($ActiveMenuFrame);
-                    t.fromTo($ActiveMenuFrame.css('display', 'block'), duration, {
-                        opacity: 1,
-                        left: 0,
-                        rotationY: '0deg',
-                        transformOrigin: '50% 50% 0',
-                        transformPerspective: Globals.WindowWidth
-                    }, {
-                        opacity: 0,
-                        left: '100vw',
-                        rotationY: '22.5deg',
-                        transformOrigin: '50% 50% 0',
-                        transformPerspective: Globals.WindowWidth,
-                        ease: Power4.easeOut,
-                        clearProps: 'all',
-                        onComplete: function () {
-                            $ActiveMenuFrame.removeClass('Active');
-                            var onHide = w[$ActiveMenuFrame.attr('data-onHide')];
-                            if ($.isFunction(onHide)) {
-                                onHide();
-                            }
-                        }
-                    });
-                } else if ($.isFunction(callback)) {
-                    callback();
+                        });
+                    } else if ($.isFunction(callback)) {
+                        Globals.MenuFrameTransiting = false;
+                        callback();
+                    }
                 }
             },
             /**
@@ -1778,12 +1785,14 @@
             },
             CategoryListFrameCategoryButtonOnClick: function (event) {
                 event.stopPropagation();
-                /** @type Category */
-                var category = $.data(this, 'Category');
-                $Objects.CategoryHeading.text(category.properties.title);
-                Functions.GenerateEventListFrame(category);
-                Functions.ShowMenuHeading('CategoryHeading', 1, Functions.ShowMenuBackButton);
-                Functions.ShowMenuFrame($Objects.EventListFrame);
+                if (!Globals.MenuFrameTransiting) {
+                    /** @type Category */
+                    var category = $.data(this, 'Category');
+                    $Objects.CategoryHeading.text(category.properties.title);
+                    Functions.GenerateEventListFrame(category);
+                    Functions.ShowMenuHeading('CategoryHeading', 1, Functions.ShowMenuBackButton);
+                    Functions.ShowMenuFrame($Objects.EventListFrame);
+                }
             },
             EventButtonOnClick: function (e) {
                 e.stopPropagation();
@@ -1794,9 +1803,11 @@
             },
             MenuBackButtonOnClick: function (event) {
                 event.stopPropagation();
-                Functions.HideMenuBackButton(0.5);
-                Functions.ShowMenuFrame($Objects.CategoryListFrame);
-                Functions.ShowMenuHeading('CategoriesHeading');
+                if (!Globals.MenuFrameTransiting) {
+                    Functions.HideMenuBackButton(0.5);
+                    Functions.ShowMenuFrame($Objects.CategoryListFrame);
+                    Functions.ShowMenuHeading('CategoriesHeading');
+                }
             },
             SearchBarInputOnKeyDown: function (event) {
                 if (event.keyCode === 13) {
@@ -1828,12 +1839,14 @@
             },
             MenuButtonOnClick: function (event) {
                 event.stopPropagation();
-                var component = $(this).attr('data-for'),
-                    $menuFrame = $('#' + component + 'Frame', $Objects.MenuSection);
-                if (!$menuFrame.hasClass('Active')) {
-                    Functions.HideMenuBackButton(0.5);
-                    Functions.ShowMenuHeading(component + 'Heading', 1, Functions.ShowMenuBackButton);
-                    Functions.ShowMenuFrame($('#' + component + 'Frame', $Objects.MenuSection));
+                if (!Globals.MenuFrameTransiting) {
+                    var component = $(this).attr('data-for'),
+                        $menuFrame = $('#' + component + 'Frame', $Objects.MenuSection);
+                    if (!$menuFrame.hasClass('Active')) {
+                        Functions.HideMenuBackButton(0.5);
+                        Functions.ShowMenuHeading(component + 'Heading', 1, Functions.ShowMenuBackButton);
+                        Functions.ShowMenuFrame($('#' + component + 'Frame', $Objects.MenuSection));
+                    }
                 }
             },
             OnInitialized: function () {
