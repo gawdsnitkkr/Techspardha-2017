@@ -66,22 +66,23 @@
             WindowHeight: w.innerHeight,
             WindowHalfWidth: w.innerWidth / 2,
             WindowHalfHeight: w.innerHeight / 2,
-            MouseDeltaX: 0,
-            MouseDeltaY: 0,
-            MouseDeltaThreshold: 2.5,
+            GalaxyMovementDeltaX: 0,
+            GalaxyMovementDeltaY: 0,
+            MouseDeltaThreshold: 5,
             GalaxyDiameter: 2048,
             GalaxyRadius: 1024,
-            CategoryDiameterMultiplier: 42,
-            CategoryDiameterMin: 128,
-            CategoryDiameterMax: 640,
-            // Calculated in the function $(function(){...}) using GalaxyDiameter and CategoryDiameterMax.
-            GalaxyMinX: 0,
-            GalaxyMinY: 0,
-            GalaxyMaxX: 0,
-            GalaxyMaxY: 0,
+            CategoryDiameterMultiplier: 48,
+            CategoryDiameterMinimum: 128,
+            CategoryDiameterMaximum: 640,
+            // Calculated in the function $(function(){...}) using GalaxyDiameter and CategoryDiameterMaximum.
+            GalaxyMapRadius: 0,
+            GalaxyMapMinimumX: 0,
+            GalaxyMapMinimumY: 0,
+            GalaxyMapMaximumX: 0,
+            GalaxyMapMaximumY: 0,
             GalaxySVGShowing: true,
             GalaxySVGTransiting: false,
-            GalaxyMovementSpeed: 10,
+            GalaxyMovementSpeed: 30,
             GalaxyMovementAnimationFrameID: undefined,
             EventSectionShowing: false,
             EventSectionTransiting: false,
@@ -157,11 +158,17 @@
             MoveGalaxyBy: function (dX, dY) {
                 var x = GalaxyPosition.x - (Math.abs(dX) < Globals.MouseDeltaThreshold ? 0 : dX),
                     y = GalaxyPosition.y - (Math.abs(dY) < Globals.MouseDeltaThreshold ? 0 : dY);
-                if ((x <= Globals.GalaxyMinX) || (x >= Globals.GalaxyMaxX)) {
-                    x = GalaxyPosition.x;
+                /*
+                 1280 and 720 are the View Box dimensions of the #GalaxySVG element in the index.html.
+                 */
+                if ((x <= Globals.GalaxyMapMinimumX) ||
+                    ((x + 1280) >= Globals.GalaxyMapMaximumX)) {
+                    console.log('X out of bounds @ ' + x);
+                    x = Globals.GalaxyMapMaximumX - 1280;
                 }
-                if ((y <= Globals.GalaxyMinY) || (y >= Globals.GalaxyMaxY)) {
-                    y = GalaxyPosition.y;
+                if ((y <= Globals.GalaxyMapMinimumY) ||
+                    ((y + 720) >= Globals.GalaxyMapMaximumY)) {
+                    y = Globals.GalaxyMapMaximumY - 720;
                 }
                 t.to(GalaxyPosition, 2, {
                     x: x,
@@ -171,8 +178,8 @@
                 });
                 t.to($Objects.FieldOfView, 2, {
                     attr: {
-                        x: 4 + (((x - 640) / Globals.GalaxyRadius) * 50 + 50),
-                        y: 4 + (((y - 360) / Globals.GalaxyRadius) * 50 + 50)
+                        x: ((x - 640) / Globals.GalaxyMapRadius) * 50 + 50,
+                        y: ((y - 360) / Globals.GalaxyMapRadius) * 50 + 50
                     },
                     ease: Power4.easeOut
                 });
@@ -197,7 +204,7 @@
              */
             GalaxyMovementAnimationLoop: function () {
                 if (Globals.GalaxySVGShowing && !Globals.GalaxySVGTransiting) {
-                    Functions.MoveGalaxyBy(Globals.MouseDeltaX, Globals.MouseDeltaY);
+                    Functions.MoveGalaxyBy(Globals.GalaxyMovementDeltaX, Globals.GalaxyMovementDeltaY);
                     Functions.RequestGalaxyMovementAnimationLoop();
                 } else {
                     Functions.CancelGalaxyMovementAnimationLoop();
@@ -209,8 +216,8 @@
                 Functions.UpdateGalaxyViewBox();
             },
             WindowOnMouseMove: function (event) {
-                Globals.MouseDeltaX = ((Globals.WindowHalfWidth - event.pageX) / Globals.WindowHalfWidth) * Globals.GalaxyMovementSpeed;
-                Globals.MouseDeltaY = ((Globals.WindowHalfHeight - event.pageY) / Globals.WindowHalfHeight) * Globals.GalaxyMovementSpeed;
+                Globals.GalaxyMovementDeltaX = ((Globals.WindowHalfWidth - event.pageX) / Globals.WindowHalfWidth) * Globals.GalaxyMovementSpeed;
+                Globals.GalaxyMovementDeltaY = ((Globals.WindowHalfHeight - event.pageY) / Globals.WindowHalfHeight) * Globals.GalaxyMovementSpeed;
                 if (!Globals.MenuSectionShowing && !Globals.EventSectionShowing &&
                     Globals.GalaxyMovementAnimationFrameID === undefined) {
                     Functions.RequestGalaxyMovementAnimationLoop();
@@ -222,9 +229,12 @@
                     Functions.CancelGalaxyMovementAnimationLoop();
                 }
             },
-            WindowOnKeyDown: function (event) {
-                if (event.keyCode === 27) {
-                    Functions.HeaderCloseButtonOnClick();
+            WindowOnKeyUp: function (event) {
+                var keyCode = event.keyCode;
+                switch (keyCode) {
+                    case 27:
+                        Functions.HeaderCloseButtonOnClick();
+                        break;
                 }
             },
             /**
@@ -639,7 +649,6 @@
                                                 title: category.Name.toLowerCase().capitalize()
                                             }, categoryEventMap[category.Id]));
                                         }
-
                                         $(d).trigger('initialized');
                                     }
                                 },
@@ -713,9 +722,14 @@
             $.data($category.get(0), 'Category', this);
             this.$title = $category.find('text');
             this.appendEvents(this.show);
+            /*
+             First shift origin, then normalize the coordinates to 0 - 1 dimensions.
+             Then scale it up to a 0 - 50.
+             Then shift the origin to (-50, -50) [(0, 0) for our coordinate system :P]
+             */
             $Cache.CategoryMarker.clone().attr({
-                cx: 4 + (((position.x - 640) / Globals.GalaxyRadius) * 50 + 50),
-                cy: 4 + (((position.y - 360) / Globals.GalaxyRadius) * 50 + 50)
+                cx: ((position.x - 640) / Globals.GalaxyMapRadius) * 50 + 50,
+                cy: ((position.y - 360) / Globals.GalaxyMapRadius) * 50 + 50
             }).appendTo($Objects.GalaxyMapSVG);
             return this;
         },
@@ -741,10 +755,10 @@
                 eventIndex = 0,
                 eventProperty,
                 diameter = this.diameter = Globals.CategoryDiameterMultiplier * eventCount;
-            if (diameter < Globals.CategoryDiameterMin) {
-                this.diameter = Globals.CategoryDiameterMin;
-            } else if (diameter > Globals.CategoryDiameterMax) {
-                this.diameter = Globals.CategoryDiameterMax;
+            if (diameter < Globals.CategoryDiameterMinimum) {
+                this.diameter = Globals.CategoryDiameterMinimum;
+            } else if (diameter > Globals.CategoryDiameterMaximum) {
+                this.diameter = Globals.CategoryDiameterMaximum;
             }
             for (; eventIndex < eventCount; eventIndex++) {
                 eventProperty = eventPropertiesArray[eventIndex];
@@ -917,10 +931,11 @@
          640 - Half of the View Box Width set in the index.html for the #GalaxySVG
          360 - Half of the View Box Height set in the index.html for the #GalaxySVG
          */
-        Globals.GalaxyMinX = 640 - ((Globals.GalaxyDiameter / 2) + Globals.CategoryDiameterMax);
-        Globals.GalaxyMinY = 360 - ((Globals.GalaxyDiameter / 2) + Globals.CategoryDiameterMax);
-        Globals.GalaxyMaxX = 640 + ((Globals.GalaxyDiameter / 2) + Globals.CategoryDiameterMax);
-        Globals.GalaxyMaxY = 360 + ((Globals.GalaxyDiameter / 2) + Globals.CategoryDiameterMax);
+        Globals.GalaxyMapRadius = Globals.GalaxyRadius + Globals.CategoryDiameterMaximum;
+        Globals.GalaxyMapMinimumX = 640 - Globals.GalaxyMapRadius;
+        Globals.GalaxyMapMinimumY = 360 - Globals.GalaxyMapRadius;
+        Globals.GalaxyMapMaximumX = 640 + Globals.GalaxyMapRadius;
+        Globals.GalaxyMapMaximumY = 360 + Globals.GalaxyMapRadius;
 
         $Objects.LoadingFrame = $('#LoadingFrame', d);
 
@@ -944,7 +959,10 @@
             var $CategoryMarker = $('.CategoryMarker', $Objects.GalaxyMapSVG);
             $Cache.CategoryMarker = $CategoryMarker.clone();
             $CategoryMarker.remove();
-            $Objects.FieldOfView = $('#FieldOfView', $Objects.GalaxyMapSVG);
+            $Objects.FieldOfView = $('#FieldOfView', $Objects.GalaxyMapSVG).attr({
+                width: (1280 / Globals.GalaxyMapRadius) * 50,
+                height: (720 / Globals.GalaxyMapRadius) * 50
+            });
         }
 
         $Objects.EventSection = $('#EventSection', d);
@@ -987,7 +1005,7 @@
         .on('resize', Functions.WindowOnResize)
         .on('mouseout', Functions.WindowOnMouseOut)
         .on('mousemove', Functions.WindowOnMouseMove)
-        .on('keydown', Functions.WindowOnKeyDown);
+        .on('keyup', Functions.WindowOnKeyUp);
 
 })(jQuery, window, document, TweenMax);
 
