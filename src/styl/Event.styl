@@ -97,8 +97,9 @@
   }
 
   h4 {
-    color: $SkyBlue;
-    font-weight: 600;
+    font-family: $HeadingThreeFontFamily;
+    color: $Pink;
+    font-weight: 400;
   }
 
   .glyphicon {
@@ -120,7 +121,7 @@
     .glyphicon {
       padding: 6.6rem 0 1rem 0;
       font-size: 6.4rem;
-      color: $Pink;
+      color: $Red;
     }
 
     h4 {
@@ -212,10 +213,19 @@
         }
       }
       .Phone {
+        display: block;
         font-size: 1.3rem;
         font-weight: 400;
         text-decoration: none;
         color: lighten($DarkSkyBlue, 50%);
+        cursor: pointer;
+        transition: color 0.3s ease-in-out;
+        &:hover {
+          color: lighten($DarkSkyBlue, 75%);
+        }
+        &:active {
+          color: lighten($DarkSkyBlue, 25%);
+        }
       }
     }
   }

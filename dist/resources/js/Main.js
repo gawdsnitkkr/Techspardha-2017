@@ -1703,7 +1703,6 @@ function IsMobile() {
  * Includes important functioning of the Menu component of the website.
  *
  * @licence MIT
- * @author Kaushik Sarma <kausyap10@gmail.com>
  * @author Divya Mamgai <divyamamgai21@gmail.com>
  *
  */
@@ -2301,6 +2300,18 @@ function IsMobile() {
 
 })(jQuery, window, document, TweenMax);
 
+
+/**
+ * @preserve
+ *
+ * AboutUs.js
+ * Houses the animation code of the Rocket in the About Us section of the website.
+ *
+ * @licence MIT
+ * @author Rishabh Chanana <rishabhchanana97@gmail.com>
+ * @author Divya Mamgai <divyamamgai21@gmail.com>
+ *
+ */
 
 (function (d, $d, $) {
     var $Objects = {},

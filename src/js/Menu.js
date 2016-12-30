@@ -5,7 +5,6 @@
  * Includes important functioning of the Menu component of the website.
  *
  * @licence MIT
- * @author Kaushik Sarma <kausyap10@gmail.com>
  * @author Divya Mamgai <divyamamgai21@gmail.com>
  *
  */
