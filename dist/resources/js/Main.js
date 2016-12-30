@@ -1512,7 +1512,7 @@ function IsMobile() {
             $Objects.EventContentRules.text(properties.rules);
             Functions.ShowEventSection();
             Functions.StartEventRoundTicker(properties.currentRound, properties.totalRounds);
-            Functions.StartEventTimeTicker(new Date('12/30/2016 05:30 AM'), new Date('12/30/2016 12:30 PM'));
+            Functions.StartEventTimeTicker(properties.startTime, properties.endTime);
             Functions.HideGalaxySVG();
             return this;
         }
