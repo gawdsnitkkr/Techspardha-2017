@@ -349,6 +349,18 @@
     w.Trail = Trail;
 }));
 
+/*
+ Original Author - http://stackoverflow.com/a/3540295
+ Created By - Divya Mamgai
+ */
+/**
+ * Tells whether the user's browser is a mobile device or a PC.
+ * @return {boolean}
+ */
+function IsMobile() {
+    var UserAgent = navigator.userAgent;
+    return !!(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(UserAgent) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(UserAgent.substr(0, 4)));
+}
 
 /**
  * @preserve
@@ -383,6 +395,15 @@
     };
 
     /**
+     * Pads the given number with 0 if less than 10.
+     * @param {Number} number
+     * @return String
+     */
+    function padNumber(number) {
+        return number < 10 ? ('0' + number) : ('' + number);
+    }
+
+    /**
      * A point having x and y coordinates.
      * @param {Number} x - x coordinate of the point.
      * @param {Number} y - y coordinate of the point.
@@ -402,12 +423,9 @@
         $Objects = {};
 
     var floor = Math.floor,
+        round = Math.round,
         sin = Math.sin,
-        cos = Math.cos,
-        PI = Math.PI,
-        HalfPI = PI / 2,
-        TwoPI = PI * 2,
-        TwoByThreePI = TwoPI + PI;
+        cos = Math.cos;
 
     var GalaxyPosition = new Point(0, 0),
         Constants = {
@@ -433,7 +451,14 @@
             CATEGORY_DIAMETER_MINIMUM: 128,
             CATEGORY_DIAMETER_MAXIMUM: 640,
             MOUSE_DELTA_THRESHOLD: 5,
-            GALAXY_MOVEMENT_SPEED: 25
+            GALAXY_MOVEMENT_SPEED: 25,
+            PI: Math.PI,
+            HALF_PI: Math.PI / 2,
+            TWO_PI: Math.PI * 2,
+            THREE_BY_TWO_PI: Math.PI * 3 / 2,
+            LAUNCH_DATE: new Date('12/28/2016 05:30 AM'),
+            ONE_DAY_IN_MILLISECONDS: 86400000,
+            ONE_HOUR_IN_MILLISECONDS: 3600000
         },
         Globals = {
             WindowWidth: w.innerWidth,
@@ -451,6 +476,7 @@
             GalaxyMovementAnimationFrameID: undefined,
             EventSectionShowing: false,
             EventSectionTransiting: false,
+            EventTimeTimeoutID: undefined,
             EventDefaultProperties: {
                 /** @type Number */
                 id: 0,
@@ -630,6 +656,21 @@
                     Functions.CancelGalaxyMovementAnimationLoop();
                 }
             },
+            WindowOnTouchMove: function (event) {
+                event.preventDefault();
+                var touch = event.touches[0];
+                if (touch !== undefined) {
+                    Globals.GalaxyMovementDeltaX = ((Globals.WindowHalfWidth - touch.pageX) / Globals.WindowHalfWidth) * Constants.GALAXY_MOVEMENT_SPEED;
+                    Globals.GalaxyMovementDeltaY = ((Globals.WindowHalfHeight - touch.pageY) / Globals.WindowHalfHeight) * Constants.GALAXY_MOVEMENT_SPEED;
+                    if (!Globals.MenuSectionShowing && !Globals.EventSectionShowing &&
+                        Globals.GalaxyMovementAnimationFrameID === undefined) {
+                        Functions.RequestGalaxyMovementAnimationLoop();
+                    }
+                }
+            },
+            WindowOnTouchEnd: function (event) {
+                Functions.CancelGalaxyMovementAnimationLoop();
+            },
             WindowOnKeyUp: function (event) {
                 var keyCode = event.keyCode;
                 switch (keyCode) {
@@ -692,34 +733,164 @@
                 return $clone;
             },
             /**
-             * Set's the ticking arc of the clock to given time (now) based on the total time it can show.
-             * @param {Number} now - Time passed since the clock was started.
-             * @param {Number} total - The total amount of time that the clock can show.
+             * Set's the d attribute of the given .Tick path element of a .PieTicker element to reflect
+             * the given ratio as an arc.
+             * @param {jQuery} $pieTick - .Tick element of the .PieTicker element to update.
+             * @param {Number} ratio - The ratio of completion [0, 1].
              */
-            UpdateEventClock: function (now, total) {
-                var Minutes = floor(now / 60),
-                    Seconds = floor(now % 60),
-                    Ratio = ((total - now) / total),
-                    Degree = (Ratio * TwoPI) - HalfPI,
-                    X = 100 + cos(Degree) * 90,
-                    Y = 100 + sin(Degree) * 90;
-                $Objects.EventClockMinute.html(Minutes);
-                $Objects.EventClockSecond.html(Seconds > 9 ? Seconds : '0' + Seconds);
-                if (Degree >= -HalfPI && Degree < 0) {
-                    $Objects.EventClockTick.attr('d', 'M 100 10 A 90 90 0 0 1 ' + X + ' ' + Y);
-                } else if (Degree >= 0 && Degree < HalfPI) {
-                    $Objects.EventClockTick.attr('d', 'M 100 10 A 90 90 0 0 1 190 100 A 90 90 0 0 1 ' + X + ' ' + Y);
-                } else if (Degree >= HalfPI && Degree < PI) {
-                    $Objects.EventClockTick.attr('d', 'M 100 10 A 90 90 0 0 1 190 100 A 90 90 0 0 1 100 190 A 90 90 0 0 1 ' + X + ' ' + Y);
-                } else if (Degree > PI && Degree <= TwoByThreePI) {
-                    $Objects.EventClockTick.attr('d', 'M 100 10 A 90 90 0 0 1 190 100 A 90 90 0 0 1 100 190 A 90 90 0 0 1 10 100 A 90 90 0 0 1 ' + X + ' ' + Y);
+            SetPieTick: function ($pieTick, ratio) {
+                var angle = ratio * Constants.TWO_PI - Constants.HALF_PI,
+                    x = 100 + cos(angle) * 90,
+                    y = 100 + sin(angle) * 90;
+                if ((angle >= -Constants.HALF_PI) && (angle < 0)) {
+                    $pieTick.attr('d', 'M 100 10 A 90 90 0 0 1 ' + x + ' ' + y);
+                } else if ((angle >= 0) && (angle < Constants.HALF_PI)) {
+                    $pieTick.attr('d', 'M 100 10 A 90 90 0 0 1 190 100 A 90 90 0 0 1 ' + x + ' ' + y);
+                } else if ((angle >= Constants.HALF_PI) && (angle < Constants.PI)) {
+                    $pieTick.attr('d', 'M 100 10 A 90 90 0 0 1 190 100 A 90 90 0 0 1 100 190 A 90 90 0 0 1 ' + x + ' ' + y);
+                } else if ((angle > Constants.PI) && (angle <= Constants.THREE_BY_TWO_PI)) {
+                    $pieTick.attr('d', 'M 100 10 A 90 90 0 0 1 190 100 A 90 90 0 0 1 100 190 A 90 90 0 0 1 10 100 A 90 90 0 0 1 ' + x + ' ' + y);
                 }
             },
             /**
-             * Stops the Event Clock at complete.
+             * Sets the given .Tick element of a .PieTicker element to complete i.e., full arc.
+             * @param {jQuery} $pieTick - .Tick element of the .PieTicker element to update.
+             * @param {Boolean} atFull - Tells whether to set the .Tick element at full if true and empty is false.
              */
-            StopEventClock: function () {
-                $Objects.EventClockTick.attr('d', 'M 100 10 A 90 90 0 0 1 190 100 A 90 90 0 0 1 100 190 A 90 90 0 0 1 10 100 A 90 90 0 0 1 100 10');
+            StopPieTick: function ($pieTick, atFull) {
+                if (atFull) {
+                    $pieTick.attr('d', 'M 100 10 A 90 90 0 0 1 190 100 A 90 90 0 0 1 100 190 A 90 90 0 0 1 10 100 A 90 90 0 0 1 100 10');
+                } else {
+                    $pieTick.attr('d', 'M 100 10 A 90 90 0 0 1 100 10');
+                }
+            },
+            /**
+             * Sets the #EventRound element contents using the provided parameters by animating with or without delay.
+             * @param {Number} currentRound
+             * @param {Number} totalRounds
+             * @param {Number} [delay] - Animation delay.
+             */
+            StartEventRoundTicker: function (currentRound, totalRounds, delay) {
+                // Delay is in sync with the Function.ShowEventSection() function duration's default value.
+                delay = delay || 2;
+                var $EventRoundTick = $Objects.EventRoundTick,
+                    $EventRoundCurrent = $Objects.EventRoundCurrent,
+                    currentRoundTween = {
+                        value: 0
+                    };
+                $EventRoundCurrent.html(round(currentRoundTween.value));
+                $Objects.EventRoundTotal.html(padNumber(totalRounds));
+                Functions.StopPieTick($EventRoundTick, false);
+                t.to(currentRoundTween, 3, {
+                    value: currentRound,
+                    ease: Power4.easeOut,
+                    delay: delay,
+                    onUpdate: function () {
+                        Functions.SetPieTick($EventRoundTick, currentRoundTween.value / totalRounds);
+                        $EventRoundCurrent.html(round(currentRoundTween.value));
+                    },
+                    onComplete: function () {
+                        if (currentRound === totalRounds) {
+                            Functions.StopPieTick($EventRoundTick, true);
+                            $EventRoundCurrent.html(currentRound);
+                        }
+                    }
+                });
+            }, /**
+             * Sets the #EventTime element contents using the provided parameters by animating with or without delay.
+             * @param {Date} startTime
+             * @param {Date} endTime
+             * @param {Number} [delay] - Animation delay.
+             */
+            StartEventTimeTicker: function (startTime, endTime, delay) {
+
+                // Delay is in sync with the Function.ShowEventSection() function duration's default value.
+                delay = delay || 2;
+
+                var $EventStartTick = $Objects.EventTimeTick,
+                    $EventStartDay = $Objects.EventTimeDay,
+                    $EventStartHour = $Objects.EventTimeHour,
+                    timeTween = {
+                        value: 0
+                    },
+                    currentTime = (new Date()).getTime(),
+                    startCurrentDifference = startTime.getTime() - currentTime,
+                    startLaunchDifference = startTime.getTime() - Constants.LAUNCH_DATE.getTime(),
+                    endCurrentDifference = endTime.getTime() - currentTime,
+                    endStartDifference = endTime.getTime() - startTime.getTime();
+
+                if (Globals.EventTimeTimeoutID !== undefined) {
+                    clearInterval(Globals.EventTimeTimeoutID);
+                }
+
+                function startDifferenceOnUpdate() {
+                    Functions.SetPieTick($EventStartTick, timeTween.value / startLaunchDifference);
+                    $EventStartDay.html(floor(timeTween.value / Constants.ONE_DAY_IN_MILLISECONDS));
+                    $EventStartHour.html(padNumber(floor((timeTween.value % Constants.ONE_DAY_IN_MILLISECONDS) / Constants.ONE_HOUR_IN_MILLISECONDS)));
+                }
+
+                function endDifferenceOnUpdate() {
+                    Functions.SetPieTick($EventStartTick, timeTween.value / endStartDifference);
+                    $EventStartDay.html(floor(timeTween.value / Constants.ONE_DAY_IN_MILLISECONDS));
+                    $EventStartHour.html(padNumber(floor((timeTween.value % Constants.ONE_DAY_IN_MILLISECONDS) / Constants.ONE_HOUR_IN_MILLISECONDS)));
+                }
+
+                if (startCurrentDifference <= 0) {
+                    if (endCurrentDifference <= 0) {
+
+                        // Ended
+                        $Objects.EventTime.css('display', 'none');
+                        $Objects.EventTimeStatus.text('Ended');
+                        $Objects.EventEndedMessage.css('display', 'block');
+
+                    } else {
+
+                        // Started
+                        $Objects.EventTime
+                            .css('display', 'block')
+                            .attr('title', 'Time to go before the event ends.');
+                        $Objects.EventTimeStatus.text('Started');
+
+                        timeTween.value = endStartDifference;
+                        endDifferenceOnUpdate();
+
+                        t.to(timeTween, 3, {
+                            value: endCurrentDifference,
+                            ease: Power4.easeOut,
+                            delay: delay,
+                            onUpdate: endDifferenceOnUpdate,
+                            onComplete: function () {
+                                Globals.EventTimeTimeoutID = setTimeout(function () {
+                                    Functions.StartEventTimeTicker(startTime, endTime, 0);
+                                }, Constants.ONE_HOUR_IN_MILLISECONDS);
+                            }
+                        });
+
+                    }
+                } else {
+
+                    // Not Started
+                    $Objects.EventTime
+                        .css('display', 'block')
+                        .attr('title', 'Time to go before event starts.');
+                    $Objects.EventTimeStatus.text('Not Started');
+
+                    timeTween.value = startLaunchDifference;
+                    startDifferenceOnUpdate();
+
+                    t.to(timeTween, 3, {
+                        value: startCurrentDifference,
+                        ease: Power4.easeOut,
+                        delay: delay,
+                        onUpdate: startDifferenceOnUpdate,
+                        onComplete: function () {
+                            Globals.EventTimeTimeoutID = setTimeout(function () {
+                                Functions.StartEventTimeTicker(startTime, endTime, 0);
+                            }, Constants.ONE_HOUR_IN_MILLISECONDS);
+                        }
+                    });
+
+                }
             },
             EventOnClick: function () {
                 /** @type Event */
@@ -1048,7 +1219,7 @@
                                                 currentRound: event.CurrentRound,
                                                 totalRounds: event.TotalRounds,
                                                 maxParticipants: event.MaxContestants,
-                                                status: event.Status.toLowerCase().capitalize(),
+                                                status: event.Status.toLowerCase(),
                                                 pdf: event.Pdf,
                                                 rules: event.Rules,
                                                 coordinators: event.Coordinators
@@ -1340,6 +1511,8 @@
             $Objects.EventContentDescription.text(properties.description);
             $Objects.EventContentRules.text(properties.rules);
             Functions.ShowEventSection();
+            Functions.StartEventRoundTicker(properties.currentRound, properties.totalRounds);
+            Functions.StartEventTimeTicker(new Date('12/30/2016 05:30 AM'), new Date('12/30/2016 12:30 PM'));
             Functions.HideGalaxySVG();
             return this;
         }
@@ -1407,14 +1580,21 @@
                 $Objects.EventContentCategory = $('#EventContentCategory', $Objects.EventContentContainer);
                 $Objects.EventContentDescription = $('#EventContentDescription', $Objects.EventContentContainer);
                 $Objects.EventContentRules = $('#EventContentRules', $Objects.EventContentContainer);
-                $Objects.EventClockSVG = $('#EventClockSVG', $Objects.EventContentContainer);
-                if ($Objects.EventClockSVG.length > 0) {
-                    $Objects.EventClockOuter = $('#EventClockOuter', $Objects.EventClockSVG);
-                    $Objects.EventClockTick = $('#EventClockTick', $Objects.EventClockSVG);
-                    $Objects.EventClockInner = $('#EventClockInner', $Objects.EventClockSVG);
-                    $Objects.EventClockMinute = $('#EventClockMinute', $Objects.EventClockSVG);
-                    $Objects.EventClockSecond = $('#EventClockSecond', $Objects.EventClockSVG);
+                $Objects.EventRound = $('#EventRound', $Objects.EventContentContainer);
+                if ($Objects.EventRound.length > 0) {
+                    $Objects.EventRoundTick = $('.Tick', $Objects.EventRound);
+                    $Objects.EventRoundCurrent = $('#EventRoundCurrent', $Objects.EventRound);
+                    $Objects.EventRoundTotal = $('#EventRoundTotal', $Objects.EventRound);
+                    $Objects.EventRoundStatus = $('.Status', $Objects.EventRound);
                 }
+                $Objects.EventTime = $('#EventTime', $Objects.EventContentContainer);
+                if ($Objects.EventTime.length > 0) {
+                    $Objects.EventTimeTick = $('.Tick', $Objects.EventTime);
+                    $Objects.EventTimeDay = $('#EventTimeDay', $Objects.EventTime);
+                    $Objects.EventTimeHour = $('#EventTimeHour', $Objects.EventTime);
+                    $Objects.EventTimeStatus = $('.Status', $Objects.EventTime);
+                }
+                $Objects.EventEndedMessage = $('#EventEndedMessage', $Objects.EventContentContainer);
             }
         }
 
@@ -1431,9 +1611,17 @@
 
     $(w)
         .on('resize', Functions.WindowOnResize)
-        .on('mouseout', Functions.WindowOnMouseOut)
-        .on('mousemove', Functions.WindowOnMouseMove)
         .on('keyup', Functions.WindowOnKeyUp);
+
+    if (IsMobile()) {
+        $(w)
+            .on('touchmove', Functions.WindowOnTouchMove)
+            .on('touchend', Functions.WindowOnTouchEnd);
+    } else {
+        $(w)
+            .on('mousemove', Functions.WindowOnMouseMove)
+            .on('mouseout', Functions.WindowOnMouseOut);
+    }
 
 })(jQuery, window, document, TweenMax);
 

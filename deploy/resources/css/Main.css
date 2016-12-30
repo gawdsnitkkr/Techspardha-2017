@@ -1399,39 +1399,69 @@ p {
 #EventContentContainer > .row > div:nth-of-type(2) {
   text-align: right;
 }
-#EventContentContainer #EventClockSVG {
-  width: 16rem;
-  height: 16rem;
+#EventContentContainer #EventEndedMessage {
+  display: none;
+  text-align: center;
+  cursor: default;
+}
+#EventContentContainer #EventEndedMessage .glyphicon {
+  padding: 6.6rem 0 1rem 0;
+  font-size: 6.4rem;
+  color: #e84a5f;
+}
+#EventContentContainer #EventEndedMessage h4 {
+  font-family: "Lato", "Roboto", sans-serif;
+  font-weight: 600;
+  color: #e7ab3b;
+}
+#EventContentContainer .PieTickerContainer {
+  text-align: center;
+  cursor: default;
+}
+#EventContentContainer .PieTickerContainer .Status {
+  text-align: center;
+  font-family: "Lato", "Roboto", sans-serif;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #e7ab3b;
+}
+#EventContentContainer .PieTickerContainer span {
+  color: #f4f4f4;
+  font-size: 1.4rem;
+  font-weight: 400;
+}
+#EventContentContainer .PieTickerContainer .PieTicker {
+  width: 15rem;
+  height: 15rem;
+  margin: 2rem auto 1rem auto;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  margin: 1rem auto;
-  display: none;
+  display: block;
 }
-#EventContentContainer #EventClockInner {
-  fill: #9de0ad;
-  fill-opacity: 0.1;
+#EventContentContainer .PieTickerContainer .PieTicker .Inner {
+  fill: #e7ab3b;
 }
-#EventContentContainer #EventClockTick {
+#EventContentContainer .PieTickerContainer .PieTicker .Tick {
   fill: #2a363b;
   stroke: #e7ab3b;
-  stroke-width: 20;
+  stroke-width: 8;
 }
-#EventContentContainer #EventClockOuter {
+#EventContentContainer .PieTickerContainer .PieTicker .Outer {
   fill: #2a363b;
 }
-#EventContentContainer #EventClockMinute {
+#EventContentContainer .PieTickerContainer .PieTicker .UpperText {
   font-family: "Roboto Condensed", "Roboto Light", sans-serif;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 96px;
-  fill: #45ada8;
+  fill: #455961;
 }
-#EventContentContainer #EventClockSecond {
+#EventContentContainer .PieTickerContainer .PieTicker .LowerText {
   font-family: "Roboto Condensed", "Roboto Light", sans-serif;
   font-weight: 200;
   font-size: 54px;
-  fill: #547980;
+  fill: #2a363b;
 }
 @-moz-keyframes EventSVGStarShellAnimation {
   0% {

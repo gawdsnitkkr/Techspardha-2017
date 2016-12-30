@@ -95,41 +95,82 @@
     text-align: right;
   }
 
-  #EventClockSVG {
-    width: 16rem;
-    height: 16rem;
-    user-select: none;
-    margin: 1rem auto;
+  #EventEndedMessage {
+
     display: none;
+    text-align: center;
+    cursor: default;
+
+    .glyphicon {
+      padding: 6.6rem 0 1rem 0;
+      font-size: 6.4rem;
+      color: $Pink;
+    }
+
+    h4 {
+      font-family: $ContentFontFamily;
+      font-weight: 600;
+      color: $Yellow;
+    }
+
   }
 
-  #EventClockInner {
-    fill: $LightGreen;
-    fill-opacity: 0.1;
-  }
+  .PieTickerContainer {
 
-  #EventClockTick {
-    fill: $DarkBlue;
-    stroke: $Yellow;
-    stroke-width: 20;
-  }
+    text-align: center;
+    cursor: default;
 
-  #EventClockOuter {
-    fill: $DarkBlue;
-  }
+    .Status {
+      text-align: center;
+      font-family: $ContentFontFamily;
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: $Yellow;
+    }
 
-  #EventClockMinute {
-    font-family: $HeadingTwoFontFamily;
-    font-weight: 300;
-    font-size: 96px;
-    fill: $SkyBlue;
-  }
+    span {
+      color: $PaperWhite;
+      font-size: 1.4rem;
+      font-weight: 400;
+    }
 
-  #EventClockSecond {
-    font-family: $HeadingThreeFontFamily;
-    font-weight: 200;
-    font-size: 54px;
-    fill: $DarkSkyBlue;
+    .PieTicker {
+
+      width: 15rem;
+      height: 15rem;
+      margin: 2rem auto 1rem auto;
+      user-select: none;
+      display: block;
+
+      .Inner {
+        fill: $Yellow;
+      }
+
+      .Tick {
+        fill: $DarkBlue;
+        stroke: $Yellow;
+        stroke-width: 8;
+      }
+
+      .Outer {
+        fill: $DarkBlue;
+      }
+
+      .UpperText {
+        font-family: $HeadingTwoFontFamily;
+        font-weight: 400;
+        font-size: 96px;
+        fill: lighten($DarkBlue, 16%);
+      }
+
+      .LowerText {
+        font-family: $HeadingThreeFontFamily;
+        font-weight: 200;
+        font-size: 54px;
+        fill: $DarkBlue;
+      }
+
+    }
   }
 
 }

@@ -159,13 +159,53 @@
                 </p>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-                <svg id="EventClockSVG" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 201 201">
-                    <rect id="EventClockOuter" height="200" width="200" rx="100" ry="100"></rect>
-                    <path id="EventClockTick" d="M 100 10 A 90 90 0 0 1 100 10"></path>
-                    <rect id="EventClockInner" height="160" width="160" rx="80" ry="80" x="20" y="20"></rect>
-                    <text id="EventClockMinute" x="75" y="102">2</text>
-                    <text id="EventClockSecond" x="72" y="157">30</text>
-                </svg>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <div id="EventRound" class="PieTickerContainer" title="Rounds completed out of total.">
+                                <svg class="PieTicker" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 201 201">
+                                    <rect class="Outer" height="200" width="200" rx="100" ry="100"></rect>
+                                    <path class="Tick" d="M 100 10 A 90 90 0 0 1 100 10"></path>
+                                    <rect class="Inner" height="160" width="160" rx="80" ry="80" x="20" y="20"></rect>
+                                    <text class="UpperText" x="101" y="102" text-anchor="middle">
+                                        <title>Current Round</title>
+                                        <tspan id="EventRoundCurrent">1</tspan>
+                                    </text>
+                                    <text class="LowerText" x="101" y="157" text-anchor="middle">
+                                        <title>Total Rounds</title>
+                                        <tspan id="EventRoundTotal">4</tspan>
+                                    </text>
+                                </svg>
+                                <h4 class="Status">Rounds</h4>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <div id="EventTime" class="PieTickerContainer">
+                                <svg class="PieTicker" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                                     viewBox="0 0 201 201">
+                                    <rect class="Outer" height="200" width="200" rx="100" ry="100"></rect>
+                                    <path class="Tick" d="M 100 10 A 90 90 0 0 1 100 10"></path>
+                                    <rect class="Inner" height="160" width="160" rx="80" ry="80" x="20" y="20"></rect>
+                                    <text class="UpperText" x="101" y="102" text-anchor="middle">
+                                        <title>Days</title>
+                                        <tspan id="EventTimeDay">2</tspan>
+                                    </text>
+                                    <text class="LowerText" x="101" y="157" text-anchor="middle">
+                                        <title>Hours</title>
+                                        <tspan id="EventTimeHour">30</tspan>
+                                    </text>
+                                </svg>
+                                <span>Day(s) and Hour(s)</span>
+                                <h4 class="Status">Start</h4>
+                            </div>
+                            <div id="EventEndedMessage">
+                                <span class="glyphicon glyphicon-off"></span>
+                                <h4>Event has ended.</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

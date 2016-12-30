@@ -31,8 +31,7 @@
     "replace": "latest"
   },
   "scripts": {
-    "lint": "jshint src/js",
-    "prebuild:js": "npm run lint",
+    "prebuild:js": "jshint src/js",
     "build:js": "fuse -i src/js/Main.js -o dist/resources/js/Main.js",
     "build:css": "stylus -u nib src/styl/Main.styl -o dist/resources/css/Main.css",
     "build": "npm run build:js && npm run build:css",
