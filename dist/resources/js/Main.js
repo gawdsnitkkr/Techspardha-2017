@@ -657,19 +657,22 @@ function IsMobile() {
                 }
             },
             WindowOnTouchMove: function (event) {
-                event.preventDefault();
-                var touch = event.touches[0];
-                if (touch !== undefined) {
-                    Globals.GalaxyMovementDeltaX = ((Globals.WindowHalfWidth - touch.pageX) / Globals.WindowHalfWidth) * Constants.GALAXY_MOVEMENT_SPEED;
-                    Globals.GalaxyMovementDeltaY = ((Globals.WindowHalfHeight - touch.pageY) / Globals.WindowHalfHeight) * Constants.GALAXY_MOVEMENT_SPEED;
-                    if (!Globals.MenuSectionShowing && !Globals.EventSectionShowing &&
-                        Globals.GalaxyMovementAnimationFrameID === undefined) {
-                        Functions.RequestGalaxyMovementAnimationLoop();
+                if (Globals.GalaxySVGShowing && !Globals.MenuSectionShowing && !Globals.EventSectionShowing) {
+                    event.preventDefault();
+                    var touch = event.touches[0];
+                    if (touch !== undefined) {
+                        Globals.GalaxyMovementDeltaX = ((Globals.WindowHalfWidth - touch.pageX) / Globals.WindowHalfWidth) * Constants.GALAXY_MOVEMENT_SPEED;
+                        Globals.GalaxyMovementDeltaY = ((Globals.WindowHalfHeight - touch.pageY) / Globals.WindowHalfHeight) * Constants.GALAXY_MOVEMENT_SPEED;
+                        if (Globals.GalaxyMovementAnimationFrameID === undefined) {
+                            Functions.RequestGalaxyMovementAnimationLoop();
+                        }
                     }
                 }
             },
             WindowOnTouchEnd: function (event) {
-                Functions.CancelGalaxyMovementAnimationLoop();
+                if (Globals.GalaxySVGShowing && !Globals.MenuSectionShowing && !Globals.EventSectionShowing) {
+                    Functions.CancelGalaxyMovementAnimationLoop();
+                }
             },
             WindowOnKeyUp: function (event) {
                 var keyCode = event.keyCode;
@@ -850,6 +853,8 @@ function IsMobile() {
                             .css('display', 'block')
                             .attr('title', 'Time to go before the event ends.');
                         $Objects.EventTimeStatus.text('Started');
+                        $Objects.EventTimeAddOn.text('to end.');
+                        $Objects.EventEndedMessage.css('display', 'none');
 
                         timeTween.value = endStartDifference;
                         endDifferenceOnUpdate();
@@ -874,6 +879,8 @@ function IsMobile() {
                         .css('display', 'block')
                         .attr('title', 'Time to go before event starts.');
                     $Objects.EventTimeStatus.text('Not Started');
+                    $Objects.EventTimeAddOn.text('to start.');
+                    $Objects.EventEndedMessage.css('display', 'none');
 
                     timeTween.value = startLaunchDifference;
                     startDifferenceOnUpdate();
@@ -1109,7 +1116,7 @@ function IsMobile() {
                     t.killTweensOf($Objects.EventContentContainerElements);
                     t.staggerFromTo($Objects.EventContentContainerElements, halfDuration, {
                         opacity: 0,
-                        top: '5rem'
+                        top: '10rem'
                     }, {
                         opacity: 1,
                         top: 0,
@@ -1504,17 +1511,69 @@ function IsMobile() {
          * @return {Event}
          */
         showDetails: function () {
-            var properties = this.properties;
+
+            var properties = this.properties,
+                startTime = properties.startTime,
+                endTime = properties.endTime,
+                coordinators = properties.coordinators,
+                coordinatorCount = coordinators.length,
+                $CoordinatorContainer = $Objects.CoordinatorContainer.empty();
+
             $Objects.EventSVGStar.css('fill', properties.color);
             $Objects.EventContentTitle.text(properties.title);
             $Objects.EventContentCategory.text(this.category.properties.title);
             $Objects.EventContentDescription.text(properties.description);
             $Objects.EventContentRules.text(properties.rules);
+            $Objects.EventContentParticipant.text(
+                properties.maxParticipants > 1 ? 'Team of up to ' + properties.maxParticipants : 'Solo');
+            $Objects.EventContentFromDate.text(
+                padNumber(startTime.getDay()) + '/' +
+                padNumber(startTime.getMonth() + 1) + '/' +
+                startTime.getFullYear());
+            $Objects.EventContentFromTime.text(
+                padNumber(startTime.getHours()) + ':' +
+                padNumber(startTime.getMinutes()) + ':' +
+                padNumber(startTime.getSeconds()));
+            $Objects.EventContentToDate.text(
+                padNumber(endTime.getDay()) + '/' +
+                padNumber(endTime.getMonth() + 1) + '/' +
+                endTime.getFullYear());
+            $Objects.EventContentToTime.text(
+                padNumber(endTime.getHours()) + ':' +
+                padNumber(startTime.getMinutes()) + ':' +
+                padNumber(endTime.getSeconds()));
+
+            if (coordinatorCount > 0) {
+                var $CoordinatorCache = $Cache.Coordinator,
+                    $Coordinator,
+                    coordinator;
+                for (var coordinatorIndex = 0; coordinatorIndex < coordinatorCount; coordinatorIndex++) {
+                    coordinator = coordinators[coordinatorIndex];
+                    $Coordinator = $CoordinatorCache.clone();
+                    $Coordinator.find('.Name').text(coordinator.Name);
+                    $Coordinator.find('.Email')
+                        .text(coordinator.Email)
+                        .attr('href', 'mailto:' + coordinator.Email);
+                    $Coordinator.find('.Phone').text(coordinator.PhoneNo);
+                    $CoordinatorContainer.append($Coordinator);
+                }
+            }
+
+            // undefined forces default delay value to be taken.
+            Functions.StartEventRoundTicker(
+                properties.currentRound,
+                properties.totalRounds,
+                Globals.EventSectionShowing ? 0 : undefined);
+            Functions.StartEventTimeTicker(
+                startTime,
+                endTime,
+                Globals.EventSectionShowing ? 0 : undefined);
+
             Functions.ShowEventSection();
-            Functions.StartEventRoundTicker(properties.currentRound, properties.totalRounds);
-            Functions.StartEventTimeTicker(properties.startTime, properties.endTime);
             Functions.HideGalaxySVG();
+
             return this;
+
         }
     };
 
@@ -1575,7 +1634,7 @@ function IsMobile() {
             }
             $Objects.EventContentContainer = $('#EventContentContainer', $Objects.EventSection);
             if ($Objects.EventContentContainer.length > 0) {
-                $Objects.EventContentContainerElements = $('> div > div', $Objects.EventContentContainer).children();
+                $Objects.EventContentContainerElements = $('> div > div', $Objects.EventContentContainer).children().children();
                 $Objects.EventContentTitle = $('#EventContentTitle', $Objects.EventContentContainer);
                 $Objects.EventContentCategory = $('#EventContentCategory', $Objects.EventContentContainer);
                 $Objects.EventContentDescription = $('#EventContentDescription', $Objects.EventContentContainer);
@@ -1593,8 +1652,20 @@ function IsMobile() {
                     $Objects.EventTimeDay = $('#EventTimeDay', $Objects.EventTime);
                     $Objects.EventTimeHour = $('#EventTimeHour', $Objects.EventTime);
                     $Objects.EventTimeStatus = $('.Status', $Objects.EventTime);
+                    $Objects.EventTimeAddOn = $('#EventTimeAddOn', $Objects.EventTime);
                 }
                 $Objects.EventEndedMessage = $('#EventEndedMessage', $Objects.EventContentContainer);
+                $Objects.EventContentParticipant = $('#EventContentParticipant', $Objects.EventContentContainer);
+                $Objects.EventContentFromDate = $('#EventContentFromDateTimeContainer .Date', $Objects.EventContentContainer);
+                $Objects.EventContentFromTime = $('#EventContentFromDateTimeContainer .Time', $Objects.EventContentContainer);
+                $Objects.EventContentToDate = $('#EventContentToDateTimeContainer .Date', $Objects.EventContentContainer);
+                $Objects.EventContentToTime = $('#EventContentToDateTimeContainer .Time', $Objects.EventContentContainer);
+                $Objects.CoordinatorContainer = $('#CoordinatorContainer', $Objects.EventContentContainer);
+                if ($Objects.CoordinatorContainer.length > 0) {
+                    var $Coordinator = $Objects.CoordinatorContainer.find('.Coordinator');
+                    $Cache.Coordinator = $Coordinator.clone();
+                    $Coordinator.remove();
+                }
             }
         }
 
@@ -2294,3 +2365,4 @@ function IsMobile() {
     };
 
 })(document, jQuery(document), jQuery);
+

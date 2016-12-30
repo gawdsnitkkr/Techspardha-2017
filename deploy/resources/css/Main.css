@@ -913,6 +913,7 @@ p {
 }
 #Header {
   background-color: rgba(3,3,11,0.9);
+  border-bottom: solid 0.1rem #e7ab3b;
   width: 100vw;
   height: 8.8rem;
   padding: 0;
@@ -930,6 +931,11 @@ p {
   top: 1.2rem;
   right: 1.6rem;
   cursor: pointer;
+}
+#Header #Logo text {
+  font-family: "Lato", "Roboto", sans-serif;
+  font-size: 56px;
+  fill: #b7b7b7;
 }
 #Header #HeaderCloseButton {
   position: absolute;
@@ -1381,23 +1387,34 @@ p {
 }
 #EventContentContainer {
   padding-top: 9.2rem;
-  padding-bottom: 1rem;
+  padding-bottom: 2rem;
   z-index: 2;
   position: absolute;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0,0,0,0.7);
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  background-color: rgba(0,0,0,0.8);
+  font-size: 1.6rem;
+  color: #f4f4f4;
   overflow-x: hidden;
   overflow-y: hidden;
 }
-#EventContentContainer > .row > div:nth-of-type(2) {
-  text-align: right;
+#EventContentContainer * {
+  cursor: default;
+}
+#EventContentContainer h4 {
+  color: #45ada8;
+  font-weight: 600;
+}
+#EventContentContainer .glyphicon {
+  font-size: 2.4rem;
+  padding: 0.5rem;
+  color: #f4f4f4;
+}
+#EventContentContainer .glyphicon + span {
+  display: inline-block;
+  top: -0.6rem;
 }
 #EventContentContainer #EventEndedMessage {
   display: none;
@@ -1427,7 +1444,7 @@ p {
 }
 #EventContentContainer .PieTickerContainer span {
   color: #f4f4f4;
-  font-size: 1.4rem;
+  font-size: 1.3rem;
   font-weight: 400;
 }
 #EventContentContainer .PieTickerContainer .PieTicker {
@@ -1454,7 +1471,7 @@ p {
 #EventContentContainer .PieTickerContainer .PieTicker .UpperText {
   font-family: "Roboto Condensed", "Roboto Light", sans-serif;
   font-weight: 400;
-  font-size: 96px;
+  font-size: 80px;
   fill: #455961;
 }
 #EventContentContainer .PieTickerContainer .PieTicker .LowerText {
@@ -1462,6 +1479,38 @@ p {
   font-weight: 200;
   font-size: 54px;
   fill: #2a363b;
+}
+#EventContentContainer #CoordinatorContainer .Coordinator {
+  padding: 0 0 0.5rem 0;
+}
+#EventContentContainer #CoordinatorContainer .Coordinator .Name {
+  font-size: 1.6rem;
+  font-weight: 400;
+}
+#EventContentContainer #CoordinatorContainer .Coordinator .Email {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 400;
+  text-decoration: none;
+  color: #45ada8;
+  cursor: pointer;
+  -webkit-transition: color 0.3s ease-in-out;
+  -moz-transition: color 0.3s ease-in-out;
+  -o-transition: color 0.3s ease-in-out;
+  -ms-transition: color 0.3s ease-in-out;
+  transition: color 0.3s ease-in-out;
+}
+#EventContentContainer #CoordinatorContainer .Coordinator .Email:hover {
+  color: #6fc6c2;
+}
+#EventContentContainer #CoordinatorContainer .Coordinator .Email:active {
+  color: #34827e;
+}
+#EventContentContainer #CoordinatorContainer .Coordinator .Phone {
+  font-size: 1.3rem;
+  font-weight: 400;
+  text-decoration: none;
+  color: #a5bfc4;
 }
 @-moz-keyframes EventSVGStarShellAnimation {
   0% {

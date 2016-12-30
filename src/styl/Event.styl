@@ -79,20 +79,36 @@
 #EventContentContainer {
 
   padding-top: 9.2rem;
-  padding-bottom: 1rem;
+  padding-bottom: 2rem;
   z-index: 2;
   position: absolute;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.7);
-  user-select: none;
+  background-color: rgba(0, 0, 0, 0.8);
+  font-size: 1.6rem;
+  color: $PaperWhite;
   overflow-x: hidden;
   overflow-y: hidden;
 
-  > .row > div:nth-of-type(2) {
-    text-align: right;
+  * {
+    cursor: default;
+  }
+
+  h4 {
+    color: $SkyBlue;
+    font-weight: 600;
+  }
+
+  .glyphicon {
+    font-size: 2.4rem;
+    padding: 0.5rem;
+    color: $PaperWhite;
+    & + span {
+      display: inline-block;
+      top: -0.6rem;
+    }
   }
 
   #EventEndedMessage {
@@ -130,7 +146,7 @@
 
     span {
       color: $PaperWhite;
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 400;
     }
 
@@ -159,7 +175,7 @@
       .UpperText {
         font-family: $HeadingTwoFontFamily;
         font-weight: 400;
-        font-size: 96px;
+        font-size: 80px;
         fill: lighten($DarkBlue, 16%);
       }
 
@@ -173,4 +189,34 @@
     }
   }
 
+  #CoordinatorContainer {
+    .Coordinator {
+      padding: 0 0 0.5rem 0;
+      .Name {
+        font-size: 1.6rem;
+        font-weight: 400;
+      }
+      .Email {
+        display: block;
+        font-size: 1.3rem;
+        font-weight: 400;
+        text-decoration: none;
+        color: $SkyBlue;
+        cursor: pointer;
+        transition: color 0.3s ease-in-out;
+        &:hover {
+          color: lighten($SkyBlue, 25%);
+        }
+        &:active {
+          color: darken($SkyBlue, 25%);
+        }
+      }
+      .Phone {
+        font-size: 1.3rem;
+        font-weight: 400;
+        text-decoration: none;
+        color: lighten($DarkSkyBlue, 50%);
+      }
+    }
+  }
 }
