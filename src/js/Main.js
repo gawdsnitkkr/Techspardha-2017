@@ -296,16 +296,18 @@
                 }
             },
             WindowOnTouchMove: function (event) {
-                event.preventDefault();
-                var touch = event.touches[0];
-                if (touch !== undefined) {
-                    Globals.GalaxyMovementDeltaX = ((Globals.WindowHalfWidth - touch.pageX) / Globals.WindowHalfWidth) * Constants.GALAXY_MOVEMENT_SPEED;
-                    Globals.GalaxyMovementDeltaY = ((Globals.WindowHalfHeight - touch.pageY) / Globals.WindowHalfHeight) * Constants.GALAXY_MOVEMENT_SPEED;
-                    if (!Globals.MenuSectionShowing && !Globals.EventSectionShowing &&
-                        Globals.GalaxyMovementAnimationFrameID === undefined) {
-                        Functions.RequestGalaxyMovementAnimationLoop();
+	        if (Globals.GalaxySVGShowing) {
+                    event.preventDefault();
+                    var touch = event.touches[0];
+                    if (touch !== undefined && ) {
+                        Globals.GalaxyMovementDeltaX = ((Globals.WindowHalfWidth - touch.pageX) / Globals.WindowHalfWidth) * Constants.GALAXY_MOVEMENT_SPEED;
+                        Globals.GalaxyMovementDeltaY = ((Globals.WindowHalfHeight - touch.pageY) / Globals.WindowHalfHeight) * Constants.GALAXY_MOVEMENT_SPEED;
+                        if (!Globals.MenuSectionShowing && !Globals.EventSectionShowing &&
+                            Globals.GalaxyMovementAnimationFrameID === undefined) {
+                            Functions.RequestGalaxyMovementAnimationLoop();
+                        }
                     }
-                }
+		}
             },
             WindowOnTouchEnd: function (event) {
                 Functions.CancelGalaxyMovementAnimationLoop();
