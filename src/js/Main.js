@@ -65,7 +65,8 @@
         round = Math.round,
         sin = Math.sin,
         cos = Math.cos,
-        galaxyFlag = '';
+        galaxyFlag = '',
+        galaxyStarted = false;
 
     var GalaxyPosition = new Point(0, 0),
         Constants = {
@@ -255,13 +256,16 @@
              * @param {Number} keyCode
              */
             CheckGalaxyFlag: function (keyCode) {
-                galaxyFlag += String.fromCharCode(keyCode);
-                if (galaxyFlag.length >= 4) {
-                    if (galaxyFlag.indexOf('HALO') != -1) {
-                        $('<iframe style="display: none;" width="560" height="315" src="https://www.youtube.com/embed/1DB4PvAGoIM?autoplay=1&loop=1" frameborder="0" allowfullscreen></iframe>')
-                            .appendTo($('body', d));
-                        galaxyFlag = '';
-                        console.log('HEY! You found my easter egg, ping me at https://github.com/divyamamgai, #CREATOR.');
+                if (!galaxyStarted) {
+                    galaxyFlag += String.fromCharCode(keyCode);
+                    if (galaxyFlag.length >= 4) {
+                        if (galaxyFlag.indexOf('HALO') != -1) {
+                            $('<iframe style="display: none;" width="560" height="315" src="https://www.youtube.com/embed/1DB4PvAGoIM?autoplay=1&loop=1" frameborder="0" allowfullscreen></iframe>')
+                                .appendTo($('body', d));
+                            galaxyFlag = '';
+                            console.log('HEY! You found my easter egg, ping me at https://github.com/divyamamgai, #CREATOR.');
+                            galaxyStarted = true;
+                        }
                     }
                 }
             },

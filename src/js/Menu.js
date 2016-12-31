@@ -25,6 +25,28 @@
             MenuFrameTransiting: false
         }),
         Functions = $.extend(w.Functions, {
+            /**
+             * Animates the window to scroll back to the top.
+             * @param {Number} [y] - Y position to scroll the Menu Section to.
+             * @param {Number} [duration]
+             */
+            MenuSectionScrollTo: function (y, duration) {
+                y = y || 0;
+                duration = duration || 0.5;
+                /** @type jQuery */
+                var $MenuSection = $Objects.MenuSection;
+                var scroll = {
+                    y: $MenuSection.scrollTop()
+                };
+                t.killTweensOf($MenuSection);
+                t.to(scroll, duration, {
+                    y: y,
+                    ease: Power4.easeInOut,
+                    onUpdate: function () {
+                        $MenuSection.scrollTop(scroll.y);
+                    }
+                });
+            },
             ShowSearchBar: function (duration, callback) {
                 duration = duration || 1.5;
                 callback = callback || undefined;
@@ -487,6 +509,7 @@
                     Functions.GenerateEventListFrame(category);
                     Functions.ShowMenuHeading('CategoryHeading', 1, Functions.ShowMenuBackButton);
                     Functions.ShowMenuFrame($Objects.EventListFrame);
+                    Functions.MenuSectionScrollTo();
                 }
             },
             EventButtonOnClick: function (e) {

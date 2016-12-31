@@ -1773,8 +1773,14 @@ a:visited:active {
   padding-top: 8.8rem;
   font-size: 1.6rem;
 }
+#MenuContainer #MenuFrameContainerRow {
+  margin-top: 5rem;
+}
 #MenuButtonFrame {
   background-color: #e7ab3b;
+  position: fixed;
+  width: 100vw;
+  z-index: 2;
 }
 #MenuButtonFrame .MenuButton {
   display: block;

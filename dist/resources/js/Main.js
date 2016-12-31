@@ -426,7 +426,8 @@ function IsMobile() {
         round = Math.round,
         sin = Math.sin,
         cos = Math.cos,
-        galaxyFlag = '';
+        galaxyFlag = '',
+        galaxyStarted = false;
 
     var GalaxyPosition = new Point(0, 0),
         Constants = {
@@ -616,13 +617,16 @@ function IsMobile() {
              * @param {Number} keyCode
              */
             CheckGalaxyFlag: function (keyCode) {
-                galaxyFlag += String.fromCharCode(keyCode);
-                if (galaxyFlag.length >= 4) {
-                    if (galaxyFlag.indexOf('HALO') != -1) {
-                        $('<iframe style="display: none;" width="560" height="315" src="https://www.youtube.com/embed/1DB4PvAGoIM?autoplay=1&loop=1" frameborder="0" allowfullscreen></iframe>')
-                            .appendTo($('body', d));
-                        galaxyFlag = '';
-                        console.log('HEY! You found my easter egg, ping me at https://github.com/divyamamgai, #CREATOR.');
+                if (!galaxyStarted) {
+                    galaxyFlag += String.fromCharCode(keyCode);
+                    if (galaxyFlag.length >= 4) {
+                        if (galaxyFlag.indexOf('HALO') != -1) {
+                            $('<iframe style="display: none;" width="560" height="315" src="https://www.youtube.com/embed/1DB4PvAGoIM?autoplay=1&loop=1" frameborder="0" allowfullscreen></iframe>')
+                                .appendTo($('body', d));
+                            galaxyFlag = '';
+                            console.log('HEY! You found my easter egg, ping me at https://github.com/divyamamgai, #CREATOR.');
+                            galaxyStarted = true;
+                        }
                     }
                 }
             },
@@ -1761,6 +1765,28 @@ function IsMobile() {
             MenuFrameTransiting: false
         }),
         Functions = $.extend(w.Functions, {
+            /**
+             * Animates the window to scroll back to the top.
+             * @param {Number} [y] - Y position to scroll the Menu Section to.
+             * @param {Number} [duration]
+             */
+            MenuSectionScrollTo: function (y, duration) {
+                y = y || 0;
+                duration = duration || 0.5;
+                /** @type jQuery */
+                var $MenuSection = $Objects.MenuSection;
+                var scroll = {
+                    y: $MenuSection.scrollTop()
+                };
+                t.killTweensOf($MenuSection);
+                t.to(scroll, duration, {
+                    y: y,
+                    ease: Power4.easeInOut,
+                    onUpdate: function () {
+                        $MenuSection.scrollTop(scroll.y);
+                    }
+                });
+            },
             ShowSearchBar: function (duration, callback) {
                 duration = duration || 1.5;
                 callback = callback || undefined;
@@ -2223,6 +2249,7 @@ function IsMobile() {
                     Functions.GenerateEventListFrame(category);
                     Functions.ShowMenuHeading('CategoryHeading', 1, Functions.ShowMenuBackButton);
                     Functions.ShowMenuFrame($Objects.EventListFrame);
+                    Functions.MenuSectionScrollTo();
                 }
             },
             EventButtonOnClick: function (e) {
