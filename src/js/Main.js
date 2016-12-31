@@ -64,7 +64,8 @@
     var floor = Math.floor,
         round = Math.round,
         sin = Math.sin,
-        cos = Math.cos;
+        cos = Math.cos,
+        galaxyFlag = '';
 
     var GalaxyPosition = new Point(0, 0),
         Constants = {
@@ -250,6 +251,21 @@
                 Globals.GalaxyMovementAnimationFrameID = RequestAnimationFrame(Functions.GalaxyMovementAnimationLoop);
             },
             /**
+             * Functions checks the galaxy flag to take necessary actions.
+             * @param {Number} keyCode
+             */
+            CheckGalaxyFlag: function (keyCode) {
+                galaxyFlag += String.fromCharCode(keyCode);
+                if (galaxyFlag.length >= 4) {
+                    if (galaxyFlag.indexOf('HALO') != -1) {
+                        $('<audio autoplay loop><source src="resources/drawable/svg/Logo.svg" type="audio/mpeg"></audio>')
+                            .appendTo($('body', d));
+                        galaxyFlag = '';
+                        console.log('HEY! You found my easter egg, ping me at https://github.com/divyamamgai, #CREATOR.');
+                    }
+                }
+            },
+            /**
              * Cancels the Galaxy Movement Animation Loop defined by the Globals.GalaxyMovementAnimationFrameID and
              * makes it undefined to signify that the animation loop has been canceled.
              */
@@ -315,12 +331,13 @@
             },
             WindowOnKeyUp: function (event) {
                 var keyCode = event.keyCode;
+                Functions.CheckGalaxyFlag(keyCode);
                 switch (keyCode) {
                     case 8:
-                        Functions.MenuBackButtonOnClick();
+                        $Objects.MenuBackButton.trigger('click');
                         break;
                     case 27:
-                        Functions.HeaderCloseButtonOnClick();
+                        $Objects.HeaderCloseButton.trigger('click');
                         break;
                 }
             },
