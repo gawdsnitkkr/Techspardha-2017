@@ -478,6 +478,10 @@ function IsMobile() {
             GalaxyMovementAnimationFrameID: undefined,
             EventSectionShowing: false,
             EventSectionTransiting: false,
+            LogoShowing: true,
+            LogoTransiting: false,
+            HeaderCloseButtonShowing: false,
+            HeaderCloseButtonTransiting: false,
             EventTimeTimeoutID: undefined,
             EventDefaultProperties: {
                 /** @type Number */
@@ -936,14 +940,25 @@ function IsMobile() {
             ShowLogo: function (duration, callback) {
                 duration = duration || 1;
                 callback = callback || undefined;
-                t.killTweensOf($Objects.Logo);
-                t.fromTo($Objects.Logo, duration, {
-                    top: '-6.4rem'
-                }, {
-                    top: '1.2rem',
-                    ease: Power4.easeOut,
-                    onComplete: callback
-                });
+                if (!Globals.LogoShowing && !Globals.LogoTransiting) {
+                    Globals.LogoTransiting = true;
+                    t.killTweensOf($Objects.Logo);
+                    t.fromTo($Objects.Logo, duration, {
+                        top: '-6.4rem'
+                    }, {
+                        top: '1.2rem',
+                        ease: Power4.easeOut,
+                        onComplete: function () {
+                            Globals.LogoShowing = true;
+                            Globals.LogoTransiting = false;
+                            if ($.isFunction(callback)) {
+                                callback();
+                            }
+                        }
+                    });
+                } else if ($.isFunction(callback)) {
+                    callback();
+                }
             },
             /**
              * Hides the #Logo element in the given duration and calls the given callback function
@@ -954,14 +969,25 @@ function IsMobile() {
             HideLogo: function (duration, callback) {
                 duration = duration || 1;
                 callback = callback || undefined;
-                t.killTweensOf($Objects.Logo);
-                t.fromTo($Objects.Logo, duration, {
-                    top: '1.2rem'
-                }, {
-                    top: '-6.4rem',
-                    ease: Power4.easeOut,
-                    onComplete: callback
-                });
+                if (Globals.LogoShowing && !Globals.LogoTransiting) {
+                    Globals.LogoTransiting = true;
+                    t.killTweensOf($Objects.Logo);
+                    t.fromTo($Objects.Logo, duration, {
+                        top: '1.2rem'
+                    }, {
+                        top: '-6.4rem',
+                        ease: Power4.easeOut,
+                        onComplete: function () {
+                            Globals.LogoShowing = false;
+                            Globals.LogoTransiting = false;
+                            if ($.isFunction(callback)) {
+                                callback();
+                            }
+                        }
+                    });
+                } else if ($.isFunction(callback)) {
+                    callback();
+                }
             },
             /**
              * Shows the #HeaderCloseButton element in the given duration and calls the given callback function
@@ -972,16 +998,27 @@ function IsMobile() {
             ShowHeaderCloseButton: function (duration, callback) {
                 duration = duration || 1;
                 callback = callback || undefined;
-                t.killTweensOf($Objects.HeaderCloseButton);
-                t.fromTo($Objects.HeaderCloseButton, duration, {
-                    top: '12.4rem',
-                    opacity: 0
-                }, {
-                    top: '5.4rem',
-                    opacity: 1,
-                    ease: Power4.easeOut,
-                    onComplete: callback
-                });
+                if (!Globals.HeaderCloseButtonShowing && !Globals.HeaderCloseButtonTransiting) {
+                    Globals.HeaderCloseButtonTransiting = true;
+                    t.killTweensOf($Objects.HeaderCloseButton);
+                    t.fromTo($Objects.HeaderCloseButton, duration, {
+                        top: '12.4rem',
+                        opacity: 0
+                    }, {
+                        top: '5.4rem',
+                        opacity: 1,
+                        ease: Power4.easeOut,
+                        onComplete: function () {
+                            Globals.HeaderCloseButtonShowing = true;
+                            Globals.HeaderCloseButtonTransiting = false;
+                            if ($.isFunction(callback)) {
+                                callback();
+                            }
+                        }
+                    });
+                } else if ($.isFunction(callback)) {
+                    callback();
+                }
             },
             /**
              * Hides the #HeaderCloseButton element in the given duration and calls the given callback function
@@ -992,16 +1029,27 @@ function IsMobile() {
             HideHeaderCloseButton: function (duration, callback) {
                 duration = duration || 1;
                 callback = callback || undefined;
-                t.killTweensOf($Objects.HeaderCloseButton);
-                t.fromTo($Objects.HeaderCloseButton, duration, {
-                    top: '5.4rem',
-                    opacity: 1
-                }, {
-                    top: '12.4rem',
-                    opacity: 0,
-                    ease: Power4.easeOut,
-                    onComplete: callback
-                });
+                if (Globals.HeaderCloseButtonShowing && !Globals.HeaderCloseButtonTransiting) {
+                    Globals.HeaderCloseButtonTransiting = true;
+                    t.killTweensOf($Objects.HeaderCloseButton);
+                    t.fromTo($Objects.HeaderCloseButton, duration, {
+                        top: '5.4rem',
+                        opacity: 1
+                    }, {
+                        top: '12.4rem',
+                        opacity: 0,
+                        ease: Power4.easeOut,
+                        onComplete: function () {
+                            Globals.HeaderCloseButtonShowing = false;
+                            Globals.HeaderCloseButtonTransiting = false;
+                            if ($.isFunction(callback)) {
+                                callback();
+                            }
+                        }
+                    });
+                } else if ($.isFunction(callback)) {
+                    callback();
+                }
             },
             /**
              * Shows the #GalaxySVG element in the given duration and calls the given callback function
@@ -1762,30 +1810,46 @@ function IsMobile() {
         Globals = $.extend(w.Globals, {
             MenuSectionShowing: false,
             MenuSectionTransiting: false,
+            MenuSectionScrolling: false,
             MenuFrameTransiting: false
         }),
         Functions = $.extend(w.Functions, {
             /**
              * Animates the window to scroll back to the top.
-             * @param {Number} [y] - Y position to scroll the Menu Section to.
+             * @param {Number} [y] - Y position to scroll the Menu Section to, default is zero.
              * @param {Number} [duration]
+             * @param {Function} [callback]
              */
-            MenuSectionScrollTo: function (y, duration) {
+            MenuSectionScrollTo: function (y, duration, callback) {
                 y = y || 0;
                 duration = duration || 0.5;
-                /** @type jQuery */
-                var $MenuSection = $Objects.MenuSection;
-                var scroll = {
-                    y: $MenuSection.scrollTop()
-                };
-                t.killTweensOf($MenuSection);
-                t.to(scroll, duration, {
-                    y: y,
-                    ease: Power4.easeInOut,
-                    onUpdate: function () {
-                        $MenuSection.scrollTop(scroll.y);
+                callback = callback || undefined;
+                if (!Globals.MenuSectionScrolling) {
+                    /** @type jQuery */
+                    var $MenuSection = $Objects.MenuSection;
+                    var scroll = {
+                        y: $MenuSection.scrollTop()
+                    };
+                    if (scroll.y !== y) {
+                        Globals.MenuSectionScrolling = true;
+                        t.killTweensOf($MenuSection);
+                        t.to(scroll, duration, {
+                            y: y,
+                            ease: Power4.easeOut,
+                            onUpdate: function () {
+                                $MenuSection.scrollTop(scroll.y);
+                            },
+                            onComplete: function () {
+                                Globals.MenuSectionScrolling = false;
+                                if ($.isFunction(callback)) {
+                                    callback();
+                                }
+                            }
+                        });
+                    } else if ($.isFunction(callback)) {
+                        callback();
                     }
-                });
+                }
             },
             ShowSearchBar: function (duration, callback) {
                 duration = duration || 1.5;
@@ -2242,14 +2306,15 @@ function IsMobile() {
             },
             CategoryListFrameCategoryButtonOnClick: function (event) {
                 event.stopPropagation();
-                if (!Globals.MenuFrameTransiting) {
+                if (!Globals.MenuFrameTransiting && !Globals.MenuSectionScrolling) {
                     /** @type Category */
                     var category = $.data(this, 'Category');
                     $Objects.CategoryHeading.text(category.properties.title);
-                    Functions.GenerateEventListFrame(category);
-                    Functions.ShowMenuHeading('CategoryHeading', 1, Functions.ShowMenuBackButton);
-                    Functions.ShowMenuFrame($Objects.EventListFrame);
-                    Functions.MenuSectionScrollTo();
+                    Functions.MenuSectionScrollTo(0, 0.5, function () {
+                        Functions.GenerateEventListFrame(category);
+                        Functions.ShowMenuHeading('CategoryHeading', 1, Functions.ShowMenuBackButton);
+                        Functions.ShowMenuFrame($Objects.EventListFrame);
+                    });
                 }
             },
             EventButtonOnClick: function (e) {

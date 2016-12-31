@@ -22,30 +22,46 @@
         Globals = $.extend(w.Globals, {
             MenuSectionShowing: false,
             MenuSectionTransiting: false,
+            MenuSectionScrolling: false,
             MenuFrameTransiting: false
         }),
         Functions = $.extend(w.Functions, {
             /**
              * Animates the window to scroll back to the top.
-             * @param {Number} [y] - Y position to scroll the Menu Section to.
+             * @param {Number} [y] - Y position to scroll the Menu Section to, default is zero.
              * @param {Number} [duration]
+             * @param {Function} [callback]
              */
-            MenuSectionScrollTo: function (y, duration) {
+            MenuSectionScrollTo: function (y, duration, callback) {
                 y = y || 0;
                 duration = duration || 0.5;
-                /** @type jQuery */
-                var $MenuSection = $Objects.MenuSection;
-                var scroll = {
-                    y: $MenuSection.scrollTop()
-                };
-                t.killTweensOf($MenuSection);
-                t.to(scroll, duration, {
-                    y: y,
-                    ease: Power4.easeInOut,
-                    onUpdate: function () {
-                        $MenuSection.scrollTop(scroll.y);
+                callback = callback || undefined;
+                if (!Globals.MenuSectionScrolling) {
+                    /** @type jQuery */
+                    var $MenuSection = $Objects.MenuSection;
+                    var scroll = {
+                        y: $MenuSection.scrollTop()
+                    };
+                    if (scroll.y !== y) {
+                        Globals.MenuSectionScrolling = true;
+                        t.killTweensOf($MenuSection);
+                        t.to(scroll, duration, {
+                            y: y,
+                            ease: Power4.easeOut,
+                            onUpdate: function () {
+                                $MenuSection.scrollTop(scroll.y);
+                            },
+                            onComplete: function () {
+                                Globals.MenuSectionScrolling = false;
+                                if ($.isFunction(callback)) {
+                                    callback();
+                                }
+                            }
+                        });
+                    } else if ($.isFunction(callback)) {
+                        callback();
                     }
-                });
+                }
             },
             ShowSearchBar: function (duration, callback) {
                 duration = duration || 1.5;
@@ -502,14 +518,15 @@
             },
             CategoryListFrameCategoryButtonOnClick: function (event) {
                 event.stopPropagation();
-                if (!Globals.MenuFrameTransiting) {
+                if (!Globals.MenuFrameTransiting && !Globals.MenuSectionScrolling) {
                     /** @type Category */
                     var category = $.data(this, 'Category');
                     $Objects.CategoryHeading.text(category.properties.title);
-                    Functions.GenerateEventListFrame(category);
-                    Functions.ShowMenuHeading('CategoryHeading', 1, Functions.ShowMenuBackButton);
-                    Functions.ShowMenuFrame($Objects.EventListFrame);
-                    Functions.MenuSectionScrollTo();
+                    Functions.MenuSectionScrollTo(0, 0.5, function () {
+                        Functions.GenerateEventListFrame(category);
+                        Functions.ShowMenuHeading('CategoryHeading', 1, Functions.ShowMenuBackButton);
+                        Functions.ShowMenuFrame($Objects.EventListFrame);
+                    });
                 }
             },
             EventButtonOnClick: function (e) {

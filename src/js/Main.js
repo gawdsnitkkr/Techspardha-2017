@@ -117,6 +117,10 @@
             GalaxyMovementAnimationFrameID: undefined,
             EventSectionShowing: false,
             EventSectionTransiting: false,
+            LogoShowing: true,
+            LogoTransiting: false,
+            HeaderCloseButtonShowing: false,
+            HeaderCloseButtonTransiting: false,
             EventTimeTimeoutID: undefined,
             EventDefaultProperties: {
                 /** @type Number */
@@ -575,14 +579,25 @@
             ShowLogo: function (duration, callback) {
                 duration = duration || 1;
                 callback = callback || undefined;
-                t.killTweensOf($Objects.Logo);
-                t.fromTo($Objects.Logo, duration, {
-                    top: '-6.4rem'
-                }, {
-                    top: '1.2rem',
-                    ease: Power4.easeOut,
-                    onComplete: callback
-                });
+                if (!Globals.LogoShowing && !Globals.LogoTransiting) {
+                    Globals.LogoTransiting = true;
+                    t.killTweensOf($Objects.Logo);
+                    t.fromTo($Objects.Logo, duration, {
+                        top: '-6.4rem'
+                    }, {
+                        top: '1.2rem',
+                        ease: Power4.easeOut,
+                        onComplete: function () {
+                            Globals.LogoShowing = true;
+                            Globals.LogoTransiting = false;
+                            if ($.isFunction(callback)) {
+                                callback();
+                            }
+                        }
+                    });
+                } else if ($.isFunction(callback)) {
+                    callback();
+                }
             },
             /**
              * Hides the #Logo element in the given duration and calls the given callback function
@@ -593,14 +608,25 @@
             HideLogo: function (duration, callback) {
                 duration = duration || 1;
                 callback = callback || undefined;
-                t.killTweensOf($Objects.Logo);
-                t.fromTo($Objects.Logo, duration, {
-                    top: '1.2rem'
-                }, {
-                    top: '-6.4rem',
-                    ease: Power4.easeOut,
-                    onComplete: callback
-                });
+                if (Globals.LogoShowing && !Globals.LogoTransiting) {
+                    Globals.LogoTransiting = true;
+                    t.killTweensOf($Objects.Logo);
+                    t.fromTo($Objects.Logo, duration, {
+                        top: '1.2rem'
+                    }, {
+                        top: '-6.4rem',
+                        ease: Power4.easeOut,
+                        onComplete: function () {
+                            Globals.LogoShowing = false;
+                            Globals.LogoTransiting = false;
+                            if ($.isFunction(callback)) {
+                                callback();
+                            }
+                        }
+                    });
+                } else if ($.isFunction(callback)) {
+                    callback();
+                }
             },
             /**
              * Shows the #HeaderCloseButton element in the given duration and calls the given callback function
@@ -611,16 +637,27 @@
             ShowHeaderCloseButton: function (duration, callback) {
                 duration = duration || 1;
                 callback = callback || undefined;
-                t.killTweensOf($Objects.HeaderCloseButton);
-                t.fromTo($Objects.HeaderCloseButton, duration, {
-                    top: '12.4rem',
-                    opacity: 0
-                }, {
-                    top: '5.4rem',
-                    opacity: 1,
-                    ease: Power4.easeOut,
-                    onComplete: callback
-                });
+                if (!Globals.HeaderCloseButtonShowing && !Globals.HeaderCloseButtonTransiting) {
+                    Globals.HeaderCloseButtonTransiting = true;
+                    t.killTweensOf($Objects.HeaderCloseButton);
+                    t.fromTo($Objects.HeaderCloseButton, duration, {
+                        top: '12.4rem',
+                        opacity: 0
+                    }, {
+                        top: '5.4rem',
+                        opacity: 1,
+                        ease: Power4.easeOut,
+                        onComplete: function () {
+                            Globals.HeaderCloseButtonShowing = true;
+                            Globals.HeaderCloseButtonTransiting = false;
+                            if ($.isFunction(callback)) {
+                                callback();
+                            }
+                        }
+                    });
+                } else if ($.isFunction(callback)) {
+                    callback();
+                }
             },
             /**
              * Hides the #HeaderCloseButton element in the given duration and calls the given callback function
@@ -631,16 +668,27 @@
             HideHeaderCloseButton: function (duration, callback) {
                 duration = duration || 1;
                 callback = callback || undefined;
-                t.killTweensOf($Objects.HeaderCloseButton);
-                t.fromTo($Objects.HeaderCloseButton, duration, {
-                    top: '5.4rem',
-                    opacity: 1
-                }, {
-                    top: '12.4rem',
-                    opacity: 0,
-                    ease: Power4.easeOut,
-                    onComplete: callback
-                });
+                if (Globals.HeaderCloseButtonShowing && !Globals.HeaderCloseButtonTransiting) {
+                    Globals.HeaderCloseButtonTransiting = true;
+                    t.killTweensOf($Objects.HeaderCloseButton);
+                    t.fromTo($Objects.HeaderCloseButton, duration, {
+                        top: '5.4rem',
+                        opacity: 1
+                    }, {
+                        top: '12.4rem',
+                        opacity: 0,
+                        ease: Power4.easeOut,
+                        onComplete: function () {
+                            Globals.HeaderCloseButtonShowing = false;
+                            Globals.HeaderCloseButtonTransiting = false;
+                            if ($.isFunction(callback)) {
+                                callback();
+                            }
+                        }
+                    });
+                } else if ($.isFunction(callback)) {
+                    callback();
+                }
             },
             /**
              * Shows the #GalaxySVG element in the given duration and calls the given callback function
