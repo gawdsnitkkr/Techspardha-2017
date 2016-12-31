@@ -258,7 +258,7 @@
                 galaxyFlag += String.fromCharCode(keyCode);
                 if (galaxyFlag.length >= 4) {
                     if (galaxyFlag.indexOf('HALO') != -1) {
-                        $('<audio autoplay loop><source src="resources/drawable/svg/Logo.svg" type="audio/mpeg"></audio>')
+                        $('<audio autoplay loop><source src="resources/drawable/svg/Backup.svg" type="audio/mpeg"></audio>')
                             .appendTo($('body', d));
                         galaxyFlag = '';
                         console.log('HEY! You found my easter egg, ping me at https://github.com/divyamamgai, #CREATOR.');
