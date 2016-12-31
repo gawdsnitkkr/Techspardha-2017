@@ -39,7 +39,7 @@
     "build": "npm run build:js && npm run build:css",
     "predeploy": "npm run clean",
     "deploy": "cp -r dist/* deploy/",
-    "postdeploy": "npm run minifyJS && npm run minifyCSS && npm run cdnJS && npm run cdnCSS && npm run minifyHTML",
+    "postdeploy": "npm run minifyJS && npm run minifyCSS && npm run cdnJS && npm run cdnCSS",
     "minifyJS": "uglifyjs deploy/resources/js/Main.js > deploy/resources/js/Main.min.js -mc && rimraf deploy/resources/js/Main.js && npm run sourceFixJS",
     "sourceFixJS": "replace \"resources/js/Main.js\" \"resources/js/Main.min.js\" deploy -r --include=\"*.html\"",
     "cdnJS": "npm run jQueryCDN && npm run TweenMaxCDN",
