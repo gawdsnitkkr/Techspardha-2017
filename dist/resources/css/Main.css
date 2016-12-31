@@ -975,6 +975,49 @@ a:visited:active {
   top: 12.4rem;
   right: 2.4rem;
 }
+#Header #HeaderLinkContainer {
+  position: fixed;
+  height: 8.8rem;
+  width: auto;
+  top: 0;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+}
+#Header #HeaderLinkContainer a {
+  display: inline-block;
+  padding: 1rem;
+  text-align: center;
+  font-family: "Roboto Condensed", "Roboto Light", sans-serif;
+  font-weight: 400;
+  font-size: 1.4rem;
+  top: 4.4rem;
+  -webkit-transform: translateY(-50%) scale(1);
+  -moz-transform: translateY(-50%) scale(1);
+  -o-transform: translateY(-50%) scale(1);
+  -ms-transform: translateY(-50%) scale(1);
+  transform: translateY(-50%) scale(1);
+  -webkit-transition: color 0.3s ease-in-out, -webkit-transform 0.3s ease-in-out;
+  -moz-transition: color 0.3s ease-in-out, -moz-transform 0.3s ease-in-out;
+  -o-transition: color 0.3s ease-in-out, -o-transform 0.3s ease-in-out;
+  -ms-transition: color 0.3s ease-in-out, -ms-transform 0.3s ease-in-out;
+  transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+#Header #HeaderLinkContainer a:active {
+  -webkit-transform: translateY(-50%) scale(0.9);
+  -moz-transform: translateY(-50%) scale(0.9);
+  -o-transform: translateY(-50%) scale(0.9);
+  -ms-transform: translateY(-50%) scale(0.9);
+  transform: translateY(-50%) scale(0.9);
+}
+#Header #HeaderLinkContainer a .glyphicon {
+  display: block;
+  padding: 1rem;
+  font-size: 2rem;
+}
 .CloseButton {
   cursor: pointer;
 }
@@ -1023,6 +1066,25 @@ a:visited:active {
   -ms-transform: scale(0.8);
   transform: scale(0.8);
 }
+#GAWDSLink {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  font-size: 1.3rem;
+}
+#GAWDSLink .glyphicon {
+  display: inline-block;
+  top: 0.2rem;
+  padding-right: 0.5rem;
+  margin-left: -0.3rem;
+}
+#GAWDSLink svg {
+  display: block;
+  width: 12.8rem;
+  height: auto;
+  fill: #e7ab3b;
+  margin-top: 0.5rem;
+}
 @media screen and (max-width: 320px) {
   #Header #Logo {
     -webkit-transform: scale(0.8);
@@ -1035,6 +1097,11 @@ a:visited:active {
     -o-transform-origin: 100% 50%;
     -ms-transform-origin: 100% 50%;
     transform-origin: 100% 50%;
+  }
+}
+@media screen and (max-width: 1199px) {
+  #HeaderLinkContainer {
+    display: none;
   }
 }
 #SearchBar {
@@ -1870,7 +1937,7 @@ a:visited:active {
   display: inline-block;
   font-family: "Roboto Condensed", "Roboto Light", sans-serif;
   font-size: 2rem;
-  font-weight: 300;
+  font-weight: 400;
   padding: 1rem 1rem 0.5rem 1rem;
   -webkit-transform-origin: 0 50% 0;
   -moz-transform-origin: 0 50% 0;
@@ -1891,6 +1958,11 @@ a:visited:active {
   -o-transform: scale(0.9);
   -ms-transform: scale(0.9);
   transform: scale(0.9);
+}
+.MenuFrame .MenuLink .glyphicon {
+  font-size: 2.4rem;
+  top: 0.3rem;
+  padding: 0 1rem 0 0;
 }
 #CategoryListFrame .CategoryButton {
   padding-bottom: 1rem;

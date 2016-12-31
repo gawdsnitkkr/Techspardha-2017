@@ -27,8 +27,10 @@
     "stylus": "latest",
     "nib": "latest",
     "clean-css": "latest",
+    "html-minifier-cli": "latest",
     "rimraf": "latest",
-    "replace": "latest"
+    "replace": "latest",
+    "rename-files-cli": "latest"
   },
   "scripts": {
     "prebuild:js": "jshint src/js",
@@ -37,11 +39,17 @@
     "build": "npm run build:js && npm run build:css",
     "predeploy": "npm run clean",
     "deploy": "cp -r dist/* deploy/",
-    "postdeploy": "uglifyjs deploy/resources/js/Main.js > deploy/resources/js/Main.min.js -mc && rimraf deploy/resources/js/Main.js && npm run scriptSourceFix && npm run CDNBootstrap && npm run CDNjQuery && npm run CDNTweenMax",
-    "scriptSourceFix": "replace \"resources/js/Main.js\" \"resources/js/Main.min.js\" deploy -r --include=\"*.html\"",
-    "CDNBootstrap": "replace \"../node_modules/bootstrap/dist/css/bootstrap.min.css\" \"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\" deploy -r --include=\"*.html\"",
-    "CDNjQuery": "replace \"../node_modules/jquery/dist/jquery.min.js\" \"https://code.jquery.com/jquery-3.1.1.min.js\" deploy -r --include=\"*.html\"",
-    "CDNTweenMax": "replace \"../node_modules/gsap/src/minified/TweenMax.min.js\" \"https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenMax.min.js\" deploy -r --include=\"*.html\"",
+    "postdeploy": "npm run minifyJS && npm run minifyCSS && npm run cdnJS && npm run cdnCSS && npm run minifyHTML",
+    "minifyJS": "uglifyjs deploy/resources/js/Main.js > deploy/resources/js/Main.min.js -mc && rimraf deploy/resources/js/Main.js && npm run sourceFixJS",
+    "sourceFixJS": "replace \"resources/js/Main.js\" \"resources/js/Main.min.js\" deploy -r --include=\"*.html\"",
+    "cdnJS": "npm run jQueryCDN && npm run TweenMaxCDN",
+    "jQueryCDN": "replace \"../node_modules/jquery/dist/jquery.min.js\" \"https://code.jquery.com/jquery-3.1.1.min.js\" deploy -r --include=\"*.html\"",
+    "TweenMaxCDN": "replace \"../node_modules/gsap/src/minified/TweenMax.min.js\" \"https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenMax.min.js\" deploy -r --include=\"*.html\"",
+    "minifyCSS": "cleancss -o deploy/resources/css/Main.min.css deploy/resources/css/Main.css && rimraf deploy/resources/css/Main.css && npm run sourceFixCSS",
+    "sourceFixCSS": "replace \"resources/css/Main.css\" \"resources/css/Main.min.css\" deploy -r --include=\"*.html\"",
+    "cdnCSS": "npm run bootstrapCDN",
+    "bootstrapCDN": "replace \"../node_modules/bootstrap/dist/css/bootstrap.min.css\" \"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css\" deploy -r --include=\"*.html\"",
+    "minifyHTML": "htmlmin -o deploy/index.min.html deploy/index.html && rimraf deploy/index.html && rename-files \"index.min.html\" \"index.html\" --path=deploy/",
     "clean": "rimraf deploy/ && mkdir deploy"
   },
   "repository": {

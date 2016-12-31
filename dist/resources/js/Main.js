@@ -1025,6 +1025,15 @@ function IsMobile() {
                         bottom: '1rem',
                         ease: Power4.easeOut
                     });
+                    t.killTweensOf($Objects.GAWDSLink);
+                    t.fromTo($Objects.GAWDSLink, duration, {
+                        opacity: 0,
+                        bottom: '-8rem'
+                    }, {
+                        opacity: 1,
+                        bottom: '1rem',
+                        ease: Power4.easeOut
+                    });
                 }
             },
             /**
@@ -1068,6 +1077,15 @@ function IsMobile() {
                     }, {
                         opacity: 0,
                         bottom: '-11rem',
+                        ease: Power4.easeOut
+                    });
+                    t.killTweensOf($Objects.GAWDSLink);
+                    t.fromTo($Objects.GAWDSLink, duration, {
+                        opacity: 1,
+                        bottom: '1rem'
+                    }, {
+                        opacity: 0,
+                        bottom: '-8rem',
                         ease: Power4.easeOut
                     });
                 }
@@ -1529,7 +1547,7 @@ function IsMobile() {
             $Objects.EventContentParticipant.text(
                 properties.maxParticipants > 1 ? 'Team of up to ' + properties.maxParticipants : 'Solo');
             $Objects.EventContentFromDate.text(
-                padNumber(startTime.getDay()) + '/' +
+                padNumber(startTime.getDate()) + '/' +
                 padNumber(startTime.getMonth() + 1) + '/' +
                 startTime.getFullYear());
             $Objects.EventContentFromTime.text(
@@ -1537,7 +1555,7 @@ function IsMobile() {
                 padNumber(startTime.getMinutes()) + ':' +
                 padNumber(startTime.getSeconds()));
             $Objects.EventContentToDate.text(
-                padNumber(endTime.getDay()) + '/' +
+                padNumber(endTime.getDate()) + '/' +
                 padNumber(endTime.getMonth() + 1) + '/' +
                 endTime.getFullYear());
             $Objects.EventContentToTime.text(
@@ -1626,6 +1644,7 @@ function IsMobile() {
             $CategoryMarker.remove();
             $Objects.FieldOfView = $('#FieldOfView', $Objects.GalaxyMapSVG);
         }
+        $Objects.GAWDSLink = $('#GAWDSLink', d);
 
         $Objects.EventSection = $('#EventSection', d);
         if ($Objects.EventSection.length > 0) {
