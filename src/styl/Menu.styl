@@ -145,9 +145,16 @@
   .MenuLink {
     display: inline-block;
     font-family: $HeadingTwoFontFamily;
-    font-size: $HeadingTwoFontSize;
+    font-size: $HeadingThreeFontSize;
     font-weight: 300;
-    padding: 1rem;
+    padding: 1rem 1rem 0.5rem 1rem;
+    transform-origin: 0 50% 0;
+    &:hover {
+      transform: scale(1.1);
+    }
+    &:active {
+      transform: scale(0.9);
+    }
   }
 
 }

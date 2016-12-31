@@ -30,7 +30,7 @@ h2 {
   font-family: "Roboto Light", sans-serif;
   font-size: 2.4rem;
   font-weight: 300;
-  color: #cb2050;
+  color: #e84a5f;
   margin: 0.5rem 1rem;
   cursor: default;
   text-transform: capitalize;
@@ -53,6 +53,39 @@ p {
   color: #f4f4f4;
   text-align: justify;
   cursor: default;
+}
+a,
+a:link,
+a:visited {
+  text-decoration: none;
+  color: #45ada8;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -o-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+  -webkit-transition: color 0.3s ease-in-out, -webkit-transform 0.3s ease-in-out;
+  -moz-transition: color 0.3s ease-in-out, -moz-transform 0.3s ease-in-out;
+  -o-transition: color 0.3s ease-in-out, -o-transform 0.3s ease-in-out;
+  -ms-transition: color 0.3s ease-in-out, -ms-transform 0.3s ease-in-out;
+  transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+a:hover,
+a:link:hover,
+a:visited:hover {
+  text-decoration: none;
+  color: #e7ab3b;
+}
+a:active,
+a:link:active,
+a:visited:active {
+  text-decoration: none;
+  color: #c28618;
+  -webkit-transform: scale(0.9);
+  -moz-transform: scale(0.9);
+  -o-transform: scale(0.9);
+  -ms-transform: scale(0.9);
+  transform: scale(0.9);
 }
 #LoadingFrame {
   margin: 0;
@@ -570,7 +603,7 @@ p {
     -o-transform: rotate(472.5deg) scale(1.1);
     -ms-transform: rotate(472.5deg) scale(1.1);
     transform: rotate(472.5deg) scale(1.1);
-    fill: #cb2050;
+    fill: #e84a5f;
   }
   100% {
     -webkit-transform: rotate(360deg) scale(1);
@@ -604,7 +637,7 @@ p {
     -o-transform: rotate(472.5deg) scale(1.1);
     -ms-transform: rotate(472.5deg) scale(1.1);
     transform: rotate(472.5deg) scale(1.1);
-    fill: #cb2050;
+    fill: #e84a5f;
   }
   100% {
     -webkit-transform: rotate(360deg) scale(1);
@@ -638,7 +671,7 @@ p {
     -o-transform: rotate(472.5deg) scale(1.1);
     -ms-transform: rotate(472.5deg) scale(1.1);
     transform: rotate(472.5deg) scale(1.1);
-    fill: #cb2050;
+    fill: #e84a5f;
   }
   100% {
     -webkit-transform: rotate(360deg) scale(1);
@@ -672,7 +705,7 @@ p {
     -o-transform: rotate(472.5deg) scale(1.1);
     -ms-transform: rotate(472.5deg) scale(1.1);
     transform: rotate(472.5deg) scale(1.1);
-    fill: #cb2050;
+    fill: #e84a5f;
   }
   100% {
     -webkit-transform: rotate(360deg) scale(1);
@@ -706,7 +739,7 @@ p {
     -o-transform: rotate(-112.5deg) scale(1);
     -ms-transform: rotate(-112.5deg) scale(1);
     transform: rotate(-112.5deg) scale(1);
-    stroke: #cb2050;
+    stroke: #e84a5f;
   }
   100% {
     -webkit-transform: rotate(0deg) scale(1);
@@ -740,7 +773,7 @@ p {
     -o-transform: rotate(-112.5deg) scale(1);
     -ms-transform: rotate(-112.5deg) scale(1);
     transform: rotate(-112.5deg) scale(1);
-    stroke: #cb2050;
+    stroke: #e84a5f;
   }
   100% {
     -webkit-transform: rotate(0deg) scale(1);
@@ -774,7 +807,7 @@ p {
     -o-transform: rotate(-112.5deg) scale(1);
     -ms-transform: rotate(-112.5deg) scale(1);
     transform: rotate(-112.5deg) scale(1);
-    stroke: #cb2050;
+    stroke: #e84a5f;
   }
   100% {
     -webkit-transform: rotate(0deg) scale(1);
@@ -808,7 +841,7 @@ p {
     -o-transform: rotate(-112.5deg) scale(1);
     -ms-transform: rotate(-112.5deg) scale(1);
     transform: rotate(-112.5deg) scale(1);
-    stroke: #cb2050;
+    stroke: #e84a5f;
   }
   100% {
     -webkit-transform: rotate(0deg) scale(1);
@@ -1394,7 +1427,7 @@ p {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0,0,0,0.8);
+  background-color: rgba(0,0,0,0.85);
   font-size: 1.6rem;
   color: #f4f4f4;
   overflow-x: hidden;
@@ -1405,7 +1438,7 @@ p {
 }
 #EventContentContainer h4 {
   font-family: "Roboto Condensed", "Roboto Light", sans-serif;
-  color: #cb2050;
+  color: #e84a5f;
   font-weight: 400;
 }
 #EventContentContainer .glyphicon {
@@ -1752,7 +1785,7 @@ p {
   filter: alpha(opacity=0);
 }
 #MenuHeadingFrame #MenuBackButton svg {
-  fill: #cb2050;
+  fill: #e84a5f;
   width: 3.2rem;
   height: 3.2rem;
   -webkit-transform: rotate(0deg);
@@ -1827,6 +1860,37 @@ p {
   -ms-filter: none;
   filter: none;
   left: 0;
+}
+.MenuFrame .LinksHeading {
+  display: inline-block;
+  margin: 2rem 0 0.5rem 0;
+  padding: 0;
+}
+.MenuFrame .MenuLink {
+  display: inline-block;
+  font-family: "Roboto Condensed", "Roboto Light", sans-serif;
+  font-size: 2rem;
+  font-weight: 300;
+  padding: 1rem 1rem 0.5rem 1rem;
+  -webkit-transform-origin: 0 50% 0;
+  -moz-transform-origin: 0 50% 0;
+  -o-transform-origin: 0 50% 0;
+  -ms-transform-origin: 0 50% 0;
+  transform-origin: 0 50% 0;
+}
+.MenuFrame .MenuLink:hover {
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -o-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+.MenuFrame .MenuLink:active {
+  -webkit-transform: scale(0.9);
+  -moz-transform: scale(0.9);
+  -o-transform: scale(0.9);
+  -ms-transform: scale(0.9);
+  transform: scale(0.9);
 }
 #CategoryListFrame .CategoryButton {
   padding-bottom: 1rem;
@@ -1984,7 +2048,7 @@ p {
   padding-left: 0.5rem;
 }
 .EventButton .EventButtonContainer:active svg {
-  fill: #cb2050;
+  fill: #e84a5f;
   -webkit-transform: scale(0.8);
   -moz-transform: scale(0.8);
   -o-transform: scale(0.8);
@@ -1995,7 +2059,7 @@ p {
   margin: auto;
 }
 #SearchListFrame #NoSearchResults h3 {
-  color: #cb2050;
+  color: #e84a5f;
 }
 #ContactUsFrame .ContactContainer {
   padding-bottom: 2rem;
