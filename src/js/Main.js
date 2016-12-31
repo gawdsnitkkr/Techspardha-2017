@@ -539,9 +539,11 @@
                 }
             },
             EventOnClick: function () {
-                /** @type Event */
-                var event = $.data(this, 'Event');
-                event.showDetails();
+                if (Globals.GalaxySVGShowing && !Globals.EventSectionShowing && !Globals.MenuSectionShowing) {
+                    /** @type Event */
+                    var event = $.data(this, 'Event');
+                    event.showDetails();
+                }
             },
             /**
              * Shows the #Logo element in the given duration and calls the given callback function

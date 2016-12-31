@@ -410,7 +410,8 @@
                 Functions.ShowMenuSection();
             },
             GenerateCategoryListFrame: function () {
-                var $CategoryListFrame = $Objects.CategoryListFrame.detach().empty(),
+                var $CategoryListContainerParent = $Objects.CategoryListContainer.parent(),
+                    $CategoryListContainer = $Objects.CategoryListContainer.detach().empty(),
                     categories = Globals.Categories,
                     categoryCount = categories.length,
                     $CategoryButtonCache = $Cache.CategoryButton,
@@ -420,9 +421,9 @@
                     category = categories[categoryIndex];
                     $.data(($CategoryButton = $CategoryButtonCache.clone()).get(0), 'Category', category);
                     $CategoryButton.find('text').text(category.properties.title);
-                    $CategoryListFrame.append($CategoryButton);
+                    $CategoryListContainer.append($CategoryButton);
                 }
-                $Objects.EventListFrame.before($CategoryListFrame);
+                $CategoryListContainerParent.prepend($CategoryListContainer);
             },
             /**
              * Generates the Events list in the #EventListFrame for the given Category object.
@@ -578,9 +579,12 @@
             }
             $Objects.CategoryListFrame = $('#CategoryListFrame', $Objects.MenuSection);
             if ($Objects.CategoryListFrame.length > 0) {
-                var $CategoryButton = $('.CategoryButton', $Objects.CategoryListFrame);
-                $Cache.CategoryButton = $CategoryButton.clone();
-                $CategoryButton.remove();
+                $Objects.CategoryListContainer = $('#CategoryListContainer', $Objects.CategoryListFrame);
+                if ($Objects.CategoryListContainer.length > 0) {
+                    var $CategoryButton = $('.CategoryButton', $Objects.CategoryListContainer);
+                    $Cache.CategoryButton = $CategoryButton.clone();
+                    $CategoryButton.remove();
+                }
             }
             $Objects.EventListFrame = $('#EventListFrame', $Objects.MenuSection);
             if ($Objects.EventListFrame.length > 0) {

@@ -71,6 +71,22 @@ p {
   cursor: default;
 }
 
+a, a:link, a:visited {
+  text-decoration: none;
+  color: $SkyBlue;
+  transform: scale(1);
+  transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+  &:hover {
+    text-decoration: none;
+    color: $Yellow;
+  }
+  &:active {
+    text-decoration: none;
+    color darken($Yellow, 25%);
+    transform: scale(0.9);
+  }
+}
+
 @import 'Loading.styl'
 
 #Header {
