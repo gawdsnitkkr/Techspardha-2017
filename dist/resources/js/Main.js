@@ -422,8 +422,10 @@ function IsMobile() {
     var $Cache = {},
         $Objects = {};
 
-    var floor = Math.floor,
+    var random = Math.random,
+        floor = Math.floor,
         round = Math.round,
+        abs = Math.abs,
         sin = Math.sin,
         cos = Math.cos,
         galaxyFlag = '',
@@ -432,8 +434,9 @@ function IsMobile() {
     var GalaxyPosition = new Point(0, 0),
         Constants = {
             API_ADDRESS: 'http://techspardha.org/api',
-            GALAXY_DIAMETER: 2048,
-            GALAXY_RADIUS: undefined,
+            GALAXY_SIZE: 2048,
+            GALAXY_HALF_SIZE: undefined,
+            CATEGORY_POINT_COUNT: undefined,
             GALAXY_VIEW_BOX_WIDTH: 1280,
             GALAXY_VIEW_BOX_HALF_WIDTH: undefined,
             GALAXY_VIEW_BOX_HEIGHT: 720,
@@ -449,16 +452,23 @@ function IsMobile() {
             GALAXY_MAP_VIEW_BOX_HALF_HEIGHT: undefined,
             GALAXY_MAP_WIDTH_NORMALIZE: undefined,
             GALAXY_MAP_HEIGHT_NORMALIZE: undefined,
-            CATEGORY_DIAMETER_MULTIPLIER: 48,
-            CATEGORY_DIAMETER_MINIMUM: 128,
-            CATEGORY_DIAMETER_MAXIMUM: 640,
+            CATEGORY_SIZE_MULTIPLIER: 48,
+            CATEGORY_SIZE_MINIMUM: 128,
+            CATEGORY_SIZE_MAXIMUM: 640,
+            CATEGORY_POSITION_SHIFT_X: undefined,
+            CATEGORY_POSITION_SHIFT_Y: undefined,
+            EVENT_VIRTUAL_WIDTH: 128,
+            EVENT_VIRTUAL_HEIGHT: 64,
+            EVENT_MINIMUM_Y_NEGATIVE: undefined,
+            EVENT_MINIMUM_Y_POSITIVE: undefined,
+            MAXIMUM_POSITION_ITERATION: 1024,
             MOUSE_DELTA_THRESHOLD: 5,
             GALAXY_MOVEMENT_SPEED: 25,
             PI: Math.PI,
             HALF_PI: Math.PI / 2,
             TWO_PI: Math.PI * 2,
             THREE_BY_TWO_PI: Math.PI * 3 / 2,
-            LAUNCH_DATE: new Date('12/28/2016 05:30 AM'),
+            LAUNCH_DATE: new Date('12/31/2016 07:00 PM'),
             ONE_DAY_IN_MILLISECONDS: 86400000,
             ONE_HOUR_IN_MILLISECONDS: 3600000
         },
@@ -528,8 +538,6 @@ function IsMobile() {
                 /** @type String */
                 title: 'Category'
             },
-            /** @type Point[] */
-            CategoriesPosition: [],
             /** @type Category[] */
             Categories: [],
             CategoryIDToIndexMap: {},
@@ -693,7 +701,7 @@ function IsMobile() {
                     }
                 }
             },
-            WindowOnTouchEnd: function (event) {
+            WindowOnTouchEnd: function () {
                 if (Globals.GalaxySVGShowing && !Globals.MenuSectionShowing && !Globals.EventSectionShowing) {
                     Functions.CancelGalaxyMovementAnimationLoop();
                 }
@@ -1280,15 +1288,17 @@ function IsMobile() {
                                 success: function (response) {
                                     response = Functions.ExtendResponse(response);
                                     if (response.status.code === 200) {
+
                                         var events = response.data,
                                             eventCount = events.length,
-                                            event,
-                                            categoryEventMap = {},
                                             categoryIndex,
-                                            category,
                                             categoryID,
-                                            CategoriesPosition = Globals.CategoriesPosition = [],
-                                            CategoryIDToIndexMap = Globals.CategoryIDToIndexMap = {};
+                                            categoryEventMap = {},
+                                            CategoryIDToIndexMap = Globals.CategoryIDToIndexMap = {},
+                                            event,
+                                            category,
+                                            Categories = Globals.Categories;
+
                                         // Initialize the Category-Event Map.
                                         for (categoryIndex = 0; categoryIndex < categoryCount; categoryIndex++) {
                                             categoryID = categories[categoryIndex].Id;
@@ -1296,10 +1306,8 @@ function IsMobile() {
                                             // Will be needed later to get Category object from the Category ID
                                             // retrieved by the Site's API.
                                             CategoryIDToIndexMap[categoryID] = categoryIndex;
-                                            CategoriesPosition.push(new Point(
-                                                (Math.random() - 0.5) * Constants.GALAXY_DIAMETER + Constants.GALAXY_VIEW_BOX_HALF_WIDTH,
-                                                (Math.random() - 0.5) * Constants.GALAXY_DIAMETER + Constants.GALAXY_VIEW_BOX_HALF_HEIGHT));
                                         }
+
                                         // Populate the Category-Event Map.
                                         for (var eventIndex = 0; eventIndex < eventCount; eventIndex++) {
                                             event = events[eventIndex];
@@ -1321,35 +1329,34 @@ function IsMobile() {
                                                 coordinators: event.Coordinators
                                             });
                                         }
-                                        /*
-                                         The bellow statement is much faster, but since we need to maintain the
-                                         reference of the original array intact we have no choice.
-                                         Well let's hope we do not have to call Initialize() more than once, :P.
-                                         w.Categories = Globals.Categories = [];
-                                         */
-                                        var Categories = Globals.Categories;
+
+                                        // Reset Categories
                                         Categories.length = 0;
-                                        // This will be populated by the constructor of the Category Object.
+
+                                        // This will be populated by the setEvents() function of the Category.
                                         Globals.EventIDToIndexMap = {};
+
                                         for (categoryIndex = 0; categoryIndex < categoryCount; categoryIndex++) {
                                             category = categories[categoryIndex];
-                                            Categories.push(new Category(categoryIndex, {
+                                            Categories.push(new Category({
                                                 id: category.Id,
                                                 title: category.Name.toLowerCase().capitalize()
                                             }, categoryEventMap[category.Id]));
                                         }
+
                                         $(d).trigger('initialized');
+
                                     }
                                 },
                                 error: function () {
-                                    console.log('Error Events [Retrying in 2 seconds...] :: ' + arguments);
+                                    console.log('Error Events [Retrying in 2 seconds...] :: ', arguments);
                                     setTimeout(Functions.Initialize, 2000);
                                 }
                             });
                         }
                     },
                     error: function () {
-                        console.log('Error Categories [Retrying in 2 seconds...] :: ' + arguments);
+                        console.log('Error Categories [Retrying in 2 seconds...] :: ', arguments);
                         setTimeout(Functions.Initialize, 2000);
                     }
                 });
@@ -1383,17 +1390,16 @@ function IsMobile() {
 
     /**
      * Category entity.
-     * @param {Number} index - Index of the Category, uniquely identifying the Category.
      * @param {Object} properties - Category property object.
      * @param {Object[]} eventPropertiesArray - An array of event property as received by the server-side scripts.
      * @constructor
      */
-    var Category = function (index, properties, eventPropertiesArray) {
+    var Category = function (properties, eventPropertiesArray) {
         this.properties = $.extend({}, Globals.CategoryDefaultProperties, properties);
-        this.position = Globals.CategoriesPosition[index];
         /** @type Event[] */
         this.events = [];
         this.setEvents(eventPropertiesArray);
+        this.calculatePosition();
         this.initialize();
     };
     Category.prototype = {
@@ -1406,6 +1412,12 @@ function IsMobile() {
                 }).appendTo($Objects.GalaxyContainer);
             $.data($category.get(0), 'Category', this);
             this.$title = $category.find('text');
+            $category.find('rect').attr({
+                x: -this.properties.size / 2,
+                y: -this.properties.size / 2,
+                width: this.properties.size,
+                height: this.properties.size
+            });
             this.appendEvents(this.show);
             $Cache.CategoryMarker.clone().attr({
                 /*
@@ -1440,19 +1452,53 @@ function IsMobile() {
                 eventCount = eventPropertiesArray.length,
                 eventIndex = 0,
                 eventProperty,
-                diameter = this.diameter = Constants.CATEGORY_DIAMETER_MULTIPLIER * eventCount;
-            if (diameter < Constants.CATEGORY_DIAMETER_MINIMUM) {
-                this.diameter = Constants.CATEGORY_DIAMETER_MINIMUM;
-            } else if (diameter > Constants.CATEGORY_DIAMETER_MAXIMUM) {
-                this.diameter = Constants.CATEGORY_DIAMETER_MAXIMUM;
+                size = this.size = eventCount * Constants.CATEGORY_SIZE_MULTIPLIER;
+
+            if (size < Constants.CATEGORY_SIZE_MINIMUM) {
+                this.size = Constants.CATEGORY_SIZE_MINIMUM;
+            } else if (size > Constants.CATEGORY_SIZE_MAXIMUM) {
+                this.size = Constants.CATEGORY_SIZE_MAXIMUM;
             }
+
             for (; eventIndex < eventCount; eventIndex++) {
                 eventProperty = eventPropertiesArray[eventIndex];
                 // Will be need later to get Event object from EventID and CategoryID in O(1) time.
                 // Note : Different Events will have the same index, and hence it cannot be used alone to identify
                 // an event. Instead the combination of Category ID and Event ID is used.
                 Globals.EventIDToIndexMap[eventProperty.id] = eventIndex;
-                events.push(new Event(this, eventIndex, eventProperty));
+                events.push(new Event(this, eventProperty));
+            }
+            return this;
+        },
+        calculatePosition: function () {
+            var size = this.size,
+                position = this.position = new Point(0, 0),
+                iteration = 0,
+                MAXIMUM_POSITION_ITERATION = Constants.MAXIMUM_POSITION_ITERATION,
+                GALAXY_SIZE = Constants.GALAXY_SIZE,
+                CATEGORY_POSITION_SHIFT_X = Constants.CATEGORY_POSITION_SHIFT_X,
+                CATEGORY_POSITION_SHIFT_Y = Constants.CATEGORY_POSITION_SHIFT_Y,
+                categoryIndex,
+                Categories = Globals.Categories,
+                CategoryCount = Categories.length,
+                Category,
+                isSafe;
+            while (iteration < MAXIMUM_POSITION_ITERATION) {
+                position.x = floor(random() * GALAXY_SIZE) + CATEGORY_POSITION_SHIFT_X;
+                position.y = floor(random() * GALAXY_SIZE) + CATEGORY_POSITION_SHIFT_Y;
+                isSafe = true;
+                for (categoryIndex = 0; categoryIndex < CategoryCount; categoryIndex++) {
+                    Category = Categories[categoryIndex];
+                    if ((abs(Category.position.x - position.x) * 2 < (Category.size + size)) &&
+                        (abs(Category.position.y - position.y) * 2 < (Category.size + size))) {
+                        isSafe = false;
+                        break;
+                    }
+                }
+                if (isSafe) {
+                    break;
+                }
+                iteration++;
             }
             return this;
         },
@@ -1535,22 +1581,19 @@ function IsMobile() {
     /**
      * Event entity.
      * @param {Category} category - Category entity which the event belongs to.
-     * @param {Number} index - Index of the Event, uniquely identifying the Event.
      * @param {Object} properties - Event property object.
      * @constructor
      */
-    var Event = function (category, index, properties) {
+    var Event = function (category, properties) {
         this.category = category;
         this.properties = $.extend({}, Globals.EventDefaultProperties, properties);
+        this.calculatePosition();
         this.initialize();
     };
     Event.prototype = {
         initialize: function () {
             var properties = this.properties,
-                diameter = this.category.diameter,
-                position = this.position = new Point(
-                    diameter * (Math.random() - 0.5),
-                    diameter * (Math.random() - 0.5)),
+                position = this.position,
                 $event = this.$event = Functions.$CreateEvent(
                     properties.title,
                     (properties.color = Functions.GenerateRandomColor(
@@ -1566,6 +1609,47 @@ function IsMobile() {
             $.data($event.get(0), 'Event', this);
             this.$title = $event.find('text');
             return this;
+        },
+        calculatePosition: function () {
+            var position = this.position = new Point(0, 0),
+                iteration = 0,
+                MAXIMUM_POSITION_ITERATION = Constants.MAXIMUM_POSITION_ITERATION,
+                EVENT_MINIMUM_Y_NEGATIVE = Constants.EVENT_MINIMUM_Y_NEGATIVE,
+                EVENT_MINIMUM_Y_POSITIVE = Constants.EVENT_MINIMUM_Y_POSITIVE,
+                y,
+                EVENT_VIRTUAL_WIDTH = Constants.EVENT_VIRTUAL_WIDTH,
+                EVENT_VIRTUAL_HEIGHT = Constants.EVENT_VIRTUAL_HEIGHT,
+                categorySize = this.category.size,
+                events = this.category.events,
+                eventCount = events.length,
+                eventIndex,
+                eventPosition,
+                isSafe;
+            while (iteration < MAXIMUM_POSITION_ITERATION) {
+                position.x = floor(categorySize * (random() - 0.5));
+                y = floor(categorySize * (random() - 0.5));
+                if ((y > EVENT_MINIMUM_Y_NEGATIVE) && (y < EVENT_MINIMUM_Y_POSITIVE)) {
+                    if (y >= 0) {
+                        y = EVENT_MINIMUM_Y_POSITIVE;
+                    } else {
+                        y = EVENT_MINIMUM_Y_NEGATIVE;
+                    }
+                }
+                position.y = y;
+                isSafe = true;
+                for (eventIndex = 0; eventIndex < eventCount; eventIndex++) {
+                    eventPosition = events[eventIndex].position;
+                    if ((abs(eventPosition.x - position.x) < EVENT_VIRTUAL_WIDTH) &&
+                        (abs(eventPosition.y - position.y) < EVENT_VIRTUAL_HEIGHT)) {
+                        isSafe = false;
+                        break;
+                    }
+                }
+                if (isSafe) {
+                    break;
+                }
+                iteration++;
+            }
         },
         /**
          * Transits the event star in.
@@ -1667,10 +1751,11 @@ function IsMobile() {
     };
 
     // Define required constants using already defined constants.
-    Constants.GALAXY_RADIUS = Constants.GALAXY_DIAMETER / 2;
+    Constants.GALAXY_HALF_SIZE = Constants.GALAXY_SIZE / 2;
+    Constants.CATEGORY_POINT_COUNT = Constants.GALAXY_SIZE * Constants.GALAXY_SIZE;
     Constants.GALAXY_VIEW_BOX_HALF_WIDTH = Constants.GALAXY_VIEW_BOX_WIDTH / 2;
     Constants.GALAXY_VIEW_BOX_HALF_HEIGHT = Constants.GALAXY_VIEW_BOX_HEIGHT / 2;
-    Constants.GALAXY_OUTER_RADIUS = Constants.GALAXY_RADIUS + Constants.CATEGORY_DIAMETER_MAXIMUM;
+    Constants.GALAXY_OUTER_RADIUS = Constants.GALAXY_HALF_SIZE + Constants.CATEGORY_SIZE_MAXIMUM;
     Constants.GALAXY_OUTER_MINIMUM_X = Constants.GALAXY_VIEW_BOX_HALF_WIDTH - Constants.GALAXY_OUTER_RADIUS;
     Constants.GALAXY_OUTER_MINIMUM_Y = Constants.GALAXY_VIEW_BOX_HALF_HEIGHT - Constants.GALAXY_OUTER_RADIUS;
     Constants.GALAXY_OUTER_MAXIMUM_X = Constants.GALAXY_VIEW_BOX_HALF_WIDTH + Constants.GALAXY_OUTER_RADIUS;
@@ -1679,6 +1764,13 @@ function IsMobile() {
     Constants.GALAXY_MAP_VIEW_BOX_HALF_HEIGHT = Constants.GALAXY_MAP_VIEW_BOX_HEIGHT / 2;
     Constants.GALAXY_MAP_WIDTH_NORMALIZE = (Constants.GALAXY_VIEW_BOX_HALF_WIDTH / Constants.GALAXY_OUTER_RADIUS) * Constants.GALAXY_MAP_VIEW_BOX_HALF_WIDTH;
     Constants.GALAXY_MAP_HEIGHT_NORMALIZE = (Constants.GALAXY_VIEW_BOX_HALF_HEIGHT / Constants.GALAXY_OUTER_RADIUS) * Constants.GALAXY_MAP_VIEW_BOX_HALF_HEIGHT;
+    Constants.CATEGORY_POSITION_SHIFT_X = Constants.GALAXY_VIEW_BOX_HALF_WIDTH - Constants.GALAXY_HALF_SIZE;
+    Constants.CATEGORY_POSITION_SHIFT_Y = Constants.GALAXY_VIEW_BOX_HALF_HEIGHT - Constants.GALAXY_HALF_SIZE;
+    /*
+     24 is the Font Size of the Category's text element and hence we need to make sure no Event is positioned above it.
+     */
+    Constants.EVENT_MINIMUM_Y_NEGATIVE = -(24 + Constants.EVENT_VIRTUAL_HEIGHT);
+    Constants.EVENT_MINIMUM_Y_POSITIVE = 32;
 
     // Give truly global references to required variables, objects, functions and classes.
     w.Constants = Constants;

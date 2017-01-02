@@ -132,6 +132,10 @@
 
   }
 
+  #EventContentVenueContainer {
+    margin-top: 0.5rem;
+  }
+
   .PieTickerContainer {
 
     text-align: center;
@@ -196,6 +200,8 @@
       .Name {
         font-size: 1.6rem;
         font-weight: 400;
+        text-overflow: ellipsis;
+        text-transform: capitalize;
       }
       .Email {
         display: block;
@@ -204,6 +210,7 @@
         text-decoration: none;
         color: $SkyBlue;
         cursor: pointer;
+        text-overflow: ellipsis;
         transition: color 0.3s ease-in-out;
         &:hover {
           color: lighten($SkyBlue, 25%);
@@ -219,6 +226,7 @@
         text-decoration: none;
         color: lighten($DarkSkyBlue, 50%);
         cursor: pointer;
+        text-overflow: ellipsis;
         transition: color 0.3s ease-in-out;
         &:hover {
           color: lighten($DarkSkyBlue, 75%);

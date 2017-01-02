@@ -1186,6 +1186,10 @@ a:visited:active {
 }
 #GalaxySVG .Category > text {
   font-family: "Roboto Condensed", "Roboto Light", sans-serif;
+/*
+        Note: This font-size is being used in the logic of collision detection for
+        the case of the Events in the form of a constant only change if you know what you are doing.
+      */
   font-size: 2.4rem;
   font-weight: 300;
   fill: #547980;
@@ -1532,6 +1536,9 @@ a:visited:active {
   font-weight: 600;
   color: #e7ab3b;
 }
+#EventContentContainer #EventContentVenueContainer {
+  margin-top: 0.5rem;
+}
 #EventContentContainer .PieTickerContainer {
   text-align: center;
   cursor: default;
@@ -1587,6 +1594,9 @@ a:visited:active {
 #EventContentContainer #CoordinatorContainer .Coordinator .Name {
   font-size: 1.6rem;
   font-weight: 400;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  text-transform: capitalize;
 }
 #EventContentContainer #CoordinatorContainer .Coordinator .Email {
   display: block;
@@ -1595,6 +1605,8 @@ a:visited:active {
   text-decoration: none;
   color: #45ada8;
   cursor: pointer;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
   -webkit-transition: color 0.3s ease-in-out;
   -moz-transition: color 0.3s ease-in-out;
   -o-transition: color 0.3s ease-in-out;
@@ -1614,6 +1626,8 @@ a:visited:active {
   text-decoration: none;
   color: #a5bfc4;
   cursor: pointer;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
   -webkit-transition: color 0.3s ease-in-out;
   -moz-transition: color 0.3s ease-in-out;
   -o-transition: color 0.3s ease-in-out;
