@@ -453,14 +453,14 @@ function IsMobile() {
             GALAXY_MAP_WIDTH_NORMALIZE: undefined,
             GALAXY_MAP_HEIGHT_NORMALIZE: undefined,
             CATEGORY_SIZE_MULTIPLIER: 48,
-            CATEGORY_SIZE_MINIMUM: 128,
-            CATEGORY_SIZE_MAXIMUM: 640,
+            CATEGORY_SIZE_MINIMUM: 256,
+            CATEGORY_SIZE_MAXIMUM: 768,
             CATEGORY_POSITION_SHIFT_X: undefined,
             CATEGORY_POSITION_SHIFT_Y: undefined,
             EVENT_VIRTUAL_WIDTH: 128,
             EVENT_VIRTUAL_HEIGHT: 64,
             EVENT_MINIMUM_Y_NEGATIVE: undefined,
-            EVENT_MINIMUM_Y_POSITIVE: undefined,
+            EVENT_MINIMUM_Y_ABSOLUTE: undefined,
             MAXIMUM_POSITION_ITERATION: 1024,
             MOUSE_DELTA_THRESHOLD: 5,
             GALAXY_MOVEMENT_SPEED: 25,
@@ -1412,12 +1412,7 @@ function IsMobile() {
                 }).appendTo($Objects.GalaxyContainer);
             $.data($category.get(0), 'Category', this);
             this.$title = $category.find('text');
-            $category.find('rect').attr({
-                x: -this.properties.size / 2,
-                y: -this.properties.size / 2,
-                width: this.properties.size,
-                height: this.properties.size
-            });
+            $category.find('circle').attr('r', this.size / 2);
             this.appendEvents(this.show);
             $Cache.CategoryMarker.clone().attr({
                 /*
@@ -1614,8 +1609,7 @@ function IsMobile() {
             var position = this.position = new Point(0, 0),
                 iteration = 0,
                 MAXIMUM_POSITION_ITERATION = Constants.MAXIMUM_POSITION_ITERATION,
-                EVENT_MINIMUM_Y_NEGATIVE = Constants.EVENT_MINIMUM_Y_NEGATIVE,
-                EVENT_MINIMUM_Y_POSITIVE = Constants.EVENT_MINIMUM_Y_POSITIVE,
+                EVENT_MINIMUM_Y_ABSOLUTE = Constants.EVENT_MINIMUM_Y_ABSOLUTE,
                 y,
                 EVENT_VIRTUAL_WIDTH = Constants.EVENT_VIRTUAL_WIDTH,
                 EVENT_VIRTUAL_HEIGHT = Constants.EVENT_VIRTUAL_HEIGHT,
@@ -1628,11 +1622,11 @@ function IsMobile() {
             while (iteration < MAXIMUM_POSITION_ITERATION) {
                 position.x = floor(categorySize * (random() - 0.5));
                 y = floor(categorySize * (random() - 0.5));
-                if ((y > EVENT_MINIMUM_Y_NEGATIVE) && (y < EVENT_MINIMUM_Y_POSITIVE)) {
+                if ((y > -EVENT_MINIMUM_Y_ABSOLUTE) && (y < EVENT_MINIMUM_Y_ABSOLUTE)) {
                     if (y >= 0) {
-                        y = EVENT_MINIMUM_Y_POSITIVE;
+                        y = EVENT_MINIMUM_Y_ABSOLUTE;
                     } else {
-                        y = EVENT_MINIMUM_Y_NEGATIVE;
+                        y = -EVENT_MINIMUM_Y_ABSOLUTE;
                     }
                 }
                 position.y = y;
@@ -1695,10 +1689,12 @@ function IsMobile() {
             $Objects.EventSVGStar.css('fill', properties.color);
             $Objects.EventContentTitle.text(properties.title);
             $Objects.EventContentCategory.text(this.category.properties.title);
-            $Objects.EventContentDescription.text(properties.description);
-            $Objects.EventContentRules.text(properties.rules);
+            // Using html() because the backend people are lazy and don't want to make it secure.
+            $Objects.EventContentDescription.html(properties.description);
+            $Objects.EventContentRules.html(properties.rules);
             $Objects.EventContentParticipant.text(
                 properties.maxParticipants > 1 ? 'Team of up to ' + properties.maxParticipants : 'Solo');
+            $Objects.EventContentVenue.text(properties.venue);
             $Objects.EventContentFromDate.text(
                 padNumber(startTime.getDate()) + '/' +
                 padNumber(startTime.getMonth() + 1) + '/' +
@@ -1769,8 +1765,7 @@ function IsMobile() {
     /*
      24 is the Font Size of the Category's text element and hence we need to make sure no Event is positioned above it.
      */
-    Constants.EVENT_MINIMUM_Y_NEGATIVE = -(24 + Constants.EVENT_VIRTUAL_HEIGHT);
-    Constants.EVENT_MINIMUM_Y_POSITIVE = 32;
+    Constants.EVENT_MINIMUM_Y_ABSOLUTE = 24 + Constants.EVENT_VIRTUAL_HEIGHT / 2 + 16;
 
     // Give truly global references to required variables, objects, functions and classes.
     w.Constants = Constants;
@@ -1838,6 +1833,7 @@ function IsMobile() {
                 }
                 $Objects.EventEndedMessage = $('#EventEndedMessage', $Objects.EventContentContainer);
                 $Objects.EventContentParticipant = $('#EventContentParticipant', $Objects.EventContentContainer);
+                $Objects.EventContentVenue = $('#EventContentVenue', $Objects.EventContentContainer);
                 $Objects.EventContentFromDate = $('#EventContentFromDateTimeContainer .Date', $Objects.EventContentContainer);
                 $Objects.EventContentFromTime = $('#EventContentFromDateTimeContainer .Time', $Objects.EventContentContainer);
                 $Objects.EventContentToDate = $('#EventContentToDateTimeContainer .Date', $Objects.EventContentContainer);
