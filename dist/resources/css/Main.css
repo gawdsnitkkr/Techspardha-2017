@@ -6,10 +6,13 @@
   -moz-box-sizing: border-box;
   box-sizing: border-box;
 }
+html,
+body {
+  min-width: 340px;
+}
 body {
   background-color: #03030b;
   width: 100vw;
-  min-width: 340px;
   height: 100vh;
   font-family: "Roboto Light", sans-serif;
   font-size: 62.5%;
@@ -2203,6 +2206,11 @@ a:visited:active {
   #MenuButtonFrame .col-xs-3 {
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+}
+@media screen and (max-width: 399px) {
+  #SearchListFrame {
+    padding-top: 4rem;
   }
 }
 #rocket {
