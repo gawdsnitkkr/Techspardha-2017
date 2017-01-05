@@ -940,7 +940,7 @@ function IsMobile() {
                 }
             },
             /**
-             * Shows the #Logo element in the given duration and calls the given callback function
+             * Shows the #Logo element in the given duration, shift link header to left and calls the given callback function
              * on transition completion.
              * @param {Number} [duration]
              * @param {Function} [callback]
@@ -964,12 +964,15 @@ function IsMobile() {
                             }
                         }
                     });
+                    $Objects.HeaderLinkContainer.css({
+                        'left': '11%'
+                    });
                 } else if ($.isFunction(callback)) {
                     callback();
                 }
             },
             /**
-             * Hides the #Logo element in the given duration and calls the given callback function
+             * Hides the #Logo element in the given duration, shift link header to right and calls the given callback function
              * on transition completion.
              * @param {Number} [duration]
              * @param {Function} [callback]
@@ -992,6 +995,9 @@ function IsMobile() {
                                 callback();
                             }
                         }
+                    });
+                    $Objects.HeaderLinkContainer.css({
+                        'left': '24%'
                     });
                 } else if ($.isFunction(callback)) {
                     callback();
@@ -1780,6 +1786,7 @@ function IsMobile() {
 
         $Objects.Logo = $('#Logo', d);
         $Objects.HeaderCloseButton = $('#HeaderCloseButton', d).on('click', Functions.HeaderCloseButtonOnClick);
+        $Objects.HeaderLinkContainer = $('#HeaderLinkContainer', d);
 
         $Objects.GalaxySVG = $('#GalaxySVG', d);
         if ($Objects.GalaxySVG.length > 0) {
