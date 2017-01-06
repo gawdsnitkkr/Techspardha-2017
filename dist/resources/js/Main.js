@@ -1317,6 +1317,9 @@ function IsMobile() {
                                         // Populate the Category-Event Map.
                                         for (var eventIndex = 0; eventIndex < eventCount; eventIndex++) {
                                             event = events[eventIndex];
+                                            if (!event.Status) {
+                                                event.Status = 'Not started';
+                                            }
                                             categoryEventMap[event.CategoryId].push({
                                                 id: event.Id,
                                                 societyID: event.SocietyId,
