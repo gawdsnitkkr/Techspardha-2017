@@ -1334,22 +1334,10 @@
             $Objects.EventContentParticipant.text(
                 properties.maxParticipants > 1 ? 'Team of up to ' + properties.maxParticipants : 'Solo');
             $Objects.EventContentVenue.text(properties.venue);
-            $Objects.EventContentFromDate.text(
-                padNumber(startTime.getDate()) + '/' +
-                padNumber(startTime.getMonth() + 1) + '/' +
-                startTime.getFullYear());
-            $Objects.EventContentFromTime.text(
-                padNumber(startTime.getHours()) + ':' +
-                padNumber(startTime.getMinutes()) + ':' +
-                padNumber(startTime.getSeconds()));
-            $Objects.EventContentToDate.text(
-                padNumber(endTime.getDate()) + '/' +
-                padNumber(endTime.getMonth() + 1) + '/' +
-                endTime.getFullYear());
-            $Objects.EventContentToTime.text(
-                padNumber(endTime.getHours()) + ':' +
-                padNumber(startTime.getMinutes()) + ':' +
-                padNumber(endTime.getSeconds()));
+            $Objects.EventContentFromDate.text(startTime.toLocaleDateString());
+            $Objects.EventContentFromTime.text(startTime.toLocaleTimeString());
+            $Objects.EventContentToDate.text(endTime.toLocaleDateString());
+            $Objects.EventContentToTime.text(endTime.toLocaleTimeString());
 
             if (coordinatorCount > 0) {
                 var $CoordinatorCache = $Cache.Coordinator,

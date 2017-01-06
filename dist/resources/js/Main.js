@@ -940,7 +940,7 @@ function IsMobile() {
                 }
             },
             /**
-             * Shows the #Logo element in the given duration, shift link header to left and calls the given callback function
+             * Shows the #Logo element in the given duration and calls the given callback function
              * on transition completion.
              * @param {Number} [duration]
              * @param {Function} [callback]
@@ -964,15 +964,12 @@ function IsMobile() {
                             }
                         }
                     });
-                    $Objects.HeaderLinkContainer.css({
-                        'left': '11%'
-                    });
                 } else if ($.isFunction(callback)) {
                     callback();
                 }
             },
             /**
-             * Hides the #Logo element in the given duration, shift link header to right and calls the given callback function
+             * Hides the #Logo element in the given duration and calls the given callback function
              * on transition completion.
              * @param {Number} [duration]
              * @param {Function} [callback]
@@ -995,9 +992,6 @@ function IsMobile() {
                                 callback();
                             }
                         }
-                    });
-                    $Objects.HeaderLinkContainer.css({
-                        'left': '24%'
                     });
                 } else if ($.isFunction(callback)) {
                     callback();
@@ -1317,9 +1311,6 @@ function IsMobile() {
                                         // Populate the Category-Event Map.
                                         for (var eventIndex = 0; eventIndex < eventCount; eventIndex++) {
                                             event = events[eventIndex];
-                                            if (!event.Status) {
-                                                event.Status = 'Not started';
-                                            }
                                             categoryEventMap[event.CategoryId].push({
                                                 id: event.Id,
                                                 societyID: event.SocietyId,
@@ -1704,22 +1695,10 @@ function IsMobile() {
             $Objects.EventContentParticipant.text(
                 properties.maxParticipants > 1 ? 'Team of up to ' + properties.maxParticipants : 'Solo');
             $Objects.EventContentVenue.text(properties.venue);
-            $Objects.EventContentFromDate.text(
-                padNumber(startTime.getDate()) + '/' +
-                padNumber(startTime.getMonth() + 1) + '/' +
-                startTime.getFullYear());
-            $Objects.EventContentFromTime.text(
-                padNumber(startTime.getHours()) + ':' +
-                padNumber(startTime.getMinutes()) + ':' +
-                padNumber(startTime.getSeconds()));
-            $Objects.EventContentToDate.text(
-                padNumber(endTime.getDate()) + '/' +
-                padNumber(endTime.getMonth() + 1) + '/' +
-                endTime.getFullYear());
-            $Objects.EventContentToTime.text(
-                padNumber(endTime.getHours()) + ':' +
-                padNumber(startTime.getMinutes()) + ':' +
-                padNumber(endTime.getSeconds()));
+            $Objects.EventContentFromDate.text(startTime.toLocaleDateString());
+            $Objects.EventContentFromTime.text(startTime.toLocaleTimeString());
+            $Objects.EventContentToDate.text(endTime.toLocaleDateString());
+            $Objects.EventContentToTime.text(endTime.toLocaleTimeString());
 
             if (coordinatorCount > 0) {
                 var $CoordinatorCache = $Cache.Coordinator,
@@ -1789,7 +1768,6 @@ function IsMobile() {
 
         $Objects.Logo = $('#Logo', d);
         $Objects.HeaderCloseButton = $('#HeaderCloseButton', d).on('click', Functions.HeaderCloseButtonOnClick);
-        $Objects.HeaderLinkContainer = $('#HeaderLinkContainer', d);
 
         $Objects.GalaxySVG = $('#GalaxySVG', d);
         if ($Objects.GalaxySVG.length > 0) {

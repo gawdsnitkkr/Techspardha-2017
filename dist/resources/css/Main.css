@@ -981,14 +981,14 @@ a:visited:active {
 #Header #HeaderLinkContainer {
   position: fixed;
   height: 8.8rem;
-  width: 100%;
+  width: auto;
   top: 0;
-  left: 11%;
-  -webkit-transition: left 0.5s ease;
-  -moz-transition: left 0.5s ease;
-  -o-transition: left 0.5s ease;
-  -ms-transition: left 0.5s ease;
-  transition: left 0.5s ease;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  -moz-transform: translateX(-50%);
+  -o-transform: translateX(-50%);
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
 }
 #Header #HeaderLinkContainer a {
   display: inline-block;
