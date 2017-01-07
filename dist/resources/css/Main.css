@@ -981,7 +981,7 @@ a:visited:active {
 #Header #HeaderLinkContainer {
   position: fixed;
   height: 8.8rem;
-  width: auto;
+  width: 100vw;
   top: 0;
   left: 50%;
   -webkit-transform: translateX(-50%);
@@ -989,6 +989,8 @@ a:visited:active {
   -o-transform: translateX(-50%);
   -ms-transform: translateX(-50%);
   transform: translateX(-50%);
+  text-align: right;
+  padding-right: 27.1rem;
 }
 #Header #HeaderLinkContainer a {
   display: inline-block;

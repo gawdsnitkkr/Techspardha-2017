@@ -156,8 +156,6 @@
                 /** @type Number */
                 maxParticipants: 1,
                 /** @type String */
-                status: 'Not Started',
-                /** @type String */
                 pdf: 'PDF_URL',
                 /** @type String */
                 rules: 'Rules',
@@ -603,6 +601,13 @@
                             }
                         }
                     });
+                    t.killTweensOf($Objects.HeaderLinkContainer);
+                    t.fromTo($Objects.HeaderLinkContainer, duration, {
+                        paddingRight: '6.7rem'
+                    }, {
+                        paddingRight: '27.1rem',
+                        ease: Power4.easeOut
+                    });
                 } else if ($.isFunction(callback)) {
                     callback();
                 }
@@ -631,6 +636,13 @@
                                 callback();
                             }
                         }
+                    });
+                    t.killTweensOf($Objects.HeaderLinkContainer);
+                    t.fromTo($Objects.HeaderLinkContainer, duration, {
+                        paddingRight: '27.1rem'
+                    }, {
+                        paddingRight: '6.7rem',
+                        ease: Power4.easeOut
                     });
                 } else if ($.isFunction(callback)) {
                     callback();
@@ -962,7 +974,6 @@
                                                 currentRound: event.CurrentRound,
                                                 totalRounds: event.TotalRounds,
                                                 maxParticipants: event.MaxContestants,
-                                                status: event.Status.toLowerCase(),
                                                 pdf: event.Pdf,
                                                 rules: event.Rules,
                                                 coordinators: event.Coordinators
@@ -1407,6 +1418,7 @@
 
         $Objects.Logo = $('#Logo', d);
         $Objects.HeaderCloseButton = $('#HeaderCloseButton', d).on('click', Functions.HeaderCloseButtonOnClick);
+        $Objects.HeaderLinkContainer = $('#HeaderLinkContainer', d);
 
         $Objects.GalaxySVG = $('#GalaxySVG', d);
         if ($Objects.GalaxySVG.length > 0) {
