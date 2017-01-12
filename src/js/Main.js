@@ -1361,7 +1361,9 @@
                     $Coordinator.find('.Email')
                         .text(coordinator.Email)
                         .attr('href', 'mailto:' + coordinator.Email);
-                    $Coordinator.find('.Phone').text(coordinator.PhoneNo);
+                    $Coordinator.find('.Phone')
+                        .text(coordinator.PhoneNo)
+                        .attr('href', 'tel:' + coordinator.PhoneNo);
                     $CoordinatorContainer.append($Coordinator);
                 }
             }

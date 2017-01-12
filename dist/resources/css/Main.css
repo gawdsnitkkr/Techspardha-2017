@@ -1645,6 +1645,12 @@ a:visited:active {
 #EventContentContainer #CoordinatorContainer .Coordinator .Phone:active {
   color: #789fa6;
 }
+#EventContentContainer .col-xs-6,
+#EventContentContainer .col-sm-6,
+#EventContentContainer .col-md-6,
+#EventContentContainer .col-lg-6 {
+  word-wrap: break-word;
+}
 @-moz-keyframes EventSVGStarShellAnimation {
   0% {
     opacity: 0;
