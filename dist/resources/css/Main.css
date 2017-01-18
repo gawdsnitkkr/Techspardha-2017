@@ -2212,21 +2212,17 @@ a:visited:active {
 }
 #SponsorsFrame .SponsorContainer {
   margin: 0 0 3rem 0;
-  -webkit-perspective: 300px;
-  -moz-perspective: 300px;
-  -ms-perspective: 300px;
-  perspective: 300px;
 }
 #SponsorsFrame .SponsorContainer img {
   width: 100%;
   height: auto;
   background-color: #fff;
   padding: 3rem;
-  -webkit-transform: scale(0.9) rotate3d(1, 1, 0, 0deg);
-  -moz-transform: scale(0.9) rotate3d(1, 1, 0, 0deg);
-  -o-transform: scale(0.9) rotate3d(1, 1, 0, 0deg);
-  -ms-transform: scale(0.9) rotate3d(1, 1, 0, 0deg);
-  transform: scale(0.9) rotate3d(1, 1, 0, 0deg);
+  -webkit-transform: scale(0.9);
+  -moz-transform: scale(0.9);
+  -o-transform: scale(0.9);
+  -ms-transform: scale(0.9);
+  transform: scale(0.9);
   -webkit-transition: -webkit-transform 1s ease-out;
   -moz-transition: -moz-transform 1s ease-out;
   -o-transition: -o-transform 1s ease-out;
@@ -2234,11 +2230,11 @@ a:visited:active {
   transition: transform 1s ease-out;
 }
 #SponsorsFrame .SponsorContainer:hover img {
-  -webkit-transform: scale(1) rotate3d(1, 1, 0, 360deg);
-  -moz-transform: scale(1) rotate3d(1, 1, 0, 360deg);
-  -o-transform: scale(1) rotate3d(1, 1, 0, 360deg);
-  -ms-transform: scale(1) rotate3d(1, 1, 0, 360deg);
-  transform: scale(1) rotate3d(1, 1, 0, 360deg);
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -o-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
 }
 @media screen and (max-width: 768px) {
   #MenuButtonFrame .MenuButton {
