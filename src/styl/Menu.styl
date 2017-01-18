@@ -342,6 +342,27 @@
   }
 }
 
+#SponsorsFrame {
+  text-align: center;
+  .SponsorContainer {
+    margin: 0 0 3rem 0;
+    perspective: 300px;
+    img {
+      width: 100%;
+      height: auto;
+      background-color: #ffffff;
+      padding: 3rem;
+      transform: scale(0.9) rotate3d(1, 1, 0, 0deg);
+      transition: transform 1s ease-out;
+    }
+    &:hover {
+      img {
+        transform: scale(1) rotate3d(1, 1, 0, 360deg);
+      }
+    }
+  }
+}
+
 @media screen and (max-width: 768px) {
   #MenuButtonFrame {
     .MenuButton {
