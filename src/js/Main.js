@@ -72,7 +72,7 @@
 
     var GalaxyPosition = new Point(0, 0),
         Constants = {
-            API_ADDRESS: 'http://techspardha.org/api',
+            API_ADDRESS: 'https://thawing-coast-15454.herokuapp.com/api',
             GALAXY_SIZE: 2048,
             GALAXY_HALF_SIZE: undefined,
             CATEGORY_POINT_COUNT: undefined,
