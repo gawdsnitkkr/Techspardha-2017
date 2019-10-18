@@ -1,3 +1,4 @@
+
 // @include ./plugins/Trail.js
 // @include ./plugins/IsMobile.js
 
@@ -12,7 +13,8 @@
  * @author Divya Mamgai <divyamamgai21@gmail.com>
  *
  */
-
+//Comment Ends Here and Code Begins from next Line
+ 
 (function ($, w, d, t, undefined) {
     'use strict';
 
